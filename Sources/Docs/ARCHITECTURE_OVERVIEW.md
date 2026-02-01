@@ -1,10 +1,10 @@
-# Overview of Thot v1.0.0_deskpad.0.0_deskpad.0.0_deskpad.0.0 'Desk Pad' Build 
+# Thot App Technical Documentation
 
 ---
 
 **Last Updated**: 2026-02-01
-**Version**: 1.0.0
-**Status**: v1 Architecture Locked
+**Version**: 1.0.0 (v1.0.0_deskpad)
+**Status**: Ready for agent review; must be made exclusively executable by agent, then executed
 
 ---
 
@@ -204,7 +204,7 @@
 
 * **TextMateRuleSet:**
 
-  - Loads `ThotMarkdownTheme.json` (your `textMateRules` converted to valid JSON)
+  - Loads `ThotMarkdownTheme.json` (the `Sources/Docs/TextMateRules.md` file converted to valid JSON)
   - Provides APIs like:
 
   ```swift
@@ -239,7 +239,7 @@
   - Read/write UTF-8 safely
   - Handle empty/missing file gracefully
 
-* **StateStorage (optional for v1, but planned):**
+* **StateStorage:**
 
   - Stores small bits of UI state:
 
@@ -271,7 +271,7 @@
 * **Files:**
 
   - `PreferencesModel.swift`
-  - `PreferencesView.swift` (stub in v1)
+  - `PreferencesView.swift` (stub in v1.0.0_deskpad)
 
 * **PreferencesModel:**
 
@@ -282,8 +282,8 @@
 
 * **PreferencesView:**
 
-  - SwiftUI view that will live behind the macOS "Preferences…" menu.
-  - In v1, this can be a simple "coming soon" placeholder.
+  - SwiftUI view that will live behind the macOS "Preferences..." menu.
+  - In v1.0.0_deskpad, this can be a simple "coming soon" placeholder.
 
 * **Design notes:**
 
@@ -302,14 +302,17 @@
 
 ### 5.2. Resource Files
 
-+ `Resources/TextMate/markdown.tmLanguage.json`
++ `Sources/Resources/TextMate/markdown.tmLanguage.json`
   - The markdown grammar used by the highlighting engine
 
-+ `Resources/TextMate/ThotMarkdownTheme.json`
++ `Sources/Resources/TextMate/ThotMarkdownTheme.json`
   - Your TextMate rules subset – scope → color/style mapping
 
-+ `Resources/Assets.xcassets`
++ `Sources/Resources/Assets.xcassets`
   - App icon, accent colors
+
++ `Sources/Resources/Fonts/JetBrainsMonoNL-*.ttf`
+  - Failsafe access to JetBrains Mono Regular, Bold, Bold Italic, and Italic font family for use in the app
 
 ---
 
@@ -372,4 +375,4 @@
   - Introduce an AI-facing API: natural language → config mutations
 
 ---
-*Thot v1's architecture is deliberately conservative so those future layers can attach around the editor, not inside it.*
+*Thot v1.0.0_deskpad's architecture is deliberately conservative so those future layers can attach around the editor, not inside it.*
