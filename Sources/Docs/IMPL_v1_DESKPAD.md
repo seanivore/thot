@@ -392,6 +392,7 @@ Use provided **TextMate-style configuration** of markdown scopes and styles:
 ```text
 thot/
   ├── IMPL_v1_DESKPAD.md                      # Symlink to implementation spec (this document)
+  ├── ARCHITECTURE_OVERVIEW.md                # Symlink to architecture overview document
   ├── README.md                               # Public-facing overview for the repo
   ├── LICENSE                                 # License for the project (MIT or similar)
   ├── .gitignore                              # Standard Swift/macOS ignores
