@@ -1,0 +1,500 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		/* App files */
+		A1000001 /* ThotApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000001 /* ThotApp.swift */; };
+		A1000002 /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000002 /* AppConfig.swift */; };
+
+		/* Editor files */
+		A1000003 /* EditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000003 /* EditorView.swift */; };
+		A1000004 /* EditorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000004 /* EditorViewModel.swift */; };
+		A1000005 /* MarkdownTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000005 /* MarkdownTextView.swift */; };
+		A1000006 /* PairedDelimiterTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000006 /* PairedDelimiterTextView.swift */; };
+
+		/* Highlighting files */
+		A1000007 /* SyntaxHighlightingEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000007 /* SyntaxHighlightingEngine.swift */; };
+		A1000008 /* RegexMarkdownHighlightingEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000008 /* RegexMarkdownHighlightingEngine.swift */; };
+		A1000009 /* TextMateRuleSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000009 /* TextMateRuleSet.swift */; };
+		A100000A /* MarkdownPatterns.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000A /* MarkdownPatterns.swift */; };
+
+		/* Persistence files */
+		A100000B /* ScratchpadStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000B /* ScratchpadStorage.swift */; };
+		A100000C /* StateStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000C /* StateStorage.swift */; };
+
+		/* Preferences files */
+		A100000D /* PreferencesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000D /* PreferencesModel.swift */; };
+		A100000E /* PreferencesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B100000E /* PreferencesView.swift */; };
+
+		/* Resources */
+		A100000F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B100000F /* Assets.xcassets */; };
+		A1000010 /* ThotMarkdownTheme.json in Resources */ = {isa = PBXBuildFile; fileRef = B1000010 /* ThotMarkdownTheme.json */; };
+		A1000011 /* JetBrainsMonoNL-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B1000011 /* JetBrainsMonoNL-Regular.ttf */; };
+		A1000012 /* JetBrainsMonoNL-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B1000012 /* JetBrainsMonoNL-Bold.ttf */; };
+		A1000013 /* JetBrainsMonoNL-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B1000013 /* JetBrainsMonoNL-Italic.ttf */; };
+		A1000014 /* JetBrainsMonoNL-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B1000014 /* JetBrainsMonoNL-BoldItalic.ttf */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		/* Product */
+		C1000001 /* Thot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Thot.app; sourceTree = BUILT_PRODUCTS_DIR; };
+
+		/* App files */
+		B1000001 /* ThotApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThotApp.swift; sourceTree = "<group>"; };
+		B1000002 /* AppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfig.swift; sourceTree = "<group>"; };
+		B1000015 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+
+		/* Editor files */
+		B1000003 /* EditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorView.swift; sourceTree = "<group>"; };
+		B1000004 /* EditorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorViewModel.swift; sourceTree = "<group>"; };
+		B1000005 /* MarkdownTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownTextView.swift; sourceTree = "<group>"; };
+		B1000006 /* PairedDelimiterTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairedDelimiterTextView.swift; sourceTree = "<group>"; };
+
+		/* Highlighting files */
+		B1000007 /* SyntaxHighlightingEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyntaxHighlightingEngine.swift; sourceTree = "<group>"; };
+		B1000008 /* RegexMarkdownHighlightingEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegexMarkdownHighlightingEngine.swift; sourceTree = "<group>"; };
+		B1000009 /* TextMateRuleSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextMateRuleSet.swift; sourceTree = "<group>"; };
+		B100000A /* MarkdownPatterns.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownPatterns.swift; sourceTree = "<group>"; };
+
+		/* Persistence files */
+		B100000B /* ScratchpadStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScratchpadStorage.swift; sourceTree = "<group>"; };
+		B100000C /* StateStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateStorage.swift; sourceTree = "<group>"; };
+
+		/* Preferences files */
+		B100000D /* PreferencesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesModel.swift; sourceTree = "<group>"; };
+		B100000E /* PreferencesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesView.swift; sourceTree = "<group>"; };
+
+		/* Resources */
+		B100000F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B1000010 /* ThotMarkdownTheme.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ThotMarkdownTheme.json; sourceTree = "<group>"; };
+		B1000011 /* JetBrainsMonoNL-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "JetBrainsMonoNL-Regular.ttf"; sourceTree = "<group>"; };
+		B1000012 /* JetBrainsMonoNL-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "JetBrainsMonoNL-Bold.ttf"; sourceTree = "<group>"; };
+		B1000013 /* JetBrainsMonoNL-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "JetBrainsMonoNL-Italic.ttf"; sourceTree = "<group>"; };
+		B1000014 /* JetBrainsMonoNL-BoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "JetBrainsMonoNL-BoldItalic.ttf"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D1000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		E1000000 = {
+			isa = PBXGroup;
+			children = (
+				E1000001 /* Sources */,
+				E1000010 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		E1000001 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				E1000002 /* ThotApp */,
+				E1000003 /* Editor */,
+				E1000004 /* Highlighting */,
+				E1000005 /* Persistence */,
+				E1000006 /* Preferences */,
+				E1000007 /* Resources */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		E1000002 /* ThotApp */ = {
+			isa = PBXGroup;
+			children = (
+				E1000008 /* App */,
+				B1000015 /* Info.plist */,
+			);
+			path = ThotApp;
+			sourceTree = "<group>";
+		};
+		E1000008 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				B1000001 /* ThotApp.swift */,
+				B1000002 /* AppConfig.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		E1000003 /* Editor */ = {
+			isa = PBXGroup;
+			children = (
+				B1000003 /* EditorView.swift */,
+				B1000004 /* EditorViewModel.swift */,
+				B1000005 /* MarkdownTextView.swift */,
+				B1000006 /* PairedDelimiterTextView.swift */,
+			);
+			path = Editor;
+			sourceTree = "<group>";
+		};
+		E1000004 /* Highlighting */ = {
+			isa = PBXGroup;
+			children = (
+				B1000007 /* SyntaxHighlightingEngine.swift */,
+				B1000008 /* RegexMarkdownHighlightingEngine.swift */,
+				B1000009 /* TextMateRuleSet.swift */,
+				B100000A /* MarkdownPatterns.swift */,
+			);
+			path = Highlighting;
+			sourceTree = "<group>";
+		};
+		E1000005 /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				B100000B /* ScratchpadStorage.swift */,
+				B100000C /* StateStorage.swift */,
+			);
+			path = Persistence;
+			sourceTree = "<group>";
+		};
+		E1000006 /* Preferences */ = {
+			isa = PBXGroup;
+			children = (
+				B100000D /* PreferencesModel.swift */,
+				B100000E /* PreferencesView.swift */,
+			);
+			path = Preferences;
+			sourceTree = "<group>";
+		};
+		E1000007 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				B100000F /* Assets.xcassets */,
+				E1000009 /* Fonts */,
+				E100000A /* TextMate */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		E1000009 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				B1000011 /* JetBrainsMonoNL-Regular.ttf */,
+				B1000012 /* JetBrainsMonoNL-Bold.ttf */,
+				B1000013 /* JetBrainsMonoNL-Italic.ttf */,
+				B1000014 /* JetBrainsMonoNL-BoldItalic.ttf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
+		E100000A /* TextMate */ = {
+			isa = PBXGroup;
+			children = (
+				B1000010 /* ThotMarkdownTheme.json */,
+			);
+			path = TextMate;
+			sourceTree = "<group>";
+		};
+		E1000010 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C1000001 /* Thot.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F1000001 /* Thot */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = G1000001 /* Build configuration list for PBXNativeTarget "Thot" */;
+			buildPhases = (
+				D1000002 /* Sources */,
+				D1000001 /* Frameworks */,
+				D1000003 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Thot;
+			productName = Thot;
+			productReference = C1000001 /* Thot.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		089C1669FE841209C02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					F1000001 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = G1000000 /* Build configuration list for PBXProject "Thot" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = E1000000;
+			productRefGroup = E1000010 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F1000001 /* Thot */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		D1000003 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A100000F /* Assets.xcassets in Resources */,
+				A1000010 /* ThotMarkdownTheme.json in Resources */,
+				A1000011 /* JetBrainsMonoNL-Regular.ttf in Resources */,
+				A1000012 /* JetBrainsMonoNL-Bold.ttf in Resources */,
+				A1000013 /* JetBrainsMonoNL-Italic.ttf in Resources */,
+				A1000014 /* JetBrainsMonoNL-BoldItalic.ttf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D1000002 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1000001 /* ThotApp.swift in Sources */,
+				A1000002 /* AppConfig.swift in Sources */,
+				A1000003 /* EditorView.swift in Sources */,
+				A1000004 /* EditorViewModel.swift in Sources */,
+				A1000005 /* MarkdownTextView.swift in Sources */,
+				A1000006 /* PairedDelimiterTextView.swift in Sources */,
+				A1000007 /* SyntaxHighlightingEngine.swift in Sources */,
+				A1000008 /* RegexMarkdownHighlightingEngine.swift in Sources */,
+				A1000009 /* TextMateRuleSet.swift in Sources */,
+				A100000A /* MarkdownPatterns.swift in Sources */,
+				A100000B /* ScratchpadStorage.swift in Sources */,
+				A100000C /* StateStorage.swift in Sources */,
+				A100000D /* PreferencesModel.swift in Sources */,
+				A100000E /* PreferencesView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		H1000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		H1000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		H1000003 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Sources/ThotApp/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Thot;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2026 Sean August Horvath. All rights reserved.";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.seanhorvath.thot;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		H1000004 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Sources/ThotApp/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Thot;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2026 Sean August Horvath. All rights reserved.";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.seanhorvath.thot;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		G1000000 /* Build configuration list for PBXProject "Thot" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				H1000001 /* Debug */,
+				H1000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		G1000001 /* Build configuration list for PBXNativeTarget "Thot" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				H1000003 /* Debug */,
+				H1000004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 089C1669FE841209C02AAC07 /* Project object */;
+}

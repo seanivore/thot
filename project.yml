@@ -1,0 +1,67 @@
+name: Thot
+options:
+  bundleIdPrefix: com.seanhorvath
+  deploymentTarget:
+    macOS: "13.0"
+  xcodeVersion: "15.0"
+  generateEmptyDirectories: true
+
+settings:
+  base:
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+    INFOPLIST_FILE: Sources/ThotApp/Info.plist
+    PRODUCT_NAME: Thot
+    SWIFT_VERSION: "5.9"
+    MACOSX_DEPLOYMENT_TARGET: "13.0"
+
+targets:
+  Thot:
+    type: application
+    platform: macOS
+    sources:
+      - path: Sources/ThotApp
+        group: ThotApp
+      - path: Sources/Editor
+        group: Editor
+      - path: Sources/Highlighting
+        group: Highlighting
+      - path: Sources/Persistence
+        group: Persistence
+      - path: Sources/Preferences
+        group: Preferences
+    resources:
+      - path: Sources/Resources/Assets.xcassets
+      - path: Sources/Resources/Fonts
+      - path: Sources/Resources/TextMate
+    settings:
+      base:
+        INFOPLIST_FILE: Sources/ThotApp/Info.plist
+        PRODUCT_BUNDLE_IDENTIFIER: com.seanhorvath.thot
+        CODE_SIGN_STYLE: Automatic
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        COMBINE_HIDPI_IMAGES: YES
+        ENABLE_HARDENED_RUNTIME: YES
+    info:
+      path: Sources/ThotApp/Info.plist
+      properties:
+        CFBundleDisplayName: Thot
+        CFBundleName: Thot
+        LSApplicationCategoryType: public.app-category.productivity
+        NSHumanReadableCopyright: "Copyright © 2026 Sean August Horvath. All rights reserved."
+        ATSApplicationFontsPath: Fonts
+
+  ThotTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: Sources/Tests/ThotTests
+        group: Tests
+    dependencies:
+      - target: Thot
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.seanhorvath.thot.tests
+        CODE_SIGN_STYLE: Automatic
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/Thot.app/Contents/MacOS/Thot"
+        BUNDLE_LOADER: "$(TEST_HOST)"

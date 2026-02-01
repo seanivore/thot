@@ -37,8 +37,29 @@ target/
 .cargo/
 rusty-tags.vi
 
-# Logistical Files 
+# Logistical Files
 .archive/
 
-# Development Example Images 
+# Development Example Images
 **/IMG*
+
+# Xcode
+build/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+
+# Swift Package Manager
+.build/
+.swiftpm/
+Package.resolved
+
+# Code Injection (for Xcode live reload)
+.inject.md
+
+# Playgrounds
+timeline.xctimeline
+playground.xcworkspace

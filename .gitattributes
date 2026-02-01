@@ -1,0 +1,28 @@
+# Swift
+*.swift text diff=swift
+*.xcodeproj text
+
+# Markdown
+*.md text diff=markdown
+
+# JSON
+*.json text
+
+# Fonts (binary)
+*.ttf binary
+*.otf binary
+
+# Images (binary)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.icns binary
+
+# Xcode project files
+*.pbxproj merge=union
+*.xcscheme text
+
+# Normalize line endings
+* text=auto

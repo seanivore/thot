@@ -4,7 +4,7 @@
 
 **Last Updated**: 2026-02-01
 **Version**: 1.0.0 (v1.0.0_deskpad)
-**Status**: Ready for agent review; must be made exclusively executable by agent, then executed
+**Status**: Implementation complete - Ready for build verification in Xcode
 
 ---
 
@@ -175,46 +175,102 @@
 
 * **Files:**
 
-  - `HighlightingEngine.swift`
-  - `TextMateGrammarLoader.swift`
-  - `TextMateRuleSet.swift`
+  - `SyntaxHighlightingEngine.swift` - Protocol definition
+  - `RegexMarkdownHighlightingEngine.swift` - v1 regex-based implementation
+  - `TextMateRuleSet.swift` - Theme JSON parser
+  - `MarkdownPatterns.swift` - Regex patterns with TextMate-compatible scope names
 
-* **HighlightingEngine:**
+#### Protocol-Based Architecture
 
-  - Input: `String` text
-  - Output: `[StyledRange]` where:
+The highlighting system uses a **protocol abstraction** to allow future engine swaps:
 
-  ```swift
-  struct StyledRange {
-      let range: NSRange
-      let attributes: [NSAttributedString.Key: Any]
-  }
-  ``` 
+```swift
+/// A styled range with its TextMate-compatible scope name
+struct StyledRange {
+    let range: NSRange
+    let scope: String  // TextMate-compatible scope name
+    let attributes: [NSAttributedString.Key: Any]
+}
 
-* **Responsibilities:**
+/// Protocol for swappable syntax highlighting engines
+protocol SyntaxHighlightingEngine {
+    func styledRanges(for text: String) -> [StyledRange]
+}
+```
 
-  - Tokenize markdown using a TextMate grammar
-  - Map token scopes to styles using `TextMateRuleSet`
-  - Return a coherent set of attributes for the editor to apply
+#### v1 Implementation: RegexMarkdownHighlightingEngine
 
-* **TextMateGrammarLoader:**
+For v1, we use a **custom regex-based tokenizer** that:
+- Prioritizes startup time and zero external dependencies
+- Uses TextMate-compatible scope names (e.g., `markup.heading`, `markup.bold`)
+- Processes patterns in specificity order (fenced code first, then headings, etc.)
 
-  - Loads `markdown.tmLanguage.json` from `Resources/TextMate/`
-  - Parses it into a structure the tokenizer can use
+```swift
+class RegexMarkdownHighlightingEngine: SyntaxHighlightingEngine {
+    private let ruleSet: TextMateRuleSet
+    private let patterns: [MarkdownPattern]
 
-* **TextMateRuleSet:**
+    func styledRanges(for text: String) -> [StyledRange] {
+        // Apply patterns in order, map scopes to attributes via ruleSet
+    }
+}
+```
 
-  - Loads `ThotMarkdownTheme.json` (the `Sources/Docs/TextMateRules.md` file converted to valid JSON)
-  - Provides APIs like:
+**Pattern order** (most specific first):
+1. Fenced code blocks (```...```)
+2. Headings (# ## ### etc.)
+3. Horizontal rules (---)
+4. Bold (**text**)
+5. Italic (*text*)
+6. Strikethrough (~~text~~)
+7. Inline code (`code`)
+8. Links [text](url)
+9. Images ![alt](url)
+10. Blockquotes (>)
+11. List markers (- * + 1.)
+12. Checkboxes ([ ] [x])
+13. HTML comments
 
-  ```swift
-  func attributes(forScopes scopes: [String]) -> [NSAttributedString.Key: Any]
-  ```
+#### TextMateRuleSet
+
+Loads `ThotMarkdownTheme.json` and maps scopes to NSAttributedString attributes:
+
+```swift
+struct TextMateRuleSet {
+    func attributes(for scope: String) -> [NSAttributedString.Key: Any]
+}
+```
+
+#### Future Engine Implementations
+
+The protocol design enables future upgrades without changing MarkdownTextView:
+
+```swift
+// Future: Full TextMate grammar parsing
+class TextMateHighlightingEngine: SyntaxHighlightingEngine {
+    // Uses oniguruma or similar for real TextMate grammar support
+}
+
+// Future: Tree-sitter for incremental parsing
+class TreeSitterHighlightingEngine: SyntaxHighlightingEngine {
+    // Uses tree-sitter-markdown for fast incremental updates
+}
+```
+
+**To swap engines**: Change one line in MarkdownTextView.Coordinator:
+```swift
+// v1
+private let highlightingEngine: SyntaxHighlightingEngine = RegexMarkdownHighlightingEngine()
+
+// Future
+private let highlightingEngine: SyntaxHighlightingEngine = TreeSitterHighlightingEngine()
+```
 
 **Design notes:**
 
-  - The highlighting module must be stateless: given text, output styles. No side effects
-  - This makes it easier to test and to replace with another engine in future (e.g., tree-sitter)
+  - The highlighting module is **stateless**: given text, output styles. No side effects
+  - Scope names follow TextMate conventions for future compatibility
+  - The protocol boundary isolates the editor from implementation details
 
 ### 4.4. Persistence
 
