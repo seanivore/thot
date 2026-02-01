@@ -1,9 +1,11 @@
-# IMPL_v1_DESKPAD.md  
-Thot v1 – Desk Pad Build SPEC
+# Implementation Spec for Thot v1.0.0_deskpad 
 
-Last Updated: 2026-02-01  
-Status: Planning Complete – Ready for Agent Implementation  
-Target Platform: macOS (Swift + SwiftUI + AppKit)
+---
+
+**Last Updated**: 2026-02-01
+**Version**: 1.0.0
+**Status**: Planning drafted, must be made exclusively executable by agent, then executed
+**Target Platform**: macOS (Swift + SwiftUI + AppKit)
 
 ---
 
@@ -11,163 +13,168 @@ Target Platform: macOS (Swift + SwiftUI + AppKit)
 
 ### 0.1. One-line Product Definition
 
-A **macOS-only desk pad app** that behaves like TextEdit’s always-open unsaved TXT window, but the editor surface looks and feels like a **Cursor/VS Code markdown pane**: monospaced, semantic-highlighted markdown, dark theme, zero UI clutter, and automatic state persistence.
+A **macOS-only desk pad app** that behaves like TextEdit's always-open unsaved TXT window, but the editor surface looks and feels like a **Cursor/VS Code markdown pane** that is monospaced, has semantic-highlighted markdown, is in the dark theme; that is to say, zero UI clutter and automatic state persistence.
 
-No multi-note system, no preview, no export, no AI—just your **current TextEdit scratchpad upgraded to your IDE’s markdown experience**.
+No multi-note system, no preview, no export, no AI—just your **current TextEdit scratchpad upgraded to your IDE's markdown experience**.
 
 ### 0.2. Human Context (Owner / Primary User)
 
-- Primary user: **Sean August Horvath** (designer, creative generalist, system thinker).
-- Key modes:
++ Primary user: **Sean August Horvath** (designer, creative generalist, system thinker)
+
++ Key modes:
   - Uses a single TextEdit `.txt` window as an always-open **mental staging pad**.
   - Writes long, continuous documents separated by `---` and headings.
-  - Keeps this window unsaved; relies on macOS autosave behavior.
+  - Keeps this window unsaved; relies on macOS autosave behavior, reopens on restart launch.
   - Hates clutter and friction: anything beyond "open app → type" is overhead.
-- Loves writing in **markdown with semantic highlighting** via custom `textMateRules`.
-- Dislikes:
-  - TextEdit’s lack of semantic feedback.
-  - The heaviness of Google Docs and full-blown IDE workspaces for quick notes.
-  - Being forced into "file management brain" just to jot something down.
 
-This spec aims to respect that: **Thot v1 is not a knowledge management system; it’s your desk.**
++ Loves writing in **markdown with semantic highlighting** via custom `textMateRules`.
+
++ Dislikes:
+  - TextEdit's lack of semantic feedback 
+  - The heaviness of Google Docs and full-blown IDE workspaces for quick notes 
+  - Being forced into "file management brain" just to jot something down 
+
+This spec aims to respect that: **Thot v1.0.0_deskpad is not a knowledge management system, it's your desk**
 
 ---
 
 ## 1. Product Scope & Philosophy
 
-### 1.1. v1 Scope – "Desk Pad" Build
+### 1.1. v1.0.0 "Desk Pad" Build Scope
 
-In-scope:
+**In-scope:**
 
-- Single window.
-- Single logical document (the scratchpad).
-- State automatically persisted and restored between sessions.
-- Editor surface:
-  - Dark theme.
-  - Monospaced font (JetBrains Mono 12).
-  - Markdown-aware semantic highlighting using your existing TextMate scopes.
-  - Paired-delimiter behavior matching modern IDEs for `()[]{}''""\```.
-- Minimal macOS menus, no toolbars, no sidebars.
++ Single window
++ Single logical document (the scratchpad)
++ State automatically persisted and restored between sessions
++ Editor surface:
+  - Dark theme
+  - Monospaced font (JetBrains Mono 12)
+  - Markdown-aware semantic highlighting using existing TextMate scopes
+  - Paired-delimiter behavior matching modern IDEs for `()[]{}''""\` `pair`
++ Minimal macOS menus, no toolbars, no sidebars 
 
-Out-of-scope (must not be implemented in v1):
+**Out-of-scope (must not be implemented in v1)**:
 
-- Multi-document support, note lists, Finder-style column navigation.
-- Preview rendering (HTML/PDF), print/export.
-- Organization concepts (folders, tags, projects, workspaces).
-- AI features (chat, completion, formatting, declarative UI customization).
-- iOS/iPadOS/web builds.
-- Settings UI beyond the minimal OS-default "Preferences" stub.
++ Multi-document support, note lists, Finder-style column navigation
++ Preview rendering (HTML/PDF), print/export
++ Organization concepts (folders, tags, projects, workspaces)
++ AI features (chat, completion, formatting, declarative UI customization)
++ iOS/iPadOS/web builds
++ Settings UI beyond the minimal OS-default "Preferences" stub
 
 ### 1.2. Design Principles
 
 1. **Desk, not notebook.**  
-   Thot v1 is a single continuous writing surface, not a note organizer. It’s the digital equivalent of a legal pad that never leaves your desk.
+   Thot v1.0.0_deskpad is a single continuous writing surface, not a note organizer. It's the digital equivalent of a legal pad that never leaves your desk.
 
-2. **Editor = Product.**  
+2. **Editor = Product.** 
    There is no "shell app with an editor inside." The editor surface is the product. All design decisions prioritize the feel of typing and reading over features.
 
-3. **Frictionless entry.**  
+3. **Frictionless entry.** 
    Launch → cursor is focused → type. No modals, no "New document?" prompts, no chooser screens.
 
-4. **Semantic calm.**  
+4. **Semantic calm.** 
    The styling is expressive but not noisy. Headings, bold, links, code, lists—all visibly differentiated, but in a way that feels like your Cursor theme, not a circus.
 
-5. **Future-safe data, simple present.**  
-   Under the hood, the desk pad is a real `.md` file. That’s it. Future features (multi-note, export, web clients, AI) will build around this file, not replace it.
+5. **Future-safe data, simple present.** 
+   Under the hood, the desk pad is a real `.md` file. That's it. Future features (multi-note, export, web clients, AI) will build around this file, not replace it.
 
 ---
 
 ## 2. User Experience Specification
 
+**NOTE**: Where macOS has a System Setting, we should use that setting. Users should only have one place to configure preferences and if OS had the setting first, then that is where they will find it. 
+
 ### 2.1. Launch & Lifecycle
 
 **Launch Behavior:**
 
-- User opens Thot.
-- App shows **one window** titled `Thot – Desk Pad` (or simply `Thot`).
-- Editor has keyboard focus; insertion point at last caret position from previous session.
-- Previous content is loaded from the scratchpad file on disk (see Persistence).
+  - User opens Thot.
+  - App shows **one window** titled `Thot – Desk Pad` (or simply `Thot`).
+  - Editor has keyboard focus; insertion point at last caret position from previous session.
+  - Previous content is loaded from the scratchpad file on disk (see Persistence).
 
 **Quit & Relaunch:**
 
-- On quit, current content and caret position are saved.
-- On relaunch, everything is exactly as it was:
++ On quit, current content and caret position are saved.
++ On relaunch, everything is exactly as it was:
   - Same text.
   - Same scroll position.
   - Same caret position.
 
-No save dialogs, no "Do you want to save changes?" prompts.
+**No save dialogs, no "Do you want to save changes?" prompts.**
 
 ### 2.2. Editing Behavior
 
 **Text Model:**
 
-- Plain text markdown.
-- Hard wraps at view width (no horizontal scrolling in normal usage).
-- No rich text; everything is represented as raw markdown characters.
+  - Plain text markdown.
+  - Hard wraps at view width (no horizontal scrolling in normal usage).
+  - No rich text; everything is represented as raw markdown characters.
 
 **Input Rules:**
 
-- No automatic conversion of quotes/dashes/links:
++ No automatic conversion of quotes/dashes/links:
   - No smart quotes.
   - No smart dashes.
   - No automatic hyperlinking of URLs.
-- Paste behavior: **always paste as plain text** (strip any rich formatting).
++ Paste behavior: *always paste as plain text* (strip any rich formatting).
 
 **Keyboard Behavior:**
 
-- Standard macOS text movement and selection:
++ Standard macOS text movement and selection:
   - Arrow keys, Option-arrow for word navigation, Command-arrow for line start/end.
   - Shift + movement for selection.
-- Standard editing shortcuts: Cut/Copy/Paste, Undo/Redo, Select All.
-- Tab indents:
-  - `Tab` inserts a single tab or configured number of spaces (implementation detail).
-  - No "smart list" indentation logic; it’s just indentation.
++ Standard editing shortcuts: Cut/Copy/Paste, Undo/Redo, Select All.
++ Tab indents:
+  - `Tab` inserts 2 spaces 
+  - No "smart list" indentation logic; it's just indentation.
 
 **Paired Delimiters (IDE-like Behavior):**
 
-For `() [] {} '' "" \``:
++ For `() [] {} '' "" \` `pair` delimiters
 
-- Typing an opening character inserts both:
-  - `(` → `()` with cursor between.
-  - `[` → `[]`.
-  - `{` → `{}`.
-  - `'` → `''` (context-aware if possible, but v1 can be naive).
++ Typing an opening character inserts both 
+  - `(` → `()` with cursor between 
+  - `[` → `[]`
+  - `{` → `{}`
+  - `'` → `''` (context-aware if possible, but v1 can be naive)
   - `"` → `""`.
   - Backtick → `` ` ` `` (inline code).
 
-- When cursor is directly before an auto-inserted closing character:
-  - Typing that closing character moves the cursor past it instead of duplicating.
++ When cursor is directly before an auto-inserted closing character
+  - Typing that closing character moves the cursor past it instead of duplicating
 
-- Arrow keys allow moving "out of" pairs as usual; there’s no special trap.
++ Arrow keys allow moving "out of" pairs as usual; there's no special trap 
 
 **Spellcheck (Optional, but Desired):**
 
-- Use macOS system spellchecking:
++ Use macOS system spellchecking 
   - Underlines misspellings.
-  - No auto-correct.
-- Default: **on**, unless it visually conflicts with the semantics.
-- Can be toggled via standard "Check Spelling While Typing" menu item.
+  - No auto-correct (or default to OS settings)
++ Default: **on**, unless it visually conflicts with the semantics.
++ Can be toggled via standard "Check Spelling While Typing" menu item.
 
 ### 2.3. Visual Design
 
-**Defaults (v1):**
+**Defaults (v1.0.0_deskpad):**
 
-- Font: `JetBrains Mono, Regular, 12pt`.
-- Background: dark (similar luminance to standard macOS dark text editors).
-- Line spacing: modestly relaxed (e.g., 1.2–1.4) for readability in dense notes.
-- Text color baseline: off-white / soft gray.
+  - Font: `JetBrains Mono, Regular, 12pt`
+  - Background: dark (similar luminance to standard macOS dark text editors)
+  - Line spacing: modestly relaxed (e.g., 1.2–1.4) for readability in dense notes
+  - Text color baseline: off-white / soft gray
 
 **Syntax Highlighting:**
 
-- Apply semantic coloring/style based on the provided TextMate rules:
++ Apply semantic coloring/style based on the provided TextMate rules:
   - Headings: `markup.heading`, `entity.name.section`, etc.
   - Bold: `markup.bold`, `punctuation.definition.bold.markdown`.
   - Italic: `markup.italic`, `punctuation.definition.italic.markdown`.
   - Blockquotes, fenced/inline code, links (text + URL), lists, list markers, checkboxes, strikethrough, tables, horizontal rules, footnotes, comments, diff, HTML, math, etc.
-- Foreground, background, and fontStyle (bold/italic/strikethrough) must respect the spec from `textMateRules`.
++ Foreground, background, and fontStyle (bold/italic/strikethrough) must respect the spec from `textMateRules`.
 
-The goal is: open a markdown file in Cursor and Thot side-by-side; they feel visually equivalent in semantics and hierarchy.
+**The goal is**: open a markdown file in Cursor and Thot side-by-side; they feel visually equivalent in semantics and hierarchy.
 
 ### 2.4. Menus & Chrome
 
@@ -210,7 +217,7 @@ No "Open…", "Save As…", "Recent Documents" in v1. The mental model is: one p
 
 **Rationale:**
 
-- SwiftUI’s `TextEditor` is too limited for high-quality syntax highlighting and precise key handling.
+- SwiftUI's `TextEditor` is too limited for high-quality syntax highlighting and precise key handling.
 - `NSTextView` is the mature, battle-tested rich text engine on macOS.
 - SwiftUI controls the structure; AppKit controls the keystrokes and glyphs.
 
@@ -297,7 +304,7 @@ This is optional for v1 but extremely cheap and makes UX feel "telepathic" on re
 
 ### 5.1. Inputs
 
-You’ve already provided a **TextMate-style configuration** of markdown scopes and styles under:
+You've already provided a **TextMate-style configuration** of markdown scopes and styles under:
 
 - `editor.tokenColorCustomizations.textMateRules: [...]`
 
@@ -316,7 +323,7 @@ The `HighlightingEngine` must:
 2. Load your `textMateRules` mapping from a JSON file in the bundle (converted to proper JSON from your JSONC).
 3. For a given input `String`, tokenizes into ranges with associated scopes.
 4. For each token, resolve style:
-   - Find the first matching rule whose `scope` list includes at least one of the token’s scopes.
+   - Find the first matching rule whose `scope` list includes at least one of the token's scopes.
    - Build a style: foreground, background, font traits.
 5. Output an array of `[StyledRange]` with:
    - `range: NSRange`
@@ -346,11 +353,12 @@ Performance expectation: even for large notes (e.g., tens of thousands of charac
 
 The project is organized around a **single top-level folder and repo name**:
 
-- Local project folder: `thot`
-- Git repository name: `thot`
-- Primary active branch for this build: `v1-deskpad`  
++ Local project folder: `thot`
++ Git repository name: `thot`
++ Primary active branch for this build: `v1-deskpad` 
   - This branch represents the entire "Desk Pad" product line for v1.
-  - Future major phases can branch off this (e.g., `v2-organization`, `v3-ai-customization`).
+  - Future major phases can branch off this (e.g., `v2-organization`, `v3-ai-customization`)
+  - Completed builds will be moved to branch `main` and tagged with the version number
 
 > Git flow:
 > - Default branch can be `main` with **no direct commits**; `v1-deskpad` is the working branch.
@@ -360,54 +368,50 @@ Top-level layout:
 
 ```text
 thot/
-  IMPL_v1_DESKPAD.md               # Implementation spec (this document)
-  README.md                        # Public-facing overview for the repo
-  LICENSE                          # License for the project (MIT or similar)
-  .gitignore                       # Standard Swift/macOS ignores
-  .gitattributes                   # (Optional) Normalize line endings, etc.
-  .github/
-    workflows/
-      ci.yml                       # (Optional) Basic CI: build + tests on push/PR
-  Thot.xcodeproj/                  # Xcode project
-
-  Sources/
-    ThotApp/
-      App/
-        ThotApp.swift              # SwiftUI App entry point
-        AppConfig.swift            # Paths, fonts, colors, constants
-      Editor/
-        EditorView.swift           # SwiftUI container for editor
-        EditorViewModel.swift      # ObservableObject: text + persistence orchestration
-        MarkdownTextView.swift     # NSViewRepresentable wrapper for NSTextView
-        MarkdownTextViewDelegate.swift  # Key handling (paired delimiters etc.)
-      Highlighting/
-        HighlightingEngine.swift   # Token → style engine (TextMate-based)
-        TextMateGrammarLoader.swift
-        TextMateRuleSet.swift      # Types for rules & mapping from scopes
-      Persistence/
-        ScratchpadStorage.swift    # Load/save deskpad.md
-        StateStorage.swift         # Caret position, scroll offset, timestamps
-      Preferences/
-        PreferencesModel.swift     # (Future) user preferences surface
-        PreferencesView.swift      # (Stub) SwiftUI Preferences UI
-
-  Resources/
-    TextMate/
-      markdown.tmLanguage.json     # Markdown TextMate grammar
-      ThotMarkdownTheme.json       # Your textMateRules extracted to pure JSON
-    Assets.xcassets/               # App icon, colors, etc.
-
-  Tests/
-    ThotTests/
-      HighlightingEngineTests.swift
-      PairedDelimiterTests.swift
-      PersistenceTests.swift
-
-  Docs/
-    IMPL_v1_DESKPAD.md             # Copy or symlink of spec for easy access
-    ARCHITECTURE_OVERVIEW.md       # High-level diagram and narrative
-    FUTURE_v2_ORGANIZATION.md      # Parking lot: multi-note + column view
-    FUTURE_v3_AI_CUSTOMIZATION.md  # Parking lot: declarative + AI customization
+  ├──IMPL_v1_DESKPAD.md                      # Implementation spec (this document or a symlink)
+  ├──README.md                               # Public-facing overview for the repo
+  ├──LICENSE                                 # License for the project (MIT or similar)
+  ├──.gitignore                              # Standard Swift/macOS ignores
+  ├──.gitattributes                          # (Optional) Normalize line endings, etc.
+  ├──.github/
+  │   └──workflows/
+  │       └──ci.yml                          # (Optional) Basic CI: build + tests on push/PR
+  ├──Thot.xcodeproj/                         # Xcode project
+  └──sources/
+      ├──ThotApp/
+      │   └──App/
+      │       ├──ThotApp.swift               # SwiftUI App entry point
+      │       └──AppConfig.swift             # Paths, fonts, colors, constants
+      ├──Editor/
+      │   ├──EditorView.swift                # SwiftUI container for editor
+      │   ├──EditorViewModel.swift           # ObservableObject: text + persistence orchestration
+      │   ├──MarkdownTextView.swift          # NSViewRepresentable wrapper for NSTextView
+      │   └──MarkdownTextViewDelegate.swift  # Key handling (paired delimiters etc.)
+      ├──Highlighting/
+      │   ├──HighlightingEngine.swift        # Token → style engine (TextMate-based)
+      │   ├──TextMateGrammarLoader.swift
+      │   └──TextMateRuleSet.swift           # Types for rules & mapping from scopes
+      ├──Persistence/
+      │   ├──ScratchpadStorage.swift         # Load/save deskpad.md
+      │   └──StateStorage.swift              # Caret position, scroll offset, timestamps
+      ├──Preferences/
+      │   ├──PreferencesModel.swift          # (Future) user preferences surface
+      │   └──PreferencesView.swift           # (Stub) SwiftUI Preferences UI
+      ├──Resources/
+      │   ├──TextMate/
+      │   │   ├──markdown.tmLanguage.json    # Markdown TextMate grammar
+      │   │   └──ThotMarkdownTheme.json      # Your textMateRules extracted to pure JSON
+      │   └──Assets.xcassets/                # App icon, colors, etc.
+      ├──Tests/
+      │   └──ThotTests/
+      │       ├──HighlightingEngineTests.swift
+      │       ├──PairedDelimiterTests.swift
+      │       └──PersistenceTests.swift
+      └──Docs/
+          ├──IMPL_v1_DESKPAD.md              # Copy or symlink of spec for easy access
+          ├──ARCHITECTURE_OVERVIEW.md        # High-level diagram and narrative
+          ├──FUTURE_v2_ORGANIZATION.md       # Parking lot: multi-note + column view
+          └──FUTURE_v3_AI_CUSTOMIZATION.md   # Parking lot: declarative + AI customization
 ```
 
 Professional versioning / repo hygiene details:
@@ -428,7 +432,7 @@ Professional versioning / repo hygiene details:
 - Docs discipline:
   - Any non-trivial code change that alters behavior should be paired with:
     - An update to `IMPL_v1_DESKPAD.md` (if it changes the spec/contract), or
-    - An entry in a future `Docs/CHANGELOG_v1.md` if it’s purely internal.
+    - An entry in a future `Docs/CHANGELOG_v1.md` if it's purely internal.
 
 This structure keeps the name surface constant (`thot` everywhere), signals clearly that `v1-deskpad` is the canonical "Desk Pad" implementation branch, and gives both humans and agents a predictable map of where things live and where to evolve them next.
 
@@ -450,7 +454,7 @@ Examples of future AI interactions:
 - "Change default font to X and line spacing to Y" → AI edits `AppConfig` / `PreferencesModel`.
 - "Add a second scratchpad for project notes" → AI consults `FUTURE_v2_ORGANIZATION.md`, then adds a new storage layer and minimal UI.
 
-By keeping editor logic in dedicated modules and documenting them, agents don’t have to reverse-engineer structure on every session.
+By keeping editor logic in dedicated modules and documenting them, agents don't have to reverse-engineer structure on every session.
 
 ---
 
@@ -477,7 +481,7 @@ This section is the step-by-step plan an AI (or human) should follow. Each phase
    - Create `EditorViewModel` on startup.
    - Provide via `.environmentObject` or similar.
    - Display `EditorView`.
-3. Implement `EditorView` using SwiftUI’s `TextEditor` temporarily:
+3. Implement `EditorView` using SwiftUI's `TextEditor` temporarily:
    - Bind to `EditorViewModel.text`.
    - Confirm launch → type → quit works.
 
@@ -590,7 +594,7 @@ This section is the step-by-step plan an AI (or human) should follow. Each phase
 - Do not implement preview or export; they add complexity and distract from the core experience.
 - Do not force user into file dialogs or file naming.
 - Do not couple highlighting directly into the view model; `HighlightingEngine` stays stateless and independent.
-- Do not use SwiftUI’s `TextEditor` for anything beyond Phase 1.
+- Do not use SwiftUI's `TextEditor` for anything beyond Phase 1.
 
 ---
 

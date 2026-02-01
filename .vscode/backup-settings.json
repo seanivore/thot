@@ -6842,7 +6842,7 @@
     // Whether to use ConPTY for Windows terminal process communication (requires Windows 10 build number 18309+). Winpty will be used if this is false.
     "terminal.integrated.windowsEnableConpty": true,
     // A string containing all characters to be considered word separators when double-clicking to select word and in the fallback 'word' link detection. Since this is used for link detection, including characters such as `:` that are used when detecting links will cause the line and column part of links like `file:10:5` to be ignored.
-    "terminal.integrated.wordSeparators": " ()[]{}',\"`─‘’""|",
+    "terminal.integrated.wordSeparators": " ()[]{}',\"`─‘'""|",
     // Enable automatic tasks - note that tasks won't run in an untrusted workspace.
     //  - on: Always
     //  - off: Never
