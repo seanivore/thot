@@ -41,9 +41,4 @@ rusty-tags.vi
 .archive/
 
 # Development Example Images 
-Sources/*/IMG_*.png
-Sources/*/IMG_*.jpg
-Sources/*/IMG_*.jpeg
-Sources/*/IMG_*.bmp
-Sources/*/IMG_*.webp
-Sources/*/IMG_*.svg
+Sources/**/IMG_*
