@@ -317,14 +317,14 @@ EditorView.updateListener.of((update) => {
 ---
 
 ### Phase 5: PWA Configuration
-**Status**: [ ] Not Started
+**Status**: [x] Complete
 
 **Tasks**:
-1. [ ] Create `public/manifest.json`
-2. [ ] Configure Vite PWA plugin
-3. [ ] Generate icons from existing assets
-4. [ ] Add service worker for offline support
-5. [ ] Test installation on macOS/Chrome
+1. [x] Create `public/manifest.json` (via vite-plugin-pwa)
+2. [x] Configure Vite PWA plugin
+3. [x] Generate icons from existing assets (192px added)
+4. [x] Add service worker for offline support
+5. [x] Test installation on macOS/Chrome
 
 **Manifest** (`public/manifest.json`):
 ```json
@@ -500,7 +500,7 @@ _Update this section as phases complete:_
 | 2 | Complete | Feb 8, 2026 | Full Thot color palette applied |
 | 3 | Complete | Feb 8, 2026 | localStorage with debounce + beforeunload save |
 | 4 | Complete | Feb 8, 2026 | Cursor + scroll position saved/restored |
-| 5 | Not Started | — | — |
+| 5 | Complete | Feb 8, 2026 | PWA manifest + service worker + offline caching |
 | 6 | Not Started | — | — |
 
 ---
