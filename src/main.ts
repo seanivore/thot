@@ -1,7 +1,8 @@
 // Thot v2 - Main Entry Point
 import './styles/main.css'
-import { createEditor, getContent } from './editor'
+import { createEditor, getContent, getCursorPos, getScrollTop, setCursorPos, setScrollTop } from './editor'
 import { saveContent, loadContent, forceSave, hasSavedContent } from './persistence'
+import { saveState, loadState, forceSaveState } from './state'
 
 // Welcome content for first-time users
 const welcomeContent = `# Welcome to Thot
@@ -65,31 +66,58 @@ function init() {
   const savedContent = loadContent()
   const initialContent = hasSavedContent() ? savedContent : welcomeContent
 
+  // Load saved state (cursor/scroll position)
+  const savedState = loadState()
+
   const view = createEditor({
     parent: editorElement,
     initialContent,
     onChange: (content) => {
-      // Auto-save with debounce
+      // Auto-save content with debounce
       saveContent(content)
+    },
+    onStateChange: (cursorPos, scrollTop) => {
+      // Auto-save state with debounce
+      saveState({ cursorPos, scrollTop })
     }
   })
 
-  // Force save before page unload (closing tab, navigating away)
+  // Restore cursor and scroll position after a brief delay
+  // (allows the editor to fully render first)
+  if (savedState && hasSavedContent()) {
+    requestAnimationFrame(() => {
+      setCursorPos(view, savedState.cursorPos)
+      // Small delay for scroll to work after cursor is set
+      setTimeout(() => {
+        setScrollTop(view, savedState.scrollTop)
+      }, 50)
+    })
+  }
+
+  // Force save before page unload
   window.addEventListener('beforeunload', () => {
     forceSave(getContent(view))
+    forceSaveState({
+      cursorPos: getCursorPos(view),
+      scrollTop: getScrollTop(view)
+    })
   })
 
   // Also save on visibility change (switching tabs, minimizing)
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
       forceSave(getContent(view))
+      forceSaveState({
+        cursorPos: getCursorPos(view),
+        scrollTop: getScrollTop(view)
+      })
     }
   })
 
   // Focus the editor
   view.focus()
 
-  console.log('Thot v2 initialized', hasSavedContent() ? '(loaded saved content)' : '(first run)')
+  console.log('Thot v2 initialized', hasSavedContent() ? '(restored session)' : '(first run)')
 }
 
 // Initialize when DOM is ready

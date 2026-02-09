@@ -10,14 +10,23 @@ export interface EditorConfig {
   parent: HTMLElement
   initialContent?: string
   onChange?: (content: string) => void
+  onStateChange?: (cursorPos: number, scrollTop: number) => void
 }
 
 export function createEditor(config: EditorConfig): EditorView {
-  const { parent, initialContent = '', onChange } = config
+  const { parent, initialContent = '', onChange, onStateChange } = config
 
   const updateListener = EditorView.updateListener.of((update) => {
+    // Content changes
     if (update.docChanged && onChange) {
       onChange(update.state.doc.toString())
+    }
+
+    // Cursor or scroll changes
+    if (onStateChange && (update.selectionSet || update.geometryChanged || update.viewportChanged)) {
+      const cursorPos = update.state.selection.main.head
+      const scrollTop = update.view.scrollDOM.scrollTop
+      onStateChange(cursorPos, scrollTop)
     }
   })
 
@@ -80,4 +89,27 @@ export function setContent(view: EditorView, content: string): void {
       insert: content
     }
   })
+}
+
+export function getCursorPos(view: EditorView): number {
+  return view.state.selection.main.head
+}
+
+export function setCursorPos(view: EditorView, pos: number): void {
+  // Clamp position to valid range
+  const maxPos = view.state.doc.length
+  const safePos = Math.min(Math.max(0, pos), maxPos)
+
+  view.dispatch({
+    selection: { anchor: safePos, head: safePos },
+    scrollIntoView: true
+  })
+}
+
+export function getScrollTop(view: EditorView): number {
+  return view.scrollDOM.scrollTop
+}
+
+export function setScrollTop(view: EditorView, scrollTop: number): void {
+  view.scrollDOM.scrollTop = scrollTop
 }

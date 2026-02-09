@@ -272,13 +272,13 @@ export function forceSave(content: string): void {
 ---
 
 ### Phase 4: State Persistence
-**Status**: [ ] Not Started
+**Status**: [x] Complete
 
 **Tasks**:
-1. [ ] Create `src/state.ts` for cursor/scroll state
-2. [ ] Save cursor position on change
-3. [ ] Save scroll position on scroll
-4. [ ] Restore cursor and scroll on load
+1. [x] Create `src/state.ts` for cursor/scroll state
+2. [x] Save cursor position on change
+3. [x] Save scroll position on scroll
+4. [x] Restore cursor and scroll on load
 
 **Key code pattern** (`src/state.ts`):
 ```typescript
@@ -499,7 +499,7 @@ _Update this section as phases complete:_
 | 1 | Complete | Feb 8, 2026 | CodeMirror 6 + markdown + keybindings + line numbers |
 | 2 | Complete | Feb 8, 2026 | Full Thot color palette applied |
 | 3 | Complete | Feb 8, 2026 | localStorage with debounce + beforeunload save |
-| 4 | Not Started | — | — |
+| 4 | Complete | Feb 8, 2026 | Cursor + scroll position saved/restored |
 | 5 | Not Started | — | — |
 | 6 | Not Started | — | — |
 
