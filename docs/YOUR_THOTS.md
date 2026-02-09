@@ -167,13 +167,13 @@ export function createEditor(parent: HTMLElement): EditorView {
 ---
 
 ### Phase 2: Thot Dark Theme
-**Status**: [ ] Not Started
+**Status**: [x] Complete
 
 **Tasks**:
-1. [ ] Create `src/theme.ts` with CodeMirror theme
-2. [ ] Convert TextMate colors to CodeMirror highlight styles
-3. [ ] Apply dark background (#1a1a1a)
-4. [ ] Style cursor, selection, gutters
+1. [x] Create `src/theme.ts` with CodeMirror theme
+2. [x] Convert TextMate colors to CodeMirror highlight styles
+3. [x] Apply dark background (#1a1a1a)
+4. [x] Style cursor, selection, gutters
 
 **Color mapping** (from `ThotMarkdownTheme.json`):
 | Element | Color |
@@ -497,7 +497,7 @@ _Update this section as phases complete:_
 |-------|--------|------|-------|
 | 0 | Complete | Feb 8, 2026 | npm, Vite, TypeScript, CSS, fonts configured |
 | 1 | Complete | Feb 8, 2026 | CodeMirror 6 + markdown + keybindings + line numbers |
-| 2 | Not Started | — | — |
+| 2 | Complete | Feb 8, 2026 | Full Thot color palette applied |
 | 3 | Not Started | — | — |
 | 4 | Not Started | — | — |
 | 5 | Not Started | — | — |

@@ -3,46 +3,8 @@ import { EditorView, keymap, lineNumbers, highlightActiveLineGutter, highlightSp
 import { EditorState } from '@codemirror/state'
 import { markdown } from '@codemirror/lang-markdown'
 import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands'
-import { bracketMatching, indentOnInput, syntaxHighlighting, defaultHighlightStyle } from '@codemirror/language'
-
-// Base theme for editor chrome (not syntax - that comes in Phase 2)
-const baseTheme = EditorView.theme({
-  '&': {
-    height: '100%',
-    fontSize: '14px'
-  },
-  '.cm-scroller': {
-    fontFamily: '"JetBrains Mono NL", monospace',
-    lineHeight: '1.6',
-    padding: '16px'
-  },
-  '.cm-content': {
-    caretColor: '#e6e6e6'
-  },
-  '.cm-cursor': {
-    borderLeftColor: '#e6e6e6',
-    borderLeftWidth: '2px'
-  },
-  '.cm-selectionBackground, ::selection': {
-    backgroundColor: '#44475a !important'
-  },
-  '.cm-activeLine': {
-    backgroundColor: 'transparent'
-  },
-  '.cm-gutters': {
-    backgroundColor: '#1a1a1a',
-    color: '#6272a4',
-    border: 'none',
-    paddingRight: '8px'
-  },
-  '.cm-activeLineGutter': {
-    backgroundColor: 'transparent',
-    color: '#e6e6e6'
-  },
-  '.cm-lineNumbers .cm-gutterElement': {
-    padding: '0 8px 0 16px'
-  }
-}, { dark: true })
+import { bracketMatching, indentOnInput } from '@codemirror/language'
+import { thotTheme } from './theme'
 
 export interface EditorConfig {
   parent: HTMLElement
@@ -77,9 +39,6 @@ export function createEditor(config: EditorConfig): EditorView {
       crosshairCursor(),
       highlightActiveLine(),
 
-      // Syntax highlighting (default for now, custom theme in Phase 2)
-      syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
-
       // Markdown language support
       markdown(),
 
@@ -90,8 +49,8 @@ export function createEditor(config: EditorConfig): EditorView {
         indentWithTab
       ]),
 
-      // Theme
-      baseTheme,
+      // Thot dark theme (editor chrome + syntax highlighting)
+      thotTheme,
 
       // Change listener
       updateListener
