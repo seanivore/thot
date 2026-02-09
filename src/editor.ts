@@ -49,6 +49,9 @@ export function createEditor(config: EditorConfig): EditorView {
         indentWithTab
       ]),
 
+      // Line wrapping at window edge
+      EditorView.lineWrapping,
+
       // Thot dark theme (editor chrome + syntax highlighting)
       thotTheme,
 
