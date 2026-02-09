@@ -1,65 +1,44 @@
 # Environment variables
 .env
+.env.local
+.env.*.local
 
-# Virtual environment
-venv/
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
 
-# Python build artifacts
-*.egg-info/
-__pycache__/
-*.pyc
+# Build output
+dist/
+dist-ssr/
+*.local
+
+# Vite
+.vite/
+
+# TypeScript
+*.tsbuildinfo
+
+# OS files
+.DS_Store
+.DS_Store?
+Thumbs.db
+
+# IDE/Editor files
+.idea/
+*.swp
+*.swo
+*.sublime-*
 
 # Aider files
 .aider.chat.history.md
 .aider.tags.cache.v3
 
-# Dependencies
-node_modules/
-npm-debug.log*
-*.log
-*.lock
-
-# OS files
-.DS_Store
-.DS_Store?
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-
-# IDE/Editor files
-*.swp
-*.swo
-
-# Rust specific
-target/
-**/*.rs.bk
-.cargo/
-rusty-tags.vi
-
 # Logistical Files
 .archive/
 
-# Development Example Images
-**/IMG*
-
-# Xcode
-build/
-DerivedData/
-*.xcuserstate
-xcuserdata/
-*.xcworkspace/xcuserdata/
-*.xcodeproj/xcuserdata/
-*.xcodeproj/project.xcworkspace/xcuserdata/
-
-# Swift Package Manager
-.build/
-.swiftpm/
-Package.resolved
-
-# Code Injection (for Xcode live reload)
-.inject.md
-
-# Playgrounds
-timeline.xctimeline
-playground.xcworkspace
+# Development Example Images (keep in docs/images)
+# **/IMG*

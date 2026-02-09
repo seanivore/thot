@@ -1,1 +1,0 @@
-/Users/seanivore/Development/thot/sources/Docs/ARCHITECTURE_OVERVIEW.md
