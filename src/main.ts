@@ -1,28 +1,33 @@
 // Thot v2 - Main Entry Point
 import './styles/main.css'
-import { createEditor } from './editor'
+import { createEditor, getContent } from './editor'
+import { saveContent, loadContent, forceSave, hasSavedContent } from './persistence'
 
-// Sample markdown to show off the editor
-const sampleMarkdown = `# Welcome to Thot
+// Welcome content for first-time users
+const welcomeContent = `# Welcome to Thot
 
 A **markdown scratchpad** with *IDE-like* syntax highlighting.
 
 ## Features
 
 - Instant syntax highlighting
-- Auto-save (coming in Phase 3)
+- Auto-save to browser storage
 - Works offline as a PWA
 
-### Code Example
+## Try it out
 
-\`\`\`typescript
+Start typing to replace this text. Your content auto-saves as you type.
+
+> "The best ideas come when you least expect them."
+
+### Markdown Examples
+
+**Bold text** and *italic text* and \`inline code\`
+
+\`\`\`javascript
 const greeting = "Hello, Thot!";
 console.log(greeting);
 \`\`\`
-
-> This is a blockquote for your thoughts.
-
-Here's some \`inline code\` and a [link](https://example.com).
 
 ---
 
@@ -30,14 +35,22 @@ Here's some \`inline code\` and a [link](https://example.com).
 2. Second item
 3. Third item
 
-- [ ] Task one
-- [x] Task two (done!)
+- Bullet one
+- Bullet two
+- Bullet three
 
-| Column 1 | Column 2 |
+- [ ] Todo item
+- [x] Done item
+
+| Column A | Column B |
 |----------|----------|
-| Data A   | Data B   |
+| Data 1   | Data 2   |
 
-Start typing to replace this sample text...
+[Link example](https://example.com)
+
+---
+
+*Start writing your thots below...*
 `
 
 function init() {
@@ -48,19 +61,35 @@ function init() {
     return
   }
 
+  // Load saved content, or show welcome for first-timers
+  const savedContent = loadContent()
+  const initialContent = hasSavedContent() ? savedContent : welcomeContent
+
   const view = createEditor({
     parent: editorElement,
-    initialContent: sampleMarkdown,
+    initialContent,
     onChange: (content) => {
-      // Will hook up persistence in Phase 3
-      console.log('Content changed:', content.length, 'chars')
+      // Auto-save with debounce
+      saveContent(content)
+    }
+  })
+
+  // Force save before page unload (closing tab, navigating away)
+  window.addEventListener('beforeunload', () => {
+    forceSave(getContent(view))
+  })
+
+  // Also save on visibility change (switching tabs, minimizing)
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      forceSave(getContent(view))
     }
   })
 
   // Focus the editor
   view.focus()
 
-  console.log('Thot v2 initialized')
+  console.log('Thot v2 initialized', hasSavedContent() ? '(loaded saved content)' : '(first run)')
 }
 
 // Initialize when DOM is ready

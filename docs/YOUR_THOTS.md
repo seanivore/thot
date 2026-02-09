@@ -230,13 +230,13 @@ export const thotTheme = EditorView.theme({
 ---
 
 ### Phase 3: Persistence
-**Status**: [ ] Not Started
+**Status**: [x] Complete
 
 **Tasks**:
-1. [ ] Create `src/persistence.ts` for content storage
-2. [ ] Implement auto-save with debounce (500ms)
-3. [ ] Load content on startup
-4. [ ] Handle first-run (empty content)
+1. [x] Create `src/persistence.ts` for content storage
+2. [x] Implement auto-save with debounce (500ms)
+3. [x] Load content on startup
+4. [x] Handle first-run (welcome content)
 
 **Storage strategy**:
 - **Small documents (<1MB)**: localStorage key `thot:content`
@@ -498,7 +498,7 @@ _Update this section as phases complete:_
 | 0 | Complete | Feb 8, 2026 | npm, Vite, TypeScript, CSS, fonts configured |
 | 1 | Complete | Feb 8, 2026 | CodeMirror 6 + markdown + keybindings + line numbers |
 | 2 | Complete | Feb 8, 2026 | Full Thot color palette applied |
-| 3 | Not Started | — | — |
+| 3 | Complete | Feb 8, 2026 | localStorage with debounce + beforeunload save |
 | 4 | Not Started | — | — |
 | 5 | Not Started | — | — |
 | 6 | Not Started | — | — |
