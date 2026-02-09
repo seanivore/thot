@@ -1,0 +1,121 @@
+// Thot v2 - CodeMirror Editor Setup
+import { EditorView, keymap, lineNumbers, highlightActiveLineGutter, highlightSpecialChars, drawSelection, dropCursor, rectangularSelection, crosshairCursor, highlightActiveLine } from '@codemirror/view'
+import { EditorState } from '@codemirror/state'
+import { markdown } from '@codemirror/lang-markdown'
+import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands'
+import { bracketMatching, indentOnInput, syntaxHighlighting, defaultHighlightStyle } from '@codemirror/language'
+
+// Base theme for editor chrome (not syntax - that comes in Phase 2)
+const baseTheme = EditorView.theme({
+  '&': {
+    height: '100%',
+    fontSize: '14px'
+  },
+  '.cm-scroller': {
+    fontFamily: '"JetBrains Mono NL", monospace',
+    lineHeight: '1.6',
+    padding: '16px'
+  },
+  '.cm-content': {
+    caretColor: '#e6e6e6'
+  },
+  '.cm-cursor': {
+    borderLeftColor: '#e6e6e6',
+    borderLeftWidth: '2px'
+  },
+  '.cm-selectionBackground, ::selection': {
+    backgroundColor: '#44475a !important'
+  },
+  '.cm-activeLine': {
+    backgroundColor: 'transparent'
+  },
+  '.cm-gutters': {
+    backgroundColor: '#1a1a1a',
+    color: '#6272a4',
+    border: 'none',
+    paddingRight: '8px'
+  },
+  '.cm-activeLineGutter': {
+    backgroundColor: 'transparent',
+    color: '#e6e6e6'
+  },
+  '.cm-lineNumbers .cm-gutterElement': {
+    padding: '0 8px 0 16px'
+  }
+}, { dark: true })
+
+export interface EditorConfig {
+  parent: HTMLElement
+  initialContent?: string
+  onChange?: (content: string) => void
+}
+
+export function createEditor(config: EditorConfig): EditorView {
+  const { parent, initialContent = '', onChange } = config
+
+  const updateListener = EditorView.updateListener.of((update) => {
+    if (update.docChanged && onChange) {
+      onChange(update.state.doc.toString())
+    }
+  })
+
+  const state = EditorState.create({
+    doc: initialContent,
+    extensions: [
+      // Line numbers and gutter
+      lineNumbers(),
+      highlightActiveLineGutter(),
+
+      // Basic editor features
+      highlightSpecialChars(),
+      history(),
+      drawSelection(),
+      dropCursor(),
+      indentOnInput(),
+      bracketMatching(),
+      rectangularSelection(),
+      crosshairCursor(),
+      highlightActiveLine(),
+
+      // Syntax highlighting (default for now, custom theme in Phase 2)
+      syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
+
+      // Markdown language support
+      markdown(),
+
+      // Keybindings
+      keymap.of([
+        ...defaultKeymap,
+        ...historyKeymap,
+        indentWithTab
+      ]),
+
+      // Theme
+      baseTheme,
+
+      // Change listener
+      updateListener
+    ]
+  })
+
+  const view = new EditorView({
+    state,
+    parent
+  })
+
+  return view
+}
+
+export function getContent(view: EditorView): string {
+  return view.state.doc.toString()
+}
+
+export function setContent(view: EditorView, content: string): void {
+  view.dispatch({
+    changes: {
+      from: 0,
+      to: view.state.doc.length,
+      insert: content
+    }
+  })
+}

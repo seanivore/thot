@@ -129,14 +129,14 @@ npm install -D typescript vite vite-plugin-pwa
 ---
 
 ### Phase 1: Basic CodeMirror Editor
-**Status**: [ ] Not Started
+**Status**: [x] Complete
 
 **Tasks**:
-1. [ ] Create `src/main.ts` with CodeMirror initialization
-2. [ ] Create `src/editor.ts` with editor configuration
-3. [ ] Enable markdown language support
-4. [ ] Configure basic keybindings (Cmd+Z, Cmd+Shift+Z, Cmd+A, etc.)
-5. [ ] Set JetBrains Mono as editor font
+1. [x] Create `src/main.ts` with CodeMirror initialization
+2. [x] Create `src/editor.ts` with editor configuration
+3. [x] Enable markdown language support
+4. [x] Configure basic keybindings (Cmd+Z, Cmd+Shift+Z, Cmd+A, etc.)
+5. [x] Set JetBrains Mono as editor font
 
 **Key code pattern** (`src/editor.ts`):
 ```typescript
@@ -496,7 +496,7 @@ _Update this section as phases complete:_
 | Phase | Status | Date | Notes |
 |-------|--------|------|-------|
 | 0 | Complete | Feb 8, 2026 | npm, Vite, TypeScript, CSS, fonts configured |
-| 1 | Not Started | — | — |
+| 1 | Complete | Feb 8, 2026 | CodeMirror 6 + markdown + keybindings + line numbers |
 | 2 | Not Started | — | — |
 | 3 | Not Started | — | — |
 | 4 | Not Started | — | — |
