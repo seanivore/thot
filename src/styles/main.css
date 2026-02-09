@@ -1,0 +1,65 @@
+/* Thot v2 - Main Styles */
+
+/* JetBrains Mono NL Font Faces */
+@font-face {
+  font-family: 'JetBrains Mono NL';
+  src: url('/src/assets/fonts/JetBrainsMonoNL-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono NL';
+  src: url('/src/assets/fonts/JetBrainsMonoNL-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono NL';
+  src: url('/src/assets/fonts/JetBrainsMonoNL-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono NL';
+  src: url('/src/assets/fonts/JetBrainsMonoNL-BoldItalic.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* Reset & Base */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+body {
+  background-color: #1a1a1a;
+  color: #e6e6e6;
+  font-family: 'JetBrains Mono NL', monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Editor Container */
+#editor {
+  height: 100vh;
+  width: 100vw;
+}
+
+/* CodeMirror overrides will be in theme.ts */

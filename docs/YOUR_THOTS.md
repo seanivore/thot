@@ -106,16 +106,16 @@ thot/
 ## Implementation Phases
 
 ### Phase 0: Project Setup
-**Status**: [ ] Not Started
+**Status**: [x] Complete
 
 **Tasks**:
-1. [ ] Clean up Swift/Xcode files from repository
-2. [ ] Initialize npm project with `package.json`
-3. [ ] Configure TypeScript (`tsconfig.json`)
-4. [ ] Configure Vite (`vite.config.ts`)
-5. [ ] Create basic `index.html`
-6. [ ] Set up CSS with dark theme base
-7. [ ] Configure JetBrains Mono as web font
+1. [x] Clean up Swift/Xcode files from repository (already done in pivot)
+2. [x] Initialize npm project with `package.json`
+3. [x] Configure TypeScript (`tsconfig.json`)
+4. [x] Configure Vite (`vite.config.ts`)
+5. [x] Create basic `index.html`
+6. [x] Set up CSS with dark theme base
+7. [x] Configure JetBrains Mono as web font
 
 **Dependencies to install**:
 ```bash
@@ -495,7 +495,7 @@ _Update this section as phases complete:_
 
 | Phase | Status | Date | Notes |
 |-------|--------|------|-------|
-| 0 | Not Started | — | — |
+| 0 | Complete | Feb 8, 2026 | npm, Vite, TypeScript, CSS, fonts configured |
 | 1 | Not Started | — | — |
 | 2 | Not Started | — | — |
 | 3 | Not Started | — | — |
