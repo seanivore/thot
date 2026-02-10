@@ -374,16 +374,13 @@ export default defineConfig({
 
 ### Phase 6: Testing & Feedback 
 **Status**: 
-  - [ ] Not Started
+  - [ ] Complete — read here: `docs/archive/v2/v2_0_0_FEEDBACK.md`
 
 **Tasks**: 
-  - [ ] Test local host production build on desktop 
-  - [ ] Test on mobile 
-  - [ ] Test on tablet 
-  - [ ] Detail feedback from testing
-  - [ ] Provide & discuss feedback with agent 
-  - [ ] Integrate feedback into next phase 
-  - [ ] Start clear `docs/UPDATE_THOTS.md` organizing updates 
+  - [x] Test local host production build on desktop  
+  - [x] Detail feedback from testing
+  - [x] Provide & discuss feedback with agent 
+  - [ ] Integrate feedback tasks and fixes into next phase 
 
 **Verification**: Feedback is detailed, then made clear and actionable with agent, new document created with updates roadmap 
 
@@ -391,7 +388,7 @@ export default defineConfig({
 
 ### Phase 7: Polish
 **Status**: 
-  - [ ] Not Started
+  - [ ] Complete
 
 **Tasks**:
   - [ ] 1. Add keyboard shortcut hints (optional floating UI)
@@ -411,7 +408,23 @@ export default defineConfig({
 
 ---
 
+### Phase 8: Document Updates 
+**Status**:
+  - [ ] Complete
+
+**Tasks**:
+  - [ ] Keep this document as is, rename and move it to `docs/archive/v2/v2_0_0_UPDATES.md`
+  - [ ] Use template `docs/PROJECT_NAME.md` to create a `docs/THOT_APP.md` which should reflect all architecture, take into account recent changes, and adding anything else needed that it can exist as an all-in-one reference for the project
+  - [ ] Start clear `docs/UPDATE_THOTS.md` organizing updates to be made over upcoming sessions 
+
+
+---
+
 ## Deployment
+**Status**: 
+  - [ ] Setup 
+  - [ ] Pages, Vercel, or other
+  - [ ] Custom Domain DNS Setup 
 
 ### GitHub Pages (Free) **Are there other free options? I'm just not sure I'm ready to make the repository public yet.**
 ```bash
@@ -429,7 +442,7 @@ npm run build
 ```
 
 ### Custom Domain
-  - Point `thot.august.style` to hosting provider
+  - Point `thot.august.style` to hosting provider *Sean needs to set up first*
   - Enable HTTPS (automatic on Vercel/Netlify) *must make GitHub repo public if hosting there*
 
 ---

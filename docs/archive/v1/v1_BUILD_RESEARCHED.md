@@ -157,13 +157,13 @@ class RegexMarkdownHighlightingEngine: SyntaxHighlightingEngine {
 
 **Files to create**:
 
-| File | Purpose |
-|------|---------|
-| `Thot.xcodeproj/` | Xcode project (macOS App, SwiftUI lifecycle, macOS 13.0+) |
-| `Sources/ThotApp/App/ThotApp.swift` | @main App entry, creates EditorViewModel |
-| `Sources/ThotApp/App/AppConfig.swift` | Paths, fonts, colors, constants |
-| `Sources/Editor/EditorViewModel.swift` | @Published text, ObservableObject |
-| `Sources/Editor/EditorView.swift` | SwiftUI view with temporary TextEditor |
+| File                                   | Purpose                                                   |
+| -------------------------------------- | --------------------------------------------------------- |
+| `Thot.xcodeproj/`                      | Xcode project (macOS App, SwiftUI lifecycle, macOS 13.0+) |
+| `Sources/ThotApp/App/ThotApp.swift`    | @main App entry, creates EditorViewModel                  |
+| `Sources/ThotApp/App/AppConfig.swift`  | Paths, fonts, colors, constants                           |
+| `Sources/Editor/EditorViewModel.swift` | @Published text, ObservableObject                         |
+| `Sources/Editor/EditorView.swift`      | SwiftUI view with temporary TextEditor                    |
 
 **Key code patterns**:
 ```swift
@@ -191,10 +191,10 @@ enum AppConfig {
 
 **Files to create**:
 
-| File | Purpose |
-|------|---------|
-| `Sources/Persistence/ScratchpadStorage.swift` | Actor for file I/O to deskpad.md |
-| `Sources/Persistence/StateStorage.swift` | Actor for caret/scroll state JSON |
+| File                                          | Purpose                           |
+| --------------------------------------------- | --------------------------------- |
+| `Sources/Persistence/ScratchpadStorage.swift` | Actor for file I/O to deskpad.md  |
+| `Sources/Persistence/StateStorage.swift`      | Actor for caret/scroll state JSON |
 
 **Key behaviors**:
 - `ScratchpadStorage.load()` - Creates directory if needed, returns empty string if no file
@@ -210,8 +210,8 @@ enum AppConfig {
 
 **Files to create**:
 
-| File | Purpose |
-|------|---------|
+| File                                    | Purpose                                                |
+| --------------------------------------- | ------------------------------------------------------ |
 | `Sources/Editor/MarkdownTextView.swift` | NSViewRepresentable wrapping NSScrollView + NSTextView |
 
 **NSTextView configuration**:
@@ -242,13 +242,13 @@ textView.textContainer?.widthTracksTextView = true
 
 **Files to create**:
 
-| File | Purpose |
-|------|---------|
-| `Sources/Highlighting/SyntaxHighlightingEngine.swift` | Protocol definition for swappable engines |
-| `Sources/Highlighting/RegexMarkdownHighlightingEngine.swift` | v1 regex-based implementation |
-| `Sources/Highlighting/TextMateRuleSet.swift` | Parses ThotMarkdownTheme.json, maps scopes to attributes |
-| `Sources/Highlighting/MarkdownPatterns.swift` | Regex patterns with TextMate-compatible scope names |
-| `Sources/Tests/ThotTests/HighlightingEngineTests.swift` | Unit tests |
+| File                                                         | Purpose                                                  |
+| ------------------------------------------------------------ | -------------------------------------------------------- |
+| `Sources/Highlighting/SyntaxHighlightingEngine.swift`        | Protocol definition for swappable engines                |
+| `Sources/Highlighting/RegexMarkdownHighlightingEngine.swift` | v1 regex-based implementation                            |
+| `Sources/Highlighting/TextMateRuleSet.swift`                 | Parses ThotMarkdownTheme.json, maps scopes to attributes |
+| `Sources/Highlighting/MarkdownPatterns.swift`                | Regex patterns with TextMate-compatible scope names      |
+| `Sources/Tests/ThotTests/HighlightingEngineTests.swift`      | Unit tests                                               |
 
 **Protocol definition**:
 ```swift
@@ -272,8 +272,8 @@ protocol SyntaxHighlightingEngine {
 5. Italic (*text*)
 6. Strikethrough (~~text~~)
 7. Inline code (`code`)
-8. Links [text](url)
-9. Images ![alt](url)
+8. Links [text](../url)
+9. Images ![alt](../url)
 10. Blockquotes (>)
 11. Unordered list markers (- * +)
 12. Ordered list markers (1. 2.)
@@ -306,10 +306,10 @@ private func scheduleHighlighting(for textView: NSTextView) {
 
 **Files to create**:
 
-| File | Purpose |
-|------|---------|
-| `Sources/Editor/PairedDelimiterTextView.swift` | NSTextView subclass with delimiter handling |
-| `Sources/Tests/ThotTests/PairedDelimiterTests.swift` | Unit tests |
+| File                                                 | Purpose                                     |
+| ---------------------------------------------------- | ------------------------------------------- |
+| `Sources/Editor/PairedDelimiterTextView.swift`       | NSTextView subclass with delimiter handling |
+| `Sources/Tests/ThotTests/PairedDelimiterTests.swift` | Unit tests                                  |
 
 **Delimiter pairs**: `()` `[]` `{}` `''` `""` ``` `` ```
 
@@ -330,18 +330,18 @@ private func scheduleHighlighting(for textView: NSTextView) {
 
 **Updates to existing files**:
 
-| File | Changes |
-|------|---------|
-| `ThotApp.swift` | Add .commands { } for menus, window title "Thot" |
+| File                    | Changes                                                      |
+| ----------------------- | ------------------------------------------------------------ |
+| `ThotApp.swift`         | Add .commands { } for menus, window title "Thot"             |
 | `EditorViewModel.swift` | Add spellCheckEnabled, showClearConfirmation, clearContent() |
-| `EditorView.swift` | Add confirmation alert for New Desk Pad |
+| `EditorView.swift`      | Add confirmation alert for New Desk Pad                      |
 
 **Files to create**:
 
-| File | Purpose |
-|------|---------|
-| `Sources/Preferences/PreferencesView.swift` | Stub ("coming soon") |
-| `Sources/Preferences/PreferencesModel.swift` | Empty placeholder |
+| File                                         | Purpose              |
+| -------------------------------------------- | -------------------- |
+| `Sources/Preferences/PreferencesView.swift`  | Stub ("coming soon") |
+| `Sources/Preferences/PreferencesModel.swift` | Empty placeholder    |
 
 **Menu structure**:
 - **File**: New Desk Pad (with confirmation), Close Window
@@ -403,15 +403,15 @@ thot/
 
 ## Potential Pitfalls & Mitigations
 
-| Pitfall | Mitigation |
-|---------|------------|
-| NSTextStorage highlighting causes caret jump | Apply via `textDidChange` delegate, NOT `textStorageDidProcessEditing` |
-| NSViewRepresentable parent reference invalidated | Store `Binding<String>` in Coordinator |
-| Highlighting flickers | Debounce (100ms), batch with `beginEditing()`/`endEditing()` |
-| JetBrains Mono not loading | Register via Info.plist `ATSApplicationFontsPath`, provide system fallback |
-| Regex patterns conflict | Order carefully: bold before italic, fenced code first |
-| Large documents lag | v1 accepts full-document re-highlight; future: incremental |
-| Autosave race on quit | Force synchronous save on scene phase change |
+| Pitfall                                          | Mitigation                                                                 |
+| ------------------------------------------------ | -------------------------------------------------------------------------- |
+| NSTextStorage highlighting causes caret jump     | Apply via `textDidChange` delegate, NOT `textStorageDidProcessEditing`     |
+| NSViewRepresentable parent reference invalidated | Store `Binding<String>` in Coordinator                                     |
+| Highlighting flickers                            | Debounce (100ms), batch with `beginEditing()`/`endEditing()`               |
+| JetBrains Mono not loading                       | Register via Info.plist `ATSApplicationFontsPath`, provide system fallback |
+| Regex patterns conflict                          | Order carefully: bold before italic, fenced code first                     |
+| Large documents lag                              | v1 accepts full-document re-highlight; future: incremental                 |
+| Autosave race on quit                            | Force synchronous save on scene phase change                               |
 
 ---
 
@@ -436,15 +436,15 @@ thot/
 
 ### Specific Documentation Tasks:
 
-| Phase | Documentation Update |
-|-------|---------------------|
-| 0 | Note regex engine choice, protocol abstraction in ARCHITECTURE |
-| 1 | Document Xcode project structure, Info.plist settings |
-| 2 | Document persistence layer, debounce strategy |
-| 3 | Document NSViewRepresentable pattern, Coordinator design |
-| 4 | Full `SyntaxHighlightingEngine` protocol docs, regex patterns reference |
-| 5 | Document paired delimiter algorithm |
-| 6 | Document menu structure, final UX behaviors |
+| Phase | Documentation Update                                                    |
+| ----- | ----------------------------------------------------------------------- |
+| 0     | Note regex engine choice, protocol abstraction in ARCHITECTURE          |
+| 1     | Document Xcode project structure, Info.plist settings                   |
+| 2     | Document persistence layer, debounce strategy                           |
+| 3     | Document NSViewRepresentable pattern, Coordinator design                |
+| 4     | Full `SyntaxHighlightingEngine` protocol docs, regex patterns reference |
+| 5     | Document paired delimiter algorithm                                     |
+| 6     | Document menu structure, final UX behaviors                             |
 
 ### App Icon Documentation:
 - v1 uses placeholder icon from `Sources/Resources/Assets.xcassets/AppIcon.appiconset`
@@ -455,14 +455,14 @@ thot/
 
 ## Verification Plan
 
-| Phase | Test Method |
-|-------|-------------|
-| 0 | `git status`, `python -m json.tool ThotMarkdownTheme.json` |
-| 1 | App launches, window appears, can type |
-| 2 | Type, quit, relaunch - text persists |
-| 3 | Dark theme, font correct, standard macOS text ops work |
-| 4 | Markdown colors match TextMateRules.md, no typing lag |
-| 5 | All delimiter pair behaviors work |
-| 6 | Menus work, app feels complete |
+| Phase | Test Method                                                |
+| ----- | ---------------------------------------------------------- |
+| 0     | `git status`, `python -m json.tool ThotMarkdownTheme.json` |
+| 1     | App launches, window appears, can type                     |
+| 2     | Type, quit, relaunch - text persists                       |
+| 3     | Dark theme, font correct, standard macOS text ops work     |
+| 4     | Markdown colors match TextMateRules.md, no typing lag      |
+| 5     | All delimiter pair behaviors work                          |
+| 6     | Menus work, app feels complete                             |
 
 **End-to-end**: Open Thot, write markdown with headings/bold/lists/code, see proper colors, use paired delimiters, quit, relaunch - everything preserved.
