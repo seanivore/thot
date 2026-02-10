@@ -72,6 +72,6 @@ export const THOT_COLORS = {
  */
 export const THOT_FONTS = {
   family: '"JetBrains Mono NL", "JetBrains Mono", monospace',
-  size: '14px',
+  size: '12px',
   lineHeight: 1.5,
 } as const

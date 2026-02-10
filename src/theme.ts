@@ -56,7 +56,7 @@ export const thotEditorTheme = EditorView.theme({
     backgroundColor: colors.bg,
     color: colors.fg,
     height: '100%',
-    fontSize: '16px',
+    fontSize: '12px',
   },
   '.cm-scroller': {
     fontFamily: '"JetBrains Mono NL", monospace',

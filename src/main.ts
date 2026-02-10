@@ -27,7 +27,7 @@ Add your current **thots** in markdown. The *syntax highlighting* feels like you
 
 > "The best ideas come when you least expect them."
 
-### Markdown Your Comfortable With 
+### What Are Your Thots? 
 
 **Bold text** and *italic text* and \`inline code\`
 
