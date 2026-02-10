@@ -22,7 +22,7 @@ const colors = {
 
   // Code
   inlineCode: '#F34D3E',   // Green
-  codeDelimiter: '#6767fc', // Blue-purple
+  codeDelimiter: '#F34D3E', // Blue-purple
   codeContent: '#F34D3E',  // Light purple
   codeLanguage: '#F1FA8C', // Yellow
 
@@ -56,7 +56,7 @@ export const thotEditorTheme = EditorView.theme({
     backgroundColor: colors.bg,
     color: colors.fg,
     height: '100%',
-    fontSize: '12px',
+    fontSize: '14px',
   },
   '.cm-scroller': {
     fontFamily: '"JetBrains Mono NL", monospace',
