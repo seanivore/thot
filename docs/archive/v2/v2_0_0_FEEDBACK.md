@@ -13,6 +13,51 @@ This is awesome. I can't believe it only took a few hours to build and it is pre
     - I ran `run npm preview` and hit refresh and it didn't work 
     - I repeated it making it 10px, used incognito, and tried again and it didn't work at first then did 
     - Now it is tiny; I tried to fix it back to 12px and I can't get it to actually change again 
+  3. **NOTE**: I think that maybe the tag highlights just aren't prioritizing properly 
+    - Because seems like the one green is just overpowering so many other things 
+    - Like the list items being overwritten back to plain white 
+    - Like the list markers being overwritten by the list item highlight, etc. 
+    - Maybe this will help: `https://lezer.codemirror.net/docs/ref/#highlight.tagHighlighter` 
+    - I was reading something in there about boolean and being at the top of the tree and idk it made me think it might be a prioritization issue 
+  4. **IMPORTANT**: We want to be pushing final production builds with tagging to a main branch 
+    - I just coped and slightly updated the "Branching" section from the v1 documentation 
+    - It is kind of repetitive, right? Will you please simplify it
+
+---
+
+### Branching  
+
+  * **The project is organized around a *single top-level folder and repo name***
+    + Local project folder: `thot`
+    + Git repository name: `thot`
+    + Primary active branch for this build: `v2-first-thots` 
+      - This branch represents the entire "Desk Pad" product line for v1.
+      - Future major phases can branch off this (e.g., `v3-organization`, `v4-ai-customization`)
+      - Completed builds will be moved to branch `main` and tagged with the version number
+
+  > Git flow:
+  > - Default branch can be `main` with **no direct commits**; `v2-first-thots` is the working branch.
+  > - Feature branches (if needed) should be prefixed with `feat/` or `fix/` and merged into `v2-first-thots` via PRs, even if the PRs are AI-authored.
+
+  * **Professional versioning / repo hygiene details**
+    + Branching:
+      - `main`: protected, only fast-forwarded from tagged, stable milestones (e.g., `v2.0.0`, `v2.1.0`).
+      - `v2-first-thots`: active development branch for this entire product phase.
+      - Short-lived feature branches off `v2-first-thots`:
+        `fix/highlighting`
+        `feat/spell-check`
+        `feat/export-md`
+        `feat/counter`
+    + Tagging:
+      - Use semantic tags on `main` and optionally on `v2-first-thots` once stable:
+        `v2.0.0-first-thots` – first fully shippable build.
+        `v2.1.0-first-thots` – minor enhancements within v1 scope (no new product surface).
+    + Docs discipline:
+      - Any non-trivial code change that alters behavior should be paired with:
+      - An update to `v2_0_0_UPDATES.md` (if it changes the spec/contract), or
+      - An entry in a future `docs/CHANGELOG_v2.md` if it's purely internal.
+
+This structure keeps the name surface constant (`thot` everywhere), signals clearly that `v2-first-thots` is the canonical "First Thots" implementation branch, and **gives both humans and agents a predictable map of where things live and where to evolve them next.**
 
 ---
 
@@ -328,3 +373,43 @@ This is awesome. I can't believe it only took a few hours to build and it is pre
   <meta name="apple-mobile-web-app-title" content="thots" />
   <link rel="manifest" href="/site.webmanifest" />
   ```
+
+---
+
+## Future Updates 
+
+### **macOS, iOS SwiftUI light wrapper**
+
+  + I thought of this randomly the other day and quickly web searched it 
+    - "How to Publish a Progressive Web App (PWA) on the iOS App Store Using SuperPWA – Super PWA Docs" 
+    - `https://superpwa.com/docs/article/how-to-publish-a-progressive-web-app-pwa-on-the-ios-app-store-using-superpwa/`
+  
+  + Apple T&C 
+    - I dug around this too, Re: PWA in the App Store 
+    - Basically it just shouldn't be clearly just a website 
+    - We already have more than that, and given we tried SwiftUI first, I'm betting we'd be good 
+    - I want to discuss this because I saw someone last week on Twitter say they were building the EXACT same thing in SwiftUI
+    - I just commented vaguely about 'ugh' the issues 
+    - But it shows interest
+  + Plus it would be super easy to find ways to use native functionality 
+    - Obviously UI stuff and file system access would be there, spellcheck, speech-to-text, haptic feedback
+    - We could easily take things a step further with things in integrating with reminders, porting over from Notes App 
+    - How could would it be if on any not just writing @02/14/2026-7pm and BOOM you get a reminder (or at the very least, notification) 
+    - All the "Share to" options for sharing directly to mail or messages, etc. 
+  + Anyway, who knows, but basically the sooner it is in there, the more time there is for user-base to grow so that if we do have really distinct new features released that are fully integrated, we can paywall them; so we should be aware of it from the start 
+
+### **Export to PDF - SIMPLE**
+
+  + I want to start this off SUPER simple by basically making it the markdown without the markup notation, solid text colors, different siz for headers
+  + But otherwise we don't really need to mess with spacing or even the font 
+
+### **Preferences UI that makes changing highlight colors super easy**
+
+  + This frankly I would love
+  + The user could even create 'project themes' or maybe different sections of the column view drill-down would be give different scope highlight colors so that it is immediately recognizable if you're in the right section of your notepad 
+
+### **Standard RTF Option** 
+
+  + Somewhere along the line it would make sense to give users who don't like markdown an option to use the app too 
+  + It would be really fun to sort of try and reinvent a UI that is as convenient as markdown for formatting plain text 
+  + Almost like a little context menu but with super prominent keyboard shortcuts written on the places that a RTF user would otherwise click to make something a heading or bold, etc. 

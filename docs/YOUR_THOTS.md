@@ -417,14 +417,14 @@ export default defineConfig({
   - [ ] Use template `docs/PROJECT_NAME.md` to create a `docs/THOT_APP.md` which should reflect all architecture, take into account recent changes, and adding anything else needed that it can exist as an all-in-one reference for the project
   - [ ] Start clear `docs/UPDATE_THOTS.md` organizing updates to be made over upcoming sessions 
 
-
 ---
 
 ## Deployment
 **Status**: 
-  - [ ] Setup 
-  - [ ] Pages, Vercel, or other
-  - [ ] Custom Domain DNS Setup 
+  - [ ] On proper `main` branch with tagging 
+  - [ ] Setup Pages, Vercel, or other
+  - [x] Custom Domain DNS Setup 
+  - [ ] Complete 
 
 ### GitHub Pages (Free) **Are there other free options? I'm just not sure I'm ready to make the repository public yet.**
 ```bash
@@ -442,7 +442,7 @@ npm run build
 ```
 
 ### Custom Domain
-  - Point `thot.august.style` to hosting provider *Sean needs to set up first*
+  - Point `thot.august.style` to hosting provider 
   - Enable HTTPS (automatic on Vercel/Netlify) *must make GitHub repo public if hosting there*
 
 ---
