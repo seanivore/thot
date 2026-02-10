@@ -11,10 +11,10 @@
 **What we're building**: A web-based markdown scratchpad with IDE-like syntax highlighting, auto-save, and PWA capability for cross-platform use.
 
 **Why web**: After extensive research and a failed native macOS implementation (see `docs/archive/OvercomeChallenges.md`), we determined that:
-- SwiftUI + NSTextStorage is architecturally unsuited for responsive text editors
-- VS Code, Cursor, and modern editors use web technologies for exactly this reason
-- CodeMirror 6 solves our highlighting performance problem out of the box
-- PWA gives us "app-like" experience on all platforms from one codebase
+  - SwiftUI + NSTextStorage is architecturally unsuited for responsive text editors
+  - VS Code, Cursor, and modern editors use web technologies for exactly this reason
+  - CodeMirror 6 solves our highlighting performance problem out of the box
+  - PWA gives us "app-like" experience on all platforms from one codebase
 
 **Core user experience**: Open the app → start typing markdown → see instant syntax highlighting → close browser → return later → text is exactly where you left it (including cursor position).
 
@@ -51,15 +51,15 @@
 
 ## Tech Stack
 
-| Component | Choice | Rationale |
-|-----------|--------|-----------|
-| **Language** | TypeScript | Type safety, excellent tooling |
-| **Editor** | CodeMirror 6 | Purpose-built, handles 100K+ lines, incremental parsing |
-| **Build** | Vite | Fast dev server, optimized production builds |
-| **Styling** | CSS (vanilla) | No framework needed for single-page app |
-| **Storage** | localStorage + IndexedDB | localStorage for state, IndexedDB for large documents |
-| **PWA** | Vite PWA plugin | Simple PWA setup |
-| **Hosting** | Vercel / Netlify / GitHub Pages | Static hosting, free tier sufficient |
+| Component    | Choice                          | Rationale                                               |
+| ------------ | ------------------------------- | ------------------------------------------------------- |
+| **Language** | TypeScript                      | Type safety, excellent tooling                          |
+| **Editor**   | CodeMirror 6                    | Purpose-built, handles 100K+ lines, incremental parsing |
+| **Build**    | Vite                            | Fast dev server, optimized production builds            |
+| **Styling**  | CSS (vanilla)                   | No framework needed for single-page app                 |
+| **Storage**  | localStorage + IndexedDB        | localStorage for state, IndexedDB for large documents   |
+| **PWA**      | Vite PWA plugin                 | Simple PWA setup                                        |
+| **Hosting**  | Vercel / Netlify / GitHub Pages | Static hosting, free tier sufficient                    |
 
 ---
 
@@ -106,16 +106,17 @@ thot/
 ## Implementation Phases
 
 ### Phase 0: Project Setup
-**Status**: [x] Complete
+**Status**: 
+  - [x] Complete
 
 **Tasks**:
-1. [x] Clean up Swift/Xcode files from repository (already done in pivot)
-2. [x] Initialize npm project with `package.json`
-3. [x] Configure TypeScript (`tsconfig.json`)
-4. [x] Configure Vite (`vite.config.ts`)
-5. [x] Create basic `index.html`
-6. [x] Set up CSS with dark theme base
-7. [x] Configure JetBrains Mono as web font
+  - [x] 1. Clean up Swift/Xcode files from repository (already done in pivot)
+  - [x] 2. Initialize npm project with `package.json`
+  - [x] 3. Configure TypeScript (`tsconfig.json`)
+  - [x] 4. Configure Vite (`vite.config.ts`)
+  - [x] 5. Create basic `index.html`
+  - [x] 6. Set up CSS with dark theme base
+  - [x] 7. Configure JetBrains Mono as web font
 
 **Dependencies to install**:
 ```bash
@@ -129,14 +130,15 @@ npm install -D typescript vite vite-plugin-pwa
 ---
 
 ### Phase 1: Basic CodeMirror Editor
-**Status**: [x] Complete
+**Status**: 
+  - [x] Complete
 
 **Tasks**:
-1. [x] Create `src/main.ts` with CodeMirror initialization
-2. [x] Create `src/editor.ts` with editor configuration
-3. [x] Enable markdown language support
-4. [x] Configure basic keybindings (Cmd+Z, Cmd+Shift+Z, Cmd+A, etc.)
-5. [x] Set JetBrains Mono as editor font
+  - [x] 1. Create `src/main.ts` with CodeMirror initialization
+  - [x] 2. Create `src/editor.ts` with editor configuration
+  - [x] 3. Enable markdown language support
+  - [x] 4. Configure basic keybindings (Cmd+Z, Cmd+Shift+Z, Cmd+A, etc.)
+  - [x] 5. Set JetBrains Mono as editor font
 
 **Key code pattern** (`src/editor.ts`):
 ```typescript
@@ -167,36 +169,37 @@ export function createEditor(parent: HTMLElement): EditorView {
 ---
 
 ### Phase 2: Thot Dark Theme
-**Status**: [x] Complete
+**Status**: 
+  - [x] Complete
 
 **Tasks**:
-1. [x] Create `src/theme.ts` with CodeMirror theme
-2. [x] Convert TextMate colors to CodeMirror highlight styles
-3. [x] Apply dark background (#1a1a1a)
-4. [x] Style cursor, selection, gutters
+  - [x] 1. Create `src/theme.ts` with CodeMirror theme
+  - [x] 2. Convert TextMate colors to CodeMirror highlight styles
+  - [x] 3. Apply dark background (#1a1a1a)
+  - [x] 4. Style cursor, selection, gutters
 
 **Color mapping** (from `ThotMarkdownTheme.json`):
-| Element | Color |
-|---------|-------|
-| Background | #1a1a1a |
-| Foreground | #e6e6e6 |
-| Headings | #FF9D00 (bold) |
-| Bold | #FFD866 |
-| Italic | #8aeefb |
-| Inline code | #78de8c |
-| Fenced code | #6767fc |
-| Links | #AB9DF2 |
-| URLs | #8BE9FD |
-| Blockquotes | #E6DB74 (italic) |
-| List markers (bullet) | #dfc532 (bold) |
-| List markers (numbered) | #ff6b6b (bold) |
-| List content (bullet) | #5feda4 |
-| List content (numbered) | #f8a5c2 |
-| Checkboxes | #50faad |
-| Strikethrough | #6272A4 |
-| Tables | #e2ff79 |
-| Horizontal rules | #93f9c6 |
-| Comments | #6272A4 (italic) |
+| Element                 | Color            |
+| ----------------------- | ---------------- |
+| Background              | #1a1a1a          |
+| Foreground              | #e6e6e6          |
+| Headings                | #FF9D00 (bold)   |
+| Bold                    | #FFD866          |
+| Italic                  | #8aeefb          |
+| Inline code             | #78de8c          |
+| Fenced code             | #6767fc          |
+| Links                   | #AB9DF2          |
+| URLs                    | #8BE9FD          |
+| Blockquotes             | #E6DB74 (italic) |
+| List markers (bullet)   | #dfc532 (bold)   |
+| List markers (numbered) | #ff6b6b (bold)   |
+| List content (bullet)   | #5feda4          |
+| List content (numbered) | #f8a5c2          |
+| Checkboxes              | #50faad          |
+| Strikethrough           | #6272A4          |
+| Tables                  | #e2ff79          |
+| Horizontal rules        | #93f9c6          |
+| Comments                | #6272A4 (italic) |
 
 **Key code pattern** (`src/theme.ts`):
 ```typescript
@@ -230,18 +233,19 @@ export const thotTheme = EditorView.theme({
 ---
 
 ### Phase 3: Persistence
-**Status**: [x] Complete
+**Status**: 
+  - [x] Complete
 
 **Tasks**:
-1. [x] Create `src/persistence.ts` for content storage
-2. [x] Implement auto-save with debounce (500ms)
-3. [x] Load content on startup
-4. [x] Handle first-run (welcome content)
+  - [x] 1. Create `src/persistence.ts` for content storage
+  - [x] 2. Implement auto-save with debounce (500ms)
+  - [x] 3. Load content on startup
+  - [x] 4. Handle first-run (welcome content)
 
 **Storage strategy**:
-- **Small documents (<1MB)**: localStorage key `thot:content`
-- **Large documents (>1MB)**: IndexedDB (future enhancement)
-- **State (cursor, scroll)**: localStorage key `thot:state`
+  - **Small documents (<1MB)**: localStorage key `thot:content`
+  - **Large documents (>1MB)**: IndexedDB (future enhancement)
+  - **State (cursor, scroll)**: localStorage key `thot:state`
 
 **Key code pattern** (`src/persistence.ts`):
 ```typescript
@@ -272,13 +276,14 @@ export function forceSave(content: string): void {
 ---
 
 ### Phase 4: State Persistence
-**Status**: [x] Complete
+**Status**: 
+  - [x] Complete
 
 **Tasks**:
-1. [x] Create `src/state.ts` for cursor/scroll state
-2. [x] Save cursor position on change
-3. [x] Save scroll position on scroll
-4. [x] Restore cursor and scroll on load
+  - [x] 1. Create `src/state.ts` for cursor/scroll state
+  - [x] 2. Save cursor position on change
+  - [x] 3. Save scroll position on scroll
+  - [x] 4. Restore cursor and scroll on load
 
 **Key code pattern** (`src/state.ts`):
 ```typescript
@@ -317,14 +322,15 @@ EditorView.updateListener.of((update) => {
 ---
 
 ### Phase 5: PWA Configuration
-**Status**: [x] Complete
+**Status**: 
+  - [x] Complete
 
 **Tasks**:
-1. [x] Create `public/manifest.json` (via vite-plugin-pwa)
-2. [x] Configure Vite PWA plugin
-3. [x] Generate icons from existing assets (192px added)
-4. [x] Add service worker for offline support
-5. [x] Test installation on macOS/Chrome
+  - [x] 1. Create `public/manifest.json` (via vite-plugin-pwa)
+  - [x] 2. Configure Vite PWA plugin
+  - [x] 3. Generate icons from existing assets (192px added)
+  - [x] 4. Add service worker for offline support
+  - [x] 5. Test installation on macOS/Chrome
 
 **Manifest** (`public/manifest.json`):
 ```json
@@ -366,21 +372,22 @@ export default defineConfig({
 ---
 
 ### Phase 6: Polish
-**Status**: [ ] Not Started
+**Status**: 
+  - [ ] Not Started
 
 **Tasks**:
-1. [ ] Add keyboard shortcut hints (optional floating UI)
-2. [ ] Improve mobile responsiveness
-3. [ ] Add "clear content" confirmation dialog
-4. [ ] Add subtle save indicator (optional)
-5. [ ] Performance audit (Lighthouse)
-6. [ ] Final CSS polish
+  - [ ] 1. Add keyboard shortcut hints (optional floating UI)
+  - [ ] 2. Improve mobile responsiveness
+  - [ ] 3. Add "clear content" confirmation dialog
+  - [ ] 4. Add subtle save indicator (optional)
+  - [ ] 5. Performance audit (Lighthouse)
+  - [ ] 6. Final CSS polish
 
 **Optional enhancements** (not blocking):
-- [ ] Word count display
-- [ ] Export to .md file
-- [ ] Import from .md file
-- [ ] Multiple scratchpads (future)
+  - [ ] Word count display
+  - [ ] Export to .md file
+  - [ ] Import from .md file
+  - [ ] Multiple scratchpads (future)
 
 **Verification**: Lighthouse score >90, no console errors, smooth on all devices
 
@@ -404,21 +411,21 @@ npm run build
 ```
 
 ### Custom Domain
-- Point `thot.seanhorvath.com` to hosting provider
-- Enable HTTPS (automatic on Vercel/Netlify)
+  - Point `thot.august.style` to hosting provider
+  - Enable HTTPS (automatic on Vercel/Netlify) *must make GitHub repo public if hosting there*
 
 ---
 
 ## Migration Checklist
 
 **Before starting implementation**:
-- [x] Create `v2-first-thots` branch
-- [x] Archive v1 documentation
-- [x] Copy salvageable assets (fonts, icons, images)
-- [ ] Remove Swift source files
-- [ ] Remove Xcode project files
-- [ ] Update README.md for v2
-- [ ] Update .gitignore for Node.js project
+  - [x] Create `v2-first-thots` branch
+  - [x] Archive v1 documentation
+  - [x] Copy salvageable assets (fonts, icons, images)
+  - [x] Remove Swift source files
+  - [x] Remove Xcode project files
+  - [x] Update README.md for v2
+  - [x] Update .gitignore for Node.js project
 
 **Files to delete**:
 ```
@@ -444,26 +451,26 @@ src/assets/icons/*.png
 
 ## Why This Will Work
 
-1. **CodeMirror 6 handles the hard problems**:
-   - Incremental parsing (no full-document scans)
-   - Virtual scrolling (only renders visible lines)
-   - Efficient updates (minimal DOM manipulation)
-   - Battle-tested on massive files
+  1. **CodeMirror 6 handles the hard problems**:
+    - Incremental parsing (no full-document scans)
+    - Virtual scrolling (only renders visible lines)
+    - Efficient updates (minimal DOM manipulation)
+    - Battle-tested on massive files
 
-2. **No framework coordination overhead**:
-   - No SwiftUI ↔ AppKit bridging
-   - No @Binding state synchronization
-   - Direct DOM access when needed
+  2. **No framework coordination overhead**:
+    - No SwiftUI ↔ AppKit bridging
+    - No @Binding state synchronization
+    - Direct DOM access when needed
 
-3. **Web storage is simpler**:
-   - localStorage is synchronous and fast
-   - No file system permissions needed
-   - Works identically across platforms
+  3. **Web storage is simpler**:
+    - localStorage is synchronous and fast
+    - No file system permissions needed
+    - Works identically across platforms
 
-4. **One codebase, all platforms**:
-   - Desktop: PWA installation
-   - Mobile: Same PWA
-   - Browser: Just visit the URL
+  4. **One codebase, all platforms**:
+    - Desktop: PWA installation
+    - Mobile: Same PWA
+    - Browser: Just visit the URL
 
 ---
 
@@ -471,13 +478,13 @@ src/assets/icons/*.png
 
 From `docs/archive/OvercomeChallenges.md`:
 
-| v1 Problem | v2 Solution |
-|------------|-------------|
-| NSTextStorage reactive re-rendering | CodeMirror incremental parsing |
-| SwiftUI @Binding coordination | Direct state management |
-| Full-document regex on keystroke | Lezer incremental tokenizer |
-| Flickering at 88+ lines | Virtual viewport rendering |
-| Font caching complexity | CSS @font-face (browser handles it) |
+| v1 Problem                          | v2 Solution                         |
+| ----------------------------------- | ----------------------------------- |
+| NSTextStorage reactive re-rendering | CodeMirror incremental parsing      |
+| SwiftUI @Binding coordination       | Direct state management             |
+| Full-document regex on keystroke    | Lezer incremental tokenizer         |
+| Flickering at 88+ lines             | Virtual viewport rendering          |
+| Font caching complexity             | CSS @font-face (browser handles it) |
 
 ---
 
@@ -493,15 +500,15 @@ From `docs/archive/OvercomeChallenges.md`:
 
 _Update this section as phases complete:_
 
-| Phase | Status | Date | Notes |
-|-------|--------|------|-------|
-| 0 | Complete | Feb 8, 2026 | npm, Vite, TypeScript, CSS, fonts configured |
-| 1 | Complete | Feb 8, 2026 | CodeMirror 6 + markdown + keybindings + line numbers |
-| 2 | Complete | Feb 8, 2026 | Full Thot color palette applied |
-| 3 | Complete | Feb 8, 2026 | localStorage with debounce + beforeunload save |
-| 4 | Complete | Feb 8, 2026 | Cursor + scroll position saved/restored |
-| 5 | Complete | Feb 8, 2026 | PWA manifest + service worker + offline caching |
-| 6 | Not Started | — | — |
+| Phase | Status      | Date        | Notes                                                |
+| ----- | ----------- | ----------- | ---------------------------------------------------- |
+| 0     | Complete    | Feb 8, 2026 | npm, Vite, TypeScript, CSS, fonts configured         |
+| 1     | Complete    | Feb 8, 2026 | CodeMirror 6 + markdown + keybindings + line numbers |
+| 2     | Complete    | Feb 8, 2026 | Full Thot color palette applied                      |
+| 3     | Complete    | Feb 8, 2026 | localStorage with debounce + beforeunload save       |
+| 4     | Complete    | Feb 8, 2026 | Cursor + scroll position saved/restored              |
+| 5     | Complete    | Feb 8, 2026 | PWA manifest + service worker + offline caching      |
+| 6     | Not Started | —           | —                                                    |
 
 ---
 
