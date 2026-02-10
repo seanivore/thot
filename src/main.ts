@@ -5,23 +5,29 @@ import { saveContent, loadContent, forceSave, hasSavedContent } from './persiste
 import { saveState, loadState, forceSaveState } from './state'
 
 // Welcome content for first-time users
-const welcomeContent = `# Welcome to Thot
+const welcomeContent = `# Thot
 
-A **markdown scratchpad** with *IDE-like* syntax highlighting.
+Add your current **thots** in markdown. The *syntax highlighting* feels like your favorite IDE. 
 
-## Features
+## Feature Overview
 
 - Instant syntax highlighting
 - Auto-save to browser storage
 - Works offline as a PWA
 
-## Try it out
+### Workflow Friendly
 
-Start typing to replace this text. Your content auto-saves as you type.
+  * **Add Thoughts Without Breaking Your Flow**
+
+    + Your content auto-saves as you type
+    + The contents are persistent
+      - Leave the app open on your desktop 24/7
+      - Restart the computer
+      - Close and relaunch the app
 
 > "The best ideas come when you least expect them."
 
-### Markdown Examples
+### Markdown Your Comfortable With 
 
 **Bold text** and *italic text* and \`inline code\`
 
@@ -32,13 +38,13 @@ console.log(greeting);
 
 ---
 
-1. First item
-2. Second item
-3. Third item
+  1. First item
+  2. Second item
+  3. Third item
 
-- Bullet one
-- Bullet two
-- Bullet three
+  - Bullet one
+  - Bullet two
+  - Bullet three
 
 - [ ] Todo item
 - [x] Done item
@@ -51,7 +57,7 @@ console.log(greeting);
 
 ---
 
-*Start writing your thots below...*
+*What are your thots?*
 `
 
 function init() {

@@ -21,9 +21,9 @@ const colors = {
   strikethrough: '#6272A4', // Gray
 
   // Code
-  inlineCode: '#78de8c',   // Green
+  inlineCode: '#F34D3E',   // Green
   codeDelimiter: '#6767fc', // Blue-purple
-  codeContent: '#8989e3',  // Light purple
+  codeContent: '#F34D3E',  // Light purple
   codeLanguage: '#F1FA8C', // Yellow
 
   // Links
@@ -101,10 +101,10 @@ export const thotEditorTheme = EditorView.theme({
 export const thotHighlightStyle = HighlightStyle.define([
   // Headings - all levels get orange bold
   { tag: tags.heading, color: colors.heading, fontWeight: 'bold' },
-  { tag: tags.heading1, color: colors.heading, fontWeight: 'bold', fontSize: '1.4em' },
-  { tag: tags.heading2, color: colors.heading, fontWeight: 'bold', fontSize: '1.3em' },
-  { tag: tags.heading3, color: colors.heading, fontWeight: 'bold', fontSize: '1.2em' },
-  { tag: tags.heading4, color: colors.heading, fontWeight: 'bold', fontSize: '1.1em' },
+  { tag: tags.heading1, color: colors.heading, fontWeight: 'bold' },
+  { tag: tags.heading2, color: colors.heading, fontWeight: 'bold' },
+  { tag: tags.heading3, color: colors.heading, fontWeight: 'bold' },
+  { tag: tags.heading4, color: colors.heading, fontWeight: 'bold' },
   { tag: tags.heading5, color: colors.heading, fontWeight: 'bold' },
   { tag: tags.heading6, color: colors.heading, fontWeight: 'bold' },
 

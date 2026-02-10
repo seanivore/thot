@@ -3,6 +3,7 @@
 **Version**: 2.0.0_first-thots
 **Date**: February 9, 2026
 **Branch**: `v2-first-thots`
+**2026-02-10 EDIT**: Sean has updated this document. 'Phase 6: Polish' is now 'Phase: 7' and I've updated 'Phase 6' to detail testing feedback from using the production build of the application on the local host. 
 
 ---
 
@@ -67,38 +68,38 @@
 
 ```
 thot/
-├── index.html                    # Entry point
-├── package.json                  # Dependencies
-├── tsconfig.json                 # TypeScript config
-├── vite.config.ts                # Vite config with PWA
+├── index.html                         # Entry point
+├── package.json                       # Dependencies
+├── tsconfig.json                      # TypeScript config
+├── vite.config.ts                     # Vite config with PWA
 ├── public/
-│   ├── favicon.ico               # From AppIcon (16x16)
-│   ├── apple-touch-icon.png      # From AppIcon (180x180)
-│   └── manifest.json             # PWA manifest
+│   ├── favicon.ico                    # From AppIcon (16x16)
+│   ├── apple-touch-icon.png           # From AppIcon (180x180)
+│   └── manifest.json                  # PWA manifest
 ├── src/
-│   ├── main.ts                   # App entry, initializes editor
-│   ├── editor.ts                 # CodeMirror setup
-│   ├── theme.ts                  # Thot dark theme
-│   ├── persistence.ts            # Save/load content
-│   ├── state.ts                  # Cursor/scroll state
+│   ├── main.ts                        # App entry, initializes editor
+│   ├── editor.ts                      # CodeMirror setup
+│   ├── theme.ts                       # Thot dark theme
+│   ├── persistence.ts                 # Save/load content
+│   ├── state.ts                       # Cursor/scroll state
 │   ├── styles/
-│   │   └── main.css              # Global styles, dark theme
+│   │   └── main.css                   # Global styles, dark theme
 │   ├── assets/
-│   │   ├── fonts/                # JetBrains Mono (4 variants)
-│   │   └── icons/                # App icons (various sizes)
+│   │   ├── fonts/                     # JetBrains Mono (4 variants)
+│   │   └── icons/                     # App icons (various sizes)
 │   └── types/
-│       └── index.d.ts            # Type definitions
+│       └── index.d.ts                 # Type definitions
 ├── docs/
-│   ├── YOUR_THOTS.md             # This document (living spec)
-│   ├── archive/                  # v1 documentation for reference
+│   ├── YOUR_THOTS.md                  # This document (living spec)
+│   ├── archive/                       # v1 documentation for reference
 │   │   ├── OvercomeChallenges.md
 │   │   ├── v1_BUILD_RESEARCHED.md
 │   │   ├── IMPL_v1_DESKPAD.md
 │   │   ├── ARCHITECTURE_OVERVIEW.md
 │   │   └── TextMateRules.md
-│   └── images/                   # UI reference images
-├── README.md                     # Updated for v2
-└── LICENSE                       # MIT
+│   └── images/                        # UI reference images
+├── README.md                          # Updated for v2
+└── LICENSE                            # MIT
 ```
 
 ---
@@ -371,20 +372,37 @@ export default defineConfig({
 
 ---
 
-### Phase 6: Polish
+### Phase 6: Testing & Feedback 
+**Status**: 
+  - [ ] Not Started
+
+**Tasks**: 
+  - [ ] Test local host production build on desktop 
+  - [ ] Test on mobile 
+  - [ ] Test on tablet 
+  - [ ] Detail feedback from testing
+  - [ ] Provide & discuss feedback with agent 
+  - [ ] Integrate feedback into next phase 
+  - [ ] Start clear `docs/UPDATE_THOTS.md` organizing updates 
+
+**Verification**: Feedback is detailed, then made clear and actionable with agent, new document created with updates roadmap 
+
+---
+
+### Phase 7: Polish
 **Status**: 
   - [ ] Not Started
 
 **Tasks**:
   - [ ] 1. Add keyboard shortcut hints (optional floating UI)
-  - [ ] 2. Improve mobile responsiveness
+  - [ ] 2. Improve mobile responsiveness 
   - [ ] 3. Add "clear content" confirmation dialog
   - [ ] 4. Add subtle save indicator (optional)
   - [ ] 5. Performance audit (Lighthouse)
   - [ ] 6. Final CSS polish
 
 **Optional enhancements** (not blocking):
-  - [ ] Word count display
+  - [ ] Word, character without spaces, and token count display
   - [ ] Export to .md file
   - [ ] Import from .md file
   - [ ] Multiple scratchpads (future)
@@ -395,7 +413,7 @@ export default defineConfig({
 
 ## Deployment
 
-### GitHub Pages (Free)
+### GitHub Pages (Free) **Are there other free options? I'm just not sure I'm ready to make the repository public yet.**
 ```bash
 # In vite.config.ts, set base to repo name
 # base: '/thot/'
