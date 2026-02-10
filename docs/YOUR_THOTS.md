@@ -390,9 +390,11 @@ export default defineConfig({
 **Status**: 
   - [ ] Complete
 
+**NOTE**: We don't yet have a mobile test environment unless I can somehow set up a local server for iPhone; also it is important to recognize that iPad is sort of way more important than mobile. The full keyboard is what makes markdown easy; not so sure it would be easy on mobile though access is essential. 
+
 **Tasks**:
   - [ ] 1. Add keyboard shortcut hints (optional floating UI)
-  - [ ] 2. Improve mobile responsiveness — **NOTE**: We don't yet have a mobile test environment unless I can somehow set up a local server for iPhone 
+  - [ ] 2. Improve mobile responsiveness — **SEE NOTE**
   - [ ] 3. Add "clear content" confirmation dialog
   - [ ] 4. Add subtle save indicator (optional)
   - [ ] 5. Performance audit (Lighthouse)
@@ -402,7 +404,10 @@ export default defineConfig({
   - [ ] Word, character without spaces, and token count display
   - [ ] Export to .md file
   - [ ] Import from .md file
-  - [ ] Multiple scratchpads (future)
+  - [ ] Multiple scratchpads (future) — **NOTE**: Right now it opens a duplicate that shows the same text 
+
+**NOTE**: It would also be nice to make it so <kbd>CMD + S</kbd> just nudges a normal auto-save. Right now it opens a window more like save-as and you obviously can only save as HTML. My main reason for mentioning this is because I compulsively hit CMD + S and it opens a window every time. 
+Eventually it would be nice to have it print too; to start, not anything other than actually printing the markdown just like you see it in the app. 
 
 **Verification**: Lighthouse score >90, no console errors, smooth on all devices
 
