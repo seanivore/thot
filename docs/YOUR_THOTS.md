@@ -392,7 +392,7 @@ export default defineConfig({
 
 **Tasks**:
   - [ ] 1. Add keyboard shortcut hints (optional floating UI)
-  - [ ] 2. Improve mobile responsiveness 
+  - [ ] 2. Improve mobile responsiveness — **NOTE**: We don't yet have a mobile test environment unless I can somehow set up a local server for iPhone 
   - [ ] 3. Add "clear content" confirmation dialog
   - [ ] 4. Add subtle save indicator (optional)
   - [ ] 5. Performance audit (Lighthouse)
