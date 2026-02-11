@@ -56,11 +56,11 @@ export const thotEditorTheme = EditorView.theme({
     backgroundColor: colors.bg,
     color: colors.fg,
     height: '100%',
-    fontSize: '14px',
+    fontSize: '12px',
   },
   '.cm-scroller': {
     fontFamily: '"JetBrains Mono NL", monospace',
-    lineHeight: '1.6',
+    lineHeight: '1.0',
     padding: '16px',
   },
   '.cm-content': {

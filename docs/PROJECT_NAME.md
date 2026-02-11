@@ -451,7 +451,7 @@ RESULT OF FLOW AND ENDPOINT OF DATA TRANSFORMATION
 ### CLI Commands
 
 | Command         | Description              |
-|-----------------|--------------------------|
+| --------------- | ------------------------ |
 | `npm run dev`   | Start development server |
 | `npm run build` | Build for production     |
 | `[custom]`      | Description              |
@@ -459,14 +459,14 @@ RESULT OF FLOW AND ENDPOINT OF DATA TRANSFORMATION
 ### Environment Variables
 
 | Variable   | Purpose            | Required |
-|------------|--------------------|----------|
+| ---------- | ------------------ | -------- |
 | `VAR_NAME` | What it configures | Yes/No   |
 | `VAR_NAME` | What it configures | Yes/No   |
 
 ### Schema/App/Api/Etc. Versions
 
 | Version | Date         | Changes            |
-|---------|--------------|--------------------|
+| ------- | ------------ | ------------------ |
 | v3.2    | `YYYY-MM-DD` | Summary of changes |
 | v3.1    | `YYYY-MM-DD` | Summary of changes |
 

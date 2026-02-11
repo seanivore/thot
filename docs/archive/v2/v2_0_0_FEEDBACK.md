@@ -140,6 +140,45 @@
 
 ---
 
+## Code Blocks 
+
+  + Does something like this from my old portfolio project's HTML that was added to highlight the code based on language help at all? 
+  + How can we get various code languages highlighted properly in 'thot app'? 
+
+```html
+    <!-- Include prism for code snippets -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+
+        <div class="content-wrap">
+            <div class="code-card">
+                <pre class="language-javascript">
+                <code>
+                class MCPToolManager {
+                    private tools: Map;
+                
+                    registerTool(tool: Tool): void {
+                    this.validateTool(tool);
+                    this.tools.set(tool.name, tool);
+                    }
+                
+                    async executeTool(name: string, params: any): Promise {
+                    const tool = this.tools.get(name);
+                    if (!tool) throw new Error(\`Tool \${name} not found\`);
+                    return await tool.handler(params);
+                    }
+                }
+                </code>
+                </pre>
+            </div>
+        </div>
+
+    <!-- Include prism scripts for code snippets -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>  
+```
+
+---
+
 ### Branching  
 
   * **The project is organized around a *single top-level folder and repo name***
