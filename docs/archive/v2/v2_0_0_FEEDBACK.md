@@ -1,25 +1,140 @@
 # v2.0.0 Feedback
 
-## Overall Feelings 
+## Overview 
 
-This is awesome. I can't believe it only took a few hours to build and it is pretty much perfect. I did find some highlighting oddities that I listed below. Then the rest is just other updates I'd like us to make. 
+  1. Inaccurate and incomplete highlighting labels  
+    + The `src/theme.ts` document is inaccurate and incomplete 
+    + This is causing a number of issues; compare to `src/theme-reference.ts` and update 
+    + I made some changes that were wrong from the dated original TextMate it was copied from 
+  2. Tag highlight label missing hierarchy  
+    + It doesn't seem like they are behaving in a logical order of priority 
+    + This and a completely list should fix most issues 
+
+### Highlight Tag Prioritization 
+
+- After doing this, I finally think I understand TextMate and currently prefer it. When I use the "Developer: Inspect Editor Tokens and Scopes" I can see the hierarchy and the one at the top is what highlights the tagged text.
+- I'm pretty sure that is the main problem with the tags highlight colors. There are one or two missing, but other than that it just looks like they are not prioritized correctly.
+
+* **IN ORDER OF PRIORITY**
+
+  + The highlighting and styling of those at the top (closer to 1) overpowers any lower ranking label
+  + Color always follows this rule
+  + Styling has two categories:
+    - Some FULL overpower only showing their style
+    - Some BLEND applying their style but retaining the lower ranking label's color 
+
+  1. strikethroughMarker, and strikethroughContent (previously just strikethrough) **BLENDS**
+  2. inlineCode, inlineCodeDelimiter, and blockCodeDelimiter (previously just codeDelimiter) **FULL** 
+  3. codeBlockContent and checkbox **BLENDS**
+  4. boldMarker, bold, italicMarker, and italic (previously just bold and italic) **FULL**
+  6. tableMarker and tableContents (previously just table) **FULL** 
+  7. headingMarker and headingContent (previouly just heading) **FULL**
+  8. bulletMarker, bulletContent, numberedMarker, and numberedContent (previously listMarker and listContent) **FULL**
+  9. blockquoteMarker and blockquoteContent (previously just blockquote) **FULL**
+  10. foreground 
+
+--- 
+
+## Annotated Images 
+
++ I used images of IDE compared to the Thot theme to show visually the mistakes. 
++ It resulted in much clearer need for priority and for missing tags 
++ I've not done all of the images I took 
+  - Stopped when it became clear that `src/theme.ts` was not accurately created 
+  - An agent must have thought they could simplify and have creative freedom 
+  - This broke the logic and the very carefully created pattern 
+  - The colors and number of tagged highlights should be the same 
+
+### 1. Heading Markers
+`docs/images/bugs/IMG_bug-v2-review_1.jpg`
+
+`headingMarker` should be same as `heading`
+  + IDE scopes didn't appear to need a differentiating label for both
+  + thot needs a label for both
+  + "span.ͼ9.ͼh" is the ### pound notation or `headingMarker`
+  + "span.ͼ9" is the heading or `headingContent`
+
+### 2. Bold Markers 
+`docs/images/bugs/IMG_bug-v2-review_1.jpg`
+
+`boldMarker` should be same as `bold`
+  + IDE scopes didn't appear to need a differentiating label for both
+  + thot needs a label for both
+  + **ADD** `boldMarker` to `src/theme.ts` and `src/theme-reference.ts`
+  + Make it have ExtraHeavyBold styling in #FFD866
+  + `bold` will need to be updated to the ExtraHeavyBold styling as well
+
+### 3. Missing List Type Labeles & Foreground Given Priority 
+`docs/images/bugs/IMG_bug-v2-review_1.jpg`
+
+* **Issue 1**: Add differentiation between ordered and unordered lists
+
+  + Already exists on `src/theme-reference.ts`
+  + Make edits to `src/theme.ts`
+      - **REMOVE** listMarker: '#dfc532',   // Gold
+      - **REMOVE** listContent: '#5feda4',  // Mint
+      - **ADD** bulletMarker: '#dfc532',   // Gold, bold
+      - **ADD** numberedMarker: '#ff6b6b', // Red, bold
+      - **ADD** bulletContent: '#8aeefb',  // Cyan
+      - **ADD** numberedContent: '#f8a5c2', // Pink
+
+* **Issue 2**: Highlight rules are ignoring listContent for foreground
+
+  + `listContent` needs to be replaced, per issue 1
+    - Currently its class "span.ͼm.ͼz" showing #e6e6e6
+  + `listMarker` needs to be replaced, per issue 1
+    - But currently it is class "span.ͼm.ͼh" showing current accurate color 
+
+### 4. Code Tickmarks Behave Two Ways 
+`docs/images/bugs/IMG_bug-v2-review_1.jpg`
+
+`codeDelimiter` on `inlineCode` should match 
+`codeDelimiter` on `codeBlockContent` holds its color 
+
+  + This means we need to create two labeles for ticks used for code
+    - `inlineCodeDelimiter` should be #F34D3E red-orange, just like `inlineCode`
+    - `blockCodeDelimiter` uses the same `codeBlockContent` as plaintext, #8989e3 a light-purple 
+
+### 5. Code Blocks Never Change from Defaul Plaintext 
+`docs/images/bugs/IMG_bug-v2-review_1.jpg`
+
+`codeBlockContent` should change based on type of `codeLanguage` 
+
+  + I've updated `codeBlockContent` to #8989e3 a light-purple
+    - This is the color it defaults to
+    - This is the "plaintext" color
+  + The problem is it doesn't adjust based on `codeLanguage`
+    - It should change for language
+    - Show HTML, CSS, bash, etc. all differently
+  + I remember doing this in HTML for a project and it was super easy! It was my first portfolio
+
+### 6. Chart Colors Never Change from White 
+`docs/images/bugs/IMG_bug-v2-review_2.jpg`
+
+`tableMarker` and `tableContents` should be changing #e2ff79 lime according to `src/theme.ts`
+
+  + Based on other situations, we probably should change the old `table` label in to two
+
+### 7. Horizontal Rule Pagebreak Is Not In Theme 
+`docs/images/bugs/IMG_bug-v2-review_2.jpg`
+
+`horizontalRule` is on `src/theme-reference.ts` but not `src/theme.ts`
+
+  + It should be listed as #93f9c6 in mint
+  + Hyphen characters should change when applied in 3
+    - If you add ---- then it does not render a full horizontal bar from L to R
+    - When you add --- normally they clamp together, indicating it worked
 
 ---
 
-### General Feedback 
+### General Feedback
 
   1. Get spell check working
   2. I removed the header size increase and made the font 12px
     - I ran `run npm preview` and hit refresh and it didn't work 
     - I repeated it making it 10px, used incognito, and tried again and it didn't work at first then did 
     - Now it is tiny; I tried to fix it back to 12px and I can't get it to actually change again 
-  3. **NOTE**: I think that maybe the tag highlights just aren't prioritizing properly 
-    - Because seems like the one green is just overpowering so many other things 
-    - Like the list items being overwritten back to plain white 
-    - Like the list markers being overwritten by the list item highlight, etc. 
-    - Maybe this will help: `https://lezer.codemirror.net/docs/ref/#highlight.tagHighlighter` 
-    - I was reading something in there about boolean and being at the top of the tree and idk it made me think it might be a prioritization issue 
-  4. **IMPORTANT**: We want to be pushing final production builds with tagging to a main branch 
+  3. **IMPORTANT**: We want to be pushing final production builds with tagging to a main branch 
     - I just coped and slightly updated the "Branching" section from the v1 documentation 
     - It is kind of repetitive, right? Will you please simplify it
 
@@ -83,44 +198,8 @@ This structure keeps the name surface constant (`thot` everywhere), signals clea
 
   3. Missing and Inaccurate Scope Highlighting 
    
-    + I'll list the specifics below 
-    + Also, highlighting does not match `src/theme.ts` 
-    + If it helps, I pasted the "STYLES" section from the inspector's HTML below under the headline `From HTML Style Section When Using "inspect"` 
-    + It seems like everything broken is turning a mint green — not the dark green that lists should be 
-    + Please reference the `src/theme-reference.ts` again and update `src/theme.ts` for the missing scopes and because there are a few that are not the right color on `src/theme.ts` 
-    + **THOUGH, NOTE** that even the incorrectly formatted in the list below that *DO* have a correct color listed in `src/theme.ts`, that doesn't work 
-
-  **CORRECT** 
-  
-  - heading — just the text, not the pound signs 
-  - *italic* — just the text, only when not in list item 
-  - **bold** — just the text, only when not in list item 
-  - codeLanguage — but the code language choice does not apply any code specific highlighting 
-  - [link](https://www.google.com) — only when not in list item 
-  - <html> or whatever this is 
-    
-  **INCORRECT**
-  
-  - **bold** - when in a list item the word and icons turn green; normally asterisks stay purple
-  - *italic* - when in a list item the word and icons turn green; normally asterisks stay purple
-  - ~~strikethrough~~ — no effect 
-  - `inlineCode`, `codeDelimiter`, `codeContent` — same green as everything else 
-  - [link](https://www.google.com) — green when in list item 
-  - | Charts | Don't work | it says white, both text and lines = |
-  - [ ] Checkbox — just white
-  - listMarker — same green
-  - > Blockquote text is white, blockquoteMarker highlighted but NOT if you tab the blockquote in at all 
-  - `  ticks stay purple instead of changing with code
-  - Code blocks — they do not highlight syntax at all, it just makes everything the same green as everything else broken 
-
-**STRANGE BEHAVIOR** 
-
-  + I'm not sure what the cause is yet, but at times, a unordered line item turns all green and MOST normal times the list marker is green but text is white 
-    - I think it might be when following an ordered list because I also just tried to add an unordered sub-list to one of an ordered list's items and it turned that item and the sublist BOLD, a bit larger font, and the following sublist items did the same 
-    - **This is probably biggest weird bug, SEE IMAGE** `docs/images/bugs/odd-sublist-behavior.png` 
-    - It only does the bold if I hit return from the numbered item in the list, then delete the new item number, then add a bullet hyphen 
-    - It doesn't happen when I use a + as the bullet icon 
-    - When I backspace the list into the same sublist spot, it doesn't get bold, but the list is still entirely green. 
+    + If it helps, I pasted the "STYLES" section from the inspector's HTML below under the headline `From HTML Style Section When Using "inspect"`
+    + Otherwise **THIS SHOULD ALREADY HAVE BEEN COVERED BY THE TOP MESSAGE**
 
 ### From HTML Style Section When Using "inspect"
 

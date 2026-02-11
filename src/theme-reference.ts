@@ -19,11 +19,11 @@ export const THOT_COLORS = {
 
   // Emphasis
   bold: '#FFD866',           // Yellow, bold
-  italic: '#8aeefb',         // Cyan, italic
+  italic: '#BF437F',         // Magenta, italic
   strikethrough: '#6272A4',  // Gray, strikethrough
 
   // Code
-  inlineCode: '#78de8c',     // Green
+  inlineCode: '#F34D3E',     // Red-orange
   fencedCodeDelimiter: '#6767fc',  // Blue-purple
   codeBlockContent: '#8989e3',     // Light purple
   codeLanguage: '#F1FA8C',   // Yellow
@@ -36,9 +36,9 @@ export const THOT_COLORS = {
   // Lists
   bulletMarker: '#dfc532',   // Gold, bold
   numberedMarker: '#ff6b6b', // Red, bold
-  bulletContent: '#5feda4',  // Mint green
+  bulletContent: '#8aeefb',  // Cyan
   numberedContent: '#f8a5c2', // Pink
-  checkbox: '#50faad',       // Bright green, bold
+  checkbox: '#8BE9FD',       // Cyan, bold
 
   // Block elements
   blockquote: '#E6DB74',     // Yellow, italic

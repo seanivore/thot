@@ -17,13 +17,13 @@ const colors = {
   // Syntax
   heading: '#FF9D00',      // Orange
   bold: '#FFD866',         // Yellow
-  italic: '#8aeefb',       // Cyan
+  italic: '#BF437F',        // Magenta
   strikethrough: '#6272A4', // Gray
 
   // Code
-  inlineCode: '#F34D3E',   // Green
+  inlineCode: '#F34D3E',   // Red-orange
   codeDelimiter: '#F34D3E', // Blue-purple
-  codeContent: '#F34D3E',  // Light purple
+  codeContent: '#8989e3',  // Light purple
   codeLanguage: '#F1FA8C', // Yellow
 
   // Links
@@ -33,7 +33,7 @@ const colors = {
   // Lists
   listMarker: '#dfc532',   // Gold
   listContent: '#5feda4',  // Mint
-  checkbox: '#50faad',     // Bright green
+  checkbox: '#8BE9FD',     // Cyan
 
   // Blocks
   quote: '#E6DB74',        // Yellow
