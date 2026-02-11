@@ -1,9 +1,8 @@
 # Thot v2.0 "First Thots" — Executable Implementation Plan
 
-**Version**: 2.0.0_first-thots
-**Date**: February 9, 2026
-**Branch**: `v2-first-thots`
-**2026-02-10 EDIT**: Sean has updated this document. 'Phase 6: Polish' is now 'Phase: 7' and I've updated 'Phase 6' to detail testing feedback from using the production build of the application on the local host. 
+**Version**: 2.0.0 "First Thots" 
+**Created**: February 9, 2026
+**02-10-2026 edit**: Sean has updated this document adjusting the remaining phases to include review and feedback and then document updates. 
 
 ---
 
@@ -11,7 +10,7 @@
 
 **What we're building**: A web-based markdown scratchpad with IDE-like syntax highlighting, auto-save, and PWA capability for cross-platform use.
 
-**Why web**: After extensive research and a failed native macOS implementation (see `docs/archive/OvercomeChallenges.md`), we determined that:
+**Why web**: After extensive research and a failed native macOS implementation (see `docs/archive/v1/OvercomeChallenges.md`), we determined that:
   - SwiftUI + NSTextStorage is architecturally unsuited for responsive text editors
   - VS Code, Cursor, and modern editors use web technologies for exactly this reason
   - CodeMirror 6 solves our highlighting performance problem out of the box
@@ -169,7 +168,7 @@ export function createEditor(parent: HTMLElement): EditorView {
 
 ---
 
-### Phase 2: Thot Dark Theme
+### Phase 2: Thot Dark Theme **NOTE: NOT CREATED FULLY IN `src/theme.ts`**
 **Status**: 
   - [x] Complete
 
@@ -180,6 +179,7 @@ export function createEditor(parent: HTMLElement): EditorView {
   - [x] 4. Style cursor, selection, gutters
 
 **Color mapping** (from `ThotMarkdownTheme.json`):
+
 | Element                 | Color            |
 | ----------------------- | ---------------- |
 | Background              | #1a1a1a          |
@@ -229,7 +229,7 @@ export const thotTheme = EditorView.theme({
 })
 ```
 
-**Verification**: Markdown renders with correct colors matching v1 theme
+**Verification**: Markdown renders with highlight colors — **NOTE: Not same as original theme; must circle back to fix**
 
 ---
 
@@ -322,7 +322,7 @@ EditorView.updateListener.of((update) => {
 
 ---
 
-### Phase 5: PWA Configuration
+### Phase 5: PWA Configuration — **NOTE: THIS FILE IS NOT PRESENT**
 **Status**: 
   - [x] Complete
 
@@ -390,24 +390,19 @@ export default defineConfig({
 **Status**: 
   - [ ] Complete
 
-**NOTE**: We don't yet have a mobile test environment unless I can somehow set up a local server for iPhone; also it is important to recognize that iPad is sort of way more important than mobile. The full keyboard is what makes markdown easy; not so sure it would be easy on mobile though access is essential. 
-
 **Tasks**:
   - [ ] 1. Add keyboard shortcut hints (optional floating UI)
-  - [ ] 2. Improve mobile responsiveness — **SEE NOTE**
-  - [ ] 3. Add "clear content" confirmation dialog
-  - [ ] 4. Add subtle save indicator (optional)
+  - [ ] 2. Improve mobile responsiveness 
+  - [ ] 3. Add "clear content" confirmation dialog 
+  - [ ] 4. Add subtle save indicator (optional) 
   - [ ] 5. Performance audit (Lighthouse)
   - [ ] 6. Final CSS polish
 
 **Optional enhancements** (not blocking):
-  - [ ] Word, character without spaces, and token count display
+  - [ ] Word, character without spaces, and token count display 
   - [ ] Export to .md file
-  - [ ] Import from .md file
-  - [ ] Multiple scratchpads (future) — **NOTE**: Right now it opens a duplicate that shows the same text 
-
-**NOTE**: It would also be nice to make it so <kbd>CMD + S</kbd> just nudges a normal auto-save. Right now it opens a window more like save-as and you obviously can only save as HTML. My main reason for mentioning this is because I compulsively hit CMD + S and it opens a window every time. 
-Eventually it would be nice to have it print too; to start, not anything other than actually printing the markdown just like you see it in the app. 
+  - [ ] Import from .md file 
+  - [ ] Multiple scratchpads (future) 
 
 **Verification**: Lighthouse score >90, no console errors, smooth on all devices
 

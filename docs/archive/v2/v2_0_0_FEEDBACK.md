@@ -1,14 +1,62 @@
-# v2.0.0 Feedback
+# Thot v2.0.0 "First Thots" Feedback
+
+**Version**: 2.0.0
+**Created**: February 10, 2026
+
+---
 
 ## Overview 
 
-  1. Inaccurate and incomplete highlighting labels  
-    + The `src/theme.ts` document is inaccurate and incomplete 
-    + This is causing a number of issues; compare to `src/theme-reference.ts` and update 
-    + I made some changes that were wrong from the dated original TextMate it was copied from 
-  2. Tag highlight label missing hierarchy  
-    + It doesn't seem like they are behaving in a logical order of priority 
-    + This and a completely list should fix most issues 
+  1. Git branch protocol planning and implementation 
+  2. Indentation not holding on natural line wrapping 
+  3. Plain color wipe out too early on indent 
+  4. Theme tag label highlights incomplete and inaccurate  
+  5. Hierarchial tag label rules are either logically flawed or missing completely
+
+---
+
+## Git Branching Protocol
+
+  * **Professional versioning & repository hygiene details**
+
+  > Git flow: `main` is default with **no direct commits** and `v2-first-thots` is all v2 product line 
+
+  + Completed builds moved to protected, only fast-forwarded, branch `main` 
+    - Use semantic tags with version number e.g.  `v2.0.0`, `v2.1.0` once stable
+    - E.g. `v2.0.0-first-thots` – first fully shippable build 
+
+  + `v2-first-thots` primary active dev for this product phase and 'First Thot' product line 
+    - Future major phases can branch off, e.g. `v3-organization`, `v4-ai-customization`
+    - Short-lived feature branches prefixed `feat/` or `fix/`; merged into `v2-first-thots` via PRs
+    - E.g. `feat/spell-check`, `feat/export-md`, `feat/counter`
+
+  + Docs discipline, have any non-trivial changes that alter behavior paired with 
+    - An update to `v2_0_0_UPDATES.md` (if it changes the spec/contract), or
+    - An entry in a future `docs/CHANGELOG_v2.md` if it's purely internal
+
+---
+
+## Indentation Issues 
+
+### 1. Text Wrapping Not Maintaining Indentation
+
+  + When typing in a block of text — standard paragraph or either types of lists with really long items that wrap — the wrapped next lines must adhere to the indentation at which the first line in the block of text started. Let me know if you need pictures of what I'm talking about. 
+  + This is **NOT** how a normal word processor would work which is maybe why it doesn't, but since markdown it traditionally written in an IDE, the text is treated more like code. 
+
+    - Plain text in a long paragraph
+    - An unordered list item that is long and wraps around 
+    - An ordered list item that is long and wraps around 
+
+### 2. Text Block Indentation Far Past First Line Changes Color 
+
+  + Traditionally in markdown, when you highlight a block of text, that could be a list of either kind of just a paragraph, it changes to the same color as 'plain text' in a code block. 
+  + In the app, the change to a solid color happens when you are AT the indent of the line or line with return in-between you and the line you are trying to indent 
+  + It is the wrong color, green like everything else wrong, but that is because of all the incorrect highlight colors in the next number
+  + It needs to be able to tab over about two past the line above in case your creating a sublist 
+
+--- 
+
+## Highlight Issues 
 
 ### Highlight Tag Prioritization 
 
@@ -23,19 +71,19 @@
     - Some FULL overpower only showing their style
     - Some BLEND applying their style but retaining the lower ranking label's color 
 
-  1. strikethroughMarker, and strikethroughContent (previously just strikethrough) **BLENDS**
+  1. `strikethroughMarker`, and `strikethroughContent` (previously just strikethrough) **BLENDS**
   2. inlineCode, inlineCodeDelimiter, and blockCodeDelimiter (previously just codeDelimiter) **FULL** 
   3. codeBlockContent and checkbox **BLENDS**
   4. boldMarker, bold, italicMarker, and italic (previously just bold and italic) **FULL**
   6. tableMarker and tableContents (previously just table) **FULL** 
-  7. headingMarker and headingContent (previouly just heading) **FULL**
+  7. headingMarker and headingContent (previously just heading) **FULL**
   8. bulletMarker, bulletContent, numberedMarker, and numberedContent (previously listMarker and listContent) **FULL**
   9. blockquoteMarker and blockquoteContent (previously just blockquote) **FULL**
   10. foreground 
 
---- 
+---
 
-## Annotated Images 
+## Highlight Annotated App Screenshots 
 
 + I used images of IDE compared to the Thot theme to show visually the mistakes. 
 + It resulted in much clearer need for priority and for missing tags 
@@ -127,20 +175,9 @@
 
 ---
 
-### General Feedback
+## Code Language Unique Highlights Not Working 
 
-  1. Get spell check working
-  2. I removed the header size increase and made the font 12px
-    - I ran `run npm preview` and hit refresh and it didn't work 
-    - I repeated it making it 10px, used incognito, and tried again and it didn't work at first then did 
-    - Now it is tiny; I tried to fix it back to 12px and I can't get it to actually change again 
-  3. **IMPORTANT**: We want to be pushing final production builds with tagging to a main branch 
-    - I just coped and slightly updated the "Branching" section from the v1 documentation 
-    - It is kind of repetitive, right? Will you please simplify it
-
----
-
-## Code Blocks 
+### Code Blocks Potential (?)
 
   + Does something like this from my old portfolio project's HTML that was added to highlight the code based on language help at all? 
   + How can we get various code languages highlighted properly in 'thot app'? 
@@ -176,200 +213,24 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>  
 ```
-
 ---
 
-### Branching  
+## Adding Tasks to Phase 7 Polish 
 
-  * **The project is organized around a *single top-level folder and repo name***
-    + Local project folder: `thot`
-    + Git repository name: `thot`
-    + Primary active branch for this build: `v2-first-thots` 
-      - This branch represents the entire "Desk Pad" product line for v1.
-      - Future major phases can branch off this (e.g., `v3-organization`, `v4-ai-customization`)
-      - Completed builds will be moved to branch `main` and tagged with the version number
+### General Feedback
 
-  > Git flow:
-  > - Default branch can be `main` with **no direct commits**; `v2-first-thots` is the working branch.
-  > - Feature branches (if needed) should be prefixed with `feat/` or `fix/` and merged into `v2-first-thots` via PRs, even if the PRs are AI-authored.
+  1. Get spell check working
+  2. I removed the header size increase and made the font 12px
+    - I ran `run npm preview` and hit refresh and it didn't work 
+    - I repeated it making it 10px, used incognito, and tried again and it didn't work at first then did 
+    - Now it is tiny; I tried to fix it back to 12px and I can't get it to actually change again 
+  3. **IMPORTANT**: We want to be pushing final production builds with tagging to a main branch 
+    - I just coped and slightly updated the "Branching" section from the v1 documentation 
+    - It is kind of repetitive, right? Will you please simplify it
 
-  * **Professional versioning / repo hygiene details**
-    + Branching:
-      - `main`: protected, only fast-forwarded from tagged, stable milestones (e.g., `v2.0.0`, `v2.1.0`).
-      - `v2-first-thots`: active development branch for this entire product phase.
-      - Short-lived feature branches off `v2-first-thots`:
-        `fix/highlighting`
-        `feat/spell-check`
-        `feat/export-md`
-        `feat/counter`
-    + Tagging:
-      - Use semantic tags on `main` and optionally on `v2-first-thots` once stable:
-        `v2.0.0-first-thots` – first fully shippable build.
-        `v2.1.0-first-thots` – minor enhancements within v1 scope (no new product surface).
-    + Docs discipline:
-      - Any non-trivial code change that alters behavior should be paired with:
-      - An update to `v2_0_0_UPDATES.md` (if it changes the spec/contract), or
-      - An entry in a future `docs/CHANGELOG_v2.md` if it's purely internal.
+--- 
 
-This structure keeps the name surface constant (`thot` everywhere), signals clearly that `v2-first-thots` is the canonical "First Thots" implementation branch, and **gives both humans and agents a predictable map of where things live and where to evolve them next.**
-
----
-
-### Formatting Issues 
-
-**NOTE:** Question about "inspecting" in developer panel — how do I get it to show me the scopes and info when clicking each word? It did it for a second but I can't figure out how to get the context pop-up to work again. I had never seen it before but it made the *ACTUAL* class and style names so simple to read. 
-
-  1. Text Wrapping Not Maintaining Indentation
-
-     + When typing in a block of text — standard paragraph or either types of lists with really long items that wrap — the wrapped next lines must adhere to the indentation at which the first line in the block of text started. Let me know if you need pictures of what I'm talking about. 
-     + This is **NOT** how a normal word processor would work which is maybe why it doesn't, but since markdown it traditionally written in an IDE, the text is treated more like code. 
-
-       - Plain text in a long paragraph
-       - An unordered list item that is long and wraps around 
-       - An ordered list item that is long and wraps around 
-
-  2. Text Block Indentation Far Past First Line Changes Color 
-
-    + Traditionally in markdown, when you highlight a block of text, that could be a list of either kind of just a paragraph, it changes to the same color as 'plain text' in a code block. 
-    + In the app, the change to a solid color happens when you are AT the indent of the line or line with return in-between you and the line you are trying to indent 
-    + It is the wrong color, green like everything else wrong, but that is because of all the incorrect highlight colors in the next number
-    + It needs to be able to tab over about two past the line above in case your creating a sublist 
-
-  3. Missing and Inaccurate Scope Highlighting 
-   
-    + If it helps, I pasted the "STYLES" section from the inspector's HTML below under the headline `From HTML Style Section When Using "inspect"`
-    + Otherwise **THIS SHOULD ALREADY HAVE BEEN COVERED BY THE TOP MESSAGE**
-
-### From HTML Style Section When Using "inspect"
-
-```css
-.ͼ1.cm-focused {outline: 1px dotted #212121;}
-.ͼ1 {position: relative !important; box-sizing: border-box; display: flex !important; flex-direction: column;}
-.ͼ1 .cm-scroller {display: flex !important; align-items: flex-start !important; font-family: monospace; line-height: 1.4; height: 100%; overflow-x: auto; position: relative; z-index: 0; overflow-anchor: none;}
-.ͼ1 .cm-content[contenteditable=true] {-webkit-user-modify: read-write-plaintext-only;}
-.ͼ1 .cm-content {margin: 0; flex-grow: 2; flex-shrink: 0; display: block; white-space: pre; word-wrap: normal; box-sizing: border-box; min-height: 100%; padding: 4px 0; outline: none;}
-.ͼ1 .cm-lineWrapping {white-space: pre-wrap; white-space: break-spaces; word-break: break-word; overflow-wrap: anywhere; flex-shrink: 1;}
-.ͼ2 .cm-content {caret-color: black;}
-.ͼ3 .cm-content {caret-color: white;}
-.ͼ1 .cm-line {display: block; padding: 0 2px 0 6px;}
-.ͼ1 .cm-layer > * {position: absolute;}
-.ͼ1 .cm-layer {position: absolute; left: 0; top: 0; contain: size style;}
-.ͼ2 .cm-selectionBackground {background: #d9d9d9;}
-.ͼ3 .cm-selectionBackground {background: #222;}
-.ͼ2.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground {background: #d7d4f0;}
-.ͼ3.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground {background: #233;}
-.ͼ1 .cm-cursorLayer {pointer-events: none;}
-.ͼ1.cm-focused > .cm-scroller > .cm-cursorLayer {animation: steps(1) cm-blink 1.2s infinite;}
-@keyframes cm-blink {50% {opacity: 0;}}
-@keyframes cm-blink2 {50% {opacity: 0;}}
-.ͼ1 .cm-cursor, .ͼ1 .cm-dropCursor {border-left: 1.2px solid black; margin-left: -0.6px; pointer-events: none;}
-.ͼ1 .cm-cursor {display: none;}
-.ͼ3 .cm-cursor {border-left-color: #ddd;}
-.ͼ1 .cm-dropCursor {position: absolute;}
-.ͼ1.cm-focused > .cm-scroller > .cm-cursorLayer .cm-cursor {display: block;}
-.ͼ1 .cm-iso {unicode-bidi: isolate;}
-.ͼ1 .cm-announced {position: fixed; top: -10000px;}
-@media print {.ͼ1 .cm-announced {display: none;}}
-.ͼ2 .cm-activeLine {background-color: #cceeff44;}
-.ͼ3 .cm-activeLine {background-color: #99eeff33;}
-.ͼ2 .cm-specialChar {color: red;}
-.ͼ3 .cm-specialChar {color: #f78;}
-.ͼ1 .cm-gutters {flex-shrink: 0; display: flex; height: 100%; box-sizing: border-box; z-index: 200;}
-.ͼ1 .cm-gutters-before {inset-inline-start: 0;}
-.ͼ1 .cm-gutters-after {inset-inline-end: 0;}
-.ͼ2 .cm-gutters.cm-gutters-before {border-right-width: 1px;}
-.ͼ2 .cm-gutters.cm-gutters-after {border-left-width: 1px;}
-.ͼ2 .cm-gutters {background-color: #f5f5f5; color: #6c6c6c; border: 0px solid #ddd;}
-.ͼ3 .cm-gutters {background-color: #333338; color: #ccc;}
-.ͼ1 .cm-gutter {display: flex !important; flex-direction: column; flex-shrink: 0; box-sizing: border-box; min-height: 100%; overflow: hidden;}
-.ͼ1 .cm-gutterElement {box-sizing: border-box;}
-.ͼ1 .cm-lineNumbers .cm-gutterElement {padding: 0 3px 0 5px; min-width: 20px; text-align: right; white-space: nowrap;}
-.ͼ2 .cm-activeLineGutter {background-color: #e2f2ff;}
-.ͼ3 .cm-activeLineGutter {background-color: #222227;}
-.ͼ1 .cm-panels {box-sizing: border-box; position: sticky; left: 0; right: 0; z-index: 300;}
-.ͼ2 .cm-panels {background-color: #f5f5f5; color: black;}
-.ͼ2 .cm-panels-top {border-bottom: 1px solid #ddd;}
-.ͼ2 .cm-panels-bottom {border-top: 1px solid #ddd;}
-.ͼ3 .cm-panels {background-color: #333338; color: white;}
-.ͼ1 .cm-dialog label {font-size: 80%;}
-.ͼ1 .cm-dialog {padding: 2px 19px 4px 6px; position: relative;}
-.ͼ1 .cm-dialog-close {position: absolute; top: 3px; right: 4px; background-color: inherit; border: none; font: inherit; font-size: 14px; padding: 0;}
-.ͼ1 .cm-tab {display: inline-block; overflow: hidden; vertical-align: bottom;}
-.ͼ1 .cm-widgetBuffer {vertical-align: text-top; height: 1em; width: 0; display: inline;}
-.ͼ1 .cm-placeholder {color: #888; display: inline-block; vertical-align: top; user-select: none;}
-.ͼ1 .cm-highlightSpace {background-image: radial-gradient(circle at 50% 55%, #aaa 20%, transparent 5%); background-position: center;}
-.ͼ1 .cm-highlightTab {background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="20"><path stroke="%23888" stroke-width="1" fill="none" d="M1 10H196L190 5M190 15L196 10M197 4L197 16"/></svg>'); background-size: auto 100%; background-position: right 90%; background-repeat: no-repeat;}
-.ͼ1 .cm-trailingSpace {background-color: #ff332255;}
-.ͼ1 .cm-button {vertical-align: middle; color: inherit; font-size: 70%; padding: .2em 1em; border-radius: 1px;}
-.ͼ2 .cm-button:active {background-image: linear-gradient(#b4b4b4, #d0d3d6);}
-.ͼ2 .cm-button {background-image: linear-gradient(#eff1f5, #d9d9df); border: 1px solid #888;}
-.ͼ3 .cm-button:active {background-image: linear-gradient(#111, #333);}
-.ͼ3 .cm-button {background-image: linear-gradient(#393939, #111); border: 1px solid #888;}
-.ͼ1 .cm-textfield {vertical-align: middle; color: inherit; font-size: 70%; border: 1px solid silver; padding: .2em .5em;}
-.ͼ2 .cm-textfield {background-color: white;}
-.ͼ3 .cm-textfield {border: 1px solid #555; background-color: inherit;}
-.ͼ1.cm-focused .cm-matchingBracket {background-color: #328c8252;}
-.ͼ1.cm-focused .cm-nonmatchingBracket {background-color: #bb555544;}
-.ͼ6 {color: #FF9D00; font-weight: bold;}
-.ͼ7 {color: #FF9D00; font-weight: bold; font-size: 1.4em;}
-.ͼ8 {color: #FF9D00; font-weight: bold; font-size: 1.3em;}
-.ͼ9 {color: #FF9D00; font-weight: bold; font-size: 1.2em;}
-.ͼa {color: #FF9D00; font-weight: bold; font-size: 1.1em;}
-.ͼb {color: #FF9D00; font-weight: bold;}
-.ͼc {color: #FF9D00; font-weight: bold;}
-.ͼd {color: #FFD866; font-weight: bold;}
-.ͼe {color: #8aeefb; font-style: italic;}
-.ͼf {color: #6272A4; text-decoration: line-through;}
-.ͼg {color: #78de8c; font-family: "JetBrains Mono NL", monospace;}
-.ͼh {color: #6767fc;}
-.ͼi {color: #AB9DF2;}
-.ͼj {color: #8BE9FD;}
-.ͼk {color: #E6DB74; font-style: italic;}
-.ͼl {color: #BD93F9;}
-.ͼm {color: #5feda4;}
-.ͼn {color: #93f9c6;}
-.ͼo {color: #93f9c6;}
-.ͼp {color: #6272A4; font-style: italic;}
-.ͼq {color: #FF79C6;}
-.ͼr {color: #FF79C6;}
-.ͼs {color: #FFD866;}
-.ͼt {color: #78de8c;}
-.ͼu {color: #F1FA8C;}
-.ͼv {color: #e6e6e6;}
-.ͼw {color: #AB9DF2;}
-.ͼx {color: #8BE9FD;}
-.ͼy {color: #FF79C6;}
-.ͼz {color: #e6e6e6;}
-.ͼ10 {color: #78de8c;}
-.ͼ11 {color: #50faad;}
-.ͼ12 {color: #50faad;}
-.ͼ13 {color: #6272A4;}
-.ͼ14 {color: #FF79C6;}
-.ͼ15 {color: #8aeefb;}
-.ͼ16 {color: #FF79C6;}
-.ͼ17 {color: #FF79C6;}
-.ͼ18 {color: #e6e6e6;}
-.ͼ19 {color: #FFD866;}
-.ͼ1a {color: #AB9DF2;}
-.ͼ1b {color: #8aeefb;}
-.ͼ1c {color: #FF9D00;}
-.ͼ1d {color: #FF9D00;}
-.ͼ5 {background-color: #1a1a1a; color: #e6e6e6; height: 100%; font-size: 14px;}
-.ͼ5 .cm-scroller {font-family: "JetBrains Mono NL", monospace; line-height: 1.6; padding: 16px;}
-.ͼ5 .cm-content {caret-color: #e6e6e6;}
-.ͼ5 .cm-cursor, .ͼ5 .cm-dropCursor {border-left-color: #e6e6e6; border-left-width: 2px;}
-.ͼ5.cm-focused .cm-selectionBackground, .ͼ5 .cm-selectionBackground, .ͼ5 .cm-content ::selection {background-color: #44475a;}
-.ͼ5 .cm-activeLine {background-color: rgba(68, 71, 90, 0.3);}
-.ͼ5 .cm-gutters {background-color: #1a1a1a; color: #6272a4; border: none; padding-right: 8px;}
-.ͼ5 .cm-activeLineGutter {background-color: transparent; color: #e6e6e6;}
-.ͼ5 .cm-lineNumbers .cm-gutterElement {padding: 0 8px 0 16px;}
-.ͼ5 .cm-line {padding: 0 2px;}
-.ͼ4 .cm-line ::selection, .ͼ4 .cm-line::selection {background-color: transparent !important;}
-.ͼ4 .cm-line {caret-color: transparent !important;}
-.ͼ4 .cm-content :focus::selection, .ͼ4 .cm-content :focus ::selection {background-color: Highlight !important;}
-.ͼ4 .cm-content :focus {caret-color: initial !important;}
-.ͼ4 .cm-content {caret-color: transparent !important;}
-```
+## Other Updates 
 
 ### Changes to Formatting 
 
@@ -400,9 +261,7 @@ This structure keeps the name surface constant (`thot` everywhere), signals clea
     8. Thin 
     9. ThinItalic 
 
----
-
-## Regarding Icons 
+### Icons 
 
 **This is how they're listed in the `YOUR_THOTS.md` document**
 
@@ -494,6 +353,38 @@ This structure keeps the name surface constant (`thot` everywhere), signals clea
 
 ---
 
+## Phase 7 "Polish" Task Review 
+
+### Spell Check 
+
+  + Need to add spellcheck urgently 
+  + "subtle save indicator" can be delayed 
+
+### Keyboard Shortcuts Hints 
+
+  + Maybe should consider below SwiftUI Wrapper question first 
+  + I'd like to think of new creative ways to get word/character/token count to display 
+
+### Improve Mobile Responsiveness 
+  
+  + We don't yet have a mobile test environment yet 
+  + Should note that iPad is way more important than mobile 
+
+### Clear Content, Export, Save, Import Open, Etc. 
+
+  + Does it make more sense to use native file system tools in SwiftUI wrapper 
+  + Feels weird to have a "clear content" button at all 
+  + "Export" and "Import" are just confusing and shouldn't be done until we plan save/open 
+  + **NOTE** Currently CMD-N opens new window that shows duplicate text 
+  + **NOTE**: It would also be nice to make it so <kbd>CMD + S</kbd> just nudges a normal auto-save. Right now it opens a window more like save-as and you obviously can only save as HTML. My main reason for mentioning this is because I compulsively hit CMD + S and it opens a window every time. 
+  - Eventually it would be nice to have it print too; to start, not anything other than actually printing the markdown just like you see it in the app. 
+
+### Definitely Add 
+
+  + Word, character without spaces, and token count display
+
+---
+
 ## Future Updates 
 
 ### **macOS, iOS SwiftUI light wrapper**
@@ -531,3 +422,5 @@ This structure keeps the name surface constant (`thot` everywhere), signals clea
   + Somewhere along the line it would make sense to give users who don't like markdown an option to use the app too 
   + It would be really fun to sort of try and reinvent a UI that is as convenient as markdown for formatting plain text 
   + Almost like a little context menu but with super prominent keyboard shortcuts written on the places that a RTF user would otherwise click to make something a heading or bold, etc. 
+
+---
