@@ -2,7 +2,7 @@
 `thots.august.style`
 
 **Last Updated**: 2026-02-13
-**Version**: v2.0.8
+**Version**: v2.1.4
 **Status**: Active development on `v2-first-thots` branch
 
 ---
@@ -24,6 +24,7 @@
   6. [Design System & Styling](#design-system--styling)
   7. [Common Pitfalls & Important Notes](#common-pitfalls--important-notes)
   8. [Deployment](#deployment)
+  9. [Changing Colors & Fonts](#changing-colors--fonts)
 
 ---
 
@@ -60,19 +61,32 @@
 
 ## Recent Changes
 
+### 2026-02-13 — v2.1.4: Context-Dependent Marker Fix
+
+* **ViewPlugin reintroduced for 3 specific marker cases** (in `editor.ts`)
+
+  + Discovery: Lezer's `ruleNodeProp.combine()` places lower-depth rules first; `getStyleTags()` returns the first match. This means the base parser's no-context depth=0 rules (e.g. `ListMark → processingInstruction`) always block context-dependent depth>0 extension rules.
+  + Targeted ViewPlugin walks the parent tree for only 3 cases: ListMark in BulletList (gold), ListMark in OrderedList (red), CodeMark in InlineCode (red-orange)
+  + CSS classes (`.thot-bullet-mark`, `.thot-number-mark`, `.thot-inline-code-mark`) in `thotEditorTheme` provide higher specificity than HighlightStyle-generated classes
+  + Link URL differentiation fixed: `tags.url` entry placed after `tags.link` in HighlightStyle cascade so URL color wins when both classes appear on a span
+
+* **Typography adjustments**
+
+  + Line height: 1.0 → 1.5 (less cramped)
+  + Base text weight confirmed as Medium (500)
+
 ### 2026-02-13 — v2.0.8: Complete Highlighting System
 
-* **Highlighting Architecture Rewrite** (replaces previous ViewPlugin approach)
+* **Highlighting architecture rewrite**
 
   + Root cause analysis revealed 3 systemic issues: Lezer styleTags depth mismatch, missing GFM parser, and reversed CSS cascade order
-  + All highlighting now handled through `styleTags` overrides + `HighlightStyle` cascade — no more ViewPlugin decorations
   + Created `src/highlight-tags.ts` as single source of truth for all colors (~100 entries) and custom Lezer tags
-  + Deleted `src/markdown-decorations.ts` (ViewPlugin) — replaced by path-based styleTags at depth=1
+  + Deleted `src/markdown-decorations.ts` (old full-scope ViewPlugin) — replaced by styleTags + targeted ViewPlugin
   + Moved `src/theme-reference.ts` to `docs/archive/v2/` — superseded by `highlight-tags.ts`
 
 * **8 Bugs Fixed** (see `docs/archive/v2/v2_0_8_BUG_LOG.md`)
 
-  + Bold/italic markers now match their content color (depth=1 path overrides)
+  + Bold/italic markers now match their content color
   + Bullet and ordered list markers/content now correctly differentiated via custom tags
   + Blockquote content now highlighted (CSS cascade fix)
   + Bold in list items now properly overrides list color (priority ordering)
@@ -130,7 +144,7 @@
   1. **CodeMirror 6 over custom editor** — Incremental Lezer parser handles syntax highlighting without full-document scans; virtual scrolling renders only visible lines; battle-tested on massive files
   2. **Web over native** — v1 used SwiftUI + NSTextStorage which flickered at 88+ lines due to reactive re-rendering; web technologies (what VS Code uses) solve this natively
   3. **localStorage over IndexedDB** — Synchronous, simple, fast; sufficient for single-document scratchpad; no permissions needed
-  4. **Custom Lezer tags + path-based styleTags** — Built-in Lezer tags can't differentiate bullet vs ordered lists. Custom `Tag.define()` creates unique tags; path-based styleTags (`'BulletList/ListItem/ListMark'`) override at depth=1, beating the default depth=0 processingInstruction tag
+  4. **Custom Lezer tags + hybrid styleTags/ViewPlugin** — Built-in Lezer tags can't differentiate bullet vs ordered lists. Custom `Tag.define()` creates unique tags. Simple depth=0 overrides and inherit rules work via styleTags; context-dependent markers (3 cases) use a targeted ViewPlugin because Lezer's `combine()` blocks depth>0 context overrides
   5. **CSS cascade ordering for priority** — `HighlightStyle.define` generates CSS rules in array order. When two classes land on one span (e.g. bold text inside a list), the LATER CSS rule wins. Low priority items go first; high priority items go last
 
 ### How It Actually Works
@@ -141,10 +155,11 @@
 
   ```
   hangingIndentPlugin         // Line decorations (lowest priority)
+  markerDecorations           // ViewPlugin: list markers + inline code marks (3 cases)
   markdown({                  // Language parser with:
     base: markdownLanguage,   //   GFM + extensions (Table, Strikethrough, etc.)
     codeLanguages: languages, //   Language-specific code block highlighting
-    extensions: [overrides],  //   Path-based styleTags (custom tags for lists, tables)
+    extensions: [overrides],  //   styleTags (custom tags for lists, tables, markers)
   })
   keymap.of([...])            // Key bindings including CMD+S
   EditorView.lineWrapping     // Soft wrap at window edge
@@ -157,9 +172,11 @@
   ```
   highlight-tags.ts → defines custom Tags + colors object (single source of truth)
        ↓
-  editor.ts → styleTags overrides assign tags to markdown nodes
+  editor.ts → styleTags assign tags to nodes (depth=0 overrides + inherit rules)
+            → ViewPlugin adds CSS classes for 3 context-dependent markers
        ↓
   theme.ts → HighlightStyle maps tags to CSS (cascade order = priority)
+           → EditorView.theme defines .thot-* classes (higher specificity)
   ```
 
 * **Save flow**
@@ -260,6 +277,7 @@
   │   │       ├── v2_0_0_FEEDBACK.md   # Detailed testing feedback
   │   │       ├── v2_0_8_BUG_REPORT.md # Bug report that triggered v2.0.8
   │   │       ├── v2_0_8_BUG_LOG.md    # Bug-by-bug fix documentation
+  │   │       ├── v2_1_4_BUG_REPORT.md # Remaining bugs after v2.0.8
   │   │       └── old-theme-ref.ts     # Archived color reference
   │   ├── images/                      # Reference screenshots
   │   └── favicon-and-other-icons/     # Favicon batches (to be consolidated)
@@ -279,9 +297,9 @@
 
 **`src/editor.ts`** — CodeMirror configuration
   + Assembles the extensions array (parser, keymap, theme)
-  + Comprehensive `styleTags` overrides using path-based matches for all marker/content pairs
+  + `styleTags` overrides: depth=0 marker overrides (HeaderMark, QuoteMark, etc.) and inherit rules (BulletList/..., OrderedList/..., Table/...)
+  + Targeted ViewPlugin for 3 context-dependent markers: ListMark in BulletList → gold, ListMark in OrderedList → red, CodeMark in InlineCode → red-orange
   + Uses `base: markdownLanguage` to enable GFM (Tables, Strikethrough, TaskList) + Subscript, Superscript, Emoji
-  + Imports custom tags from `highlight-tags.ts` for bullet/ordered list and table differentiation
   + CMD+S keymap to intercept browser save and trigger `forceSave()`
   + Exports helper functions: `getContent`, `setContent`, `getCursorPos`, `setCursorPos`, `getScrollTop`, `setScrollTop`
 
@@ -291,7 +309,7 @@
   + Designed as data source for a future user-customizable theme UI
 
 **`src/theme.ts`** — Visual styling
-  + `thotEditorTheme` — Editor chrome (background, cursor, gutters, selection)
+  + `thotEditorTheme` — Editor chrome (background, cursor, gutters, selection) + `.thot-*` CSS classes for ViewPlugin markers (higher specificity than HighlightStyle)
   + `thotHighlightStyle` — All 87+ Lezer tags mapped to colors, ordered by CSS cascade priority (low priority first, high priority last)
   + Imports all colors and custom tags from `highlight-tags.ts`
   + Exports `thotTheme` (combined array of both)
@@ -358,7 +376,8 @@
 
   + Font family: JetBrains Mono NL (no-ligature variant)
   + Font size: 12px
-  + Line height: 1.0
+  + Line height: 1.5
+  + Base text weight: Medium (500) — set via `.cm-content { fontWeight: '500' }` in `src/theme.ts`
   + 9 weight variants loaded via @font-face in `src/styles/main.css`
 
 ---
@@ -396,12 +415,13 @@
 
   + **Extension ordering matters in `editor.ts`** — lowest priority first, theme last
   + **HighlightStyle cascade order matters in `theme.ts`** — later CSS rules win; low priority items first, high priority items last (strikethrough is defined last so it always wins)
-  + **styleTags path depth matters in `editor.ts`** — path-based overrides like `'BulletList/ListItem/ListMark'` (depth=1+) beat the default `processingInstruction` (depth=0); this is how markers get colored correctly
+  + **styleTags only work at depth=0** — Lezer's `ruleNodeProp.combine()` merges base parser rules with extensions, and the base parser's no-context depth=0 rules always match first, blocking context-based depth>0 overrides. Simple name overrides (e.g. `HeaderMark: tags.heading`) work because at depth=0 the extension replaces the base rule.
+  + **ViewPlugin needed for context-dependent markers** — List markers (bullet vs ordered) and inline code marks require walking the parent tree. These are the ONLY cases handled by the ViewPlugin in `editor.ts`; everything else uses styleTags + HighlightStyle.
 
 ### Performance Considerations
 
-  + `hanging-indent.ts` only processes visible lines (`view.visibleRanges`)
-  + Highlighting is handled entirely by Lezer's built-in styleTags system — no custom syntax tree walking needed
+  + `hanging-indent.ts` and the marker ViewPlugin only process visible lines (`view.visibleRanges`)
+  + Most highlighting is handled by Lezer's built-in styleTags system — only 3 marker types need custom tree walking
   + `@codemirror/language-data` loads language parsers lazily (on demand) via dynamic imports
 
 ---
@@ -467,12 +487,65 @@
 
 ---
 
+## Changing Colors & Fonts
+
+### How to change a color
+
+All colors live in the `colors` object in `src/highlight-tags.ts`. Find the key for the element you want to change and update its hex value.
+
+**Example**: Change bullet markers from gold to green:
+```ts
+// src/highlight-tags.ts
+bulletMarker: '#50FA7B',   // was '#dfc532'
+```
+
+### How to change a font weight or style
+
+Font weights and styles are set in the `HighlightStyle.define()` array in `src/theme.ts`. Find the entry for the tag you want to change.
+
+**Example**: Make blockquote text Regular weight instead of Thin Italic:
+```ts
+// src/theme.ts — find the blockquote entry in thotHighlightStyle
+{ tag: tags.quote, color: colors.blockquote, fontWeight: '400' },
+// remove fontStyle: 'italic' and change fontWeight from '100' to '400'
+```
+
+### Where to find each element
+
+| What you want to change | File | What to look for |
+|---|---|---|
+| Any color value | `src/highlight-tags.ts` | `colors.___` key name |
+| Font weight or style | `src/theme.ts` | Entry in `thotHighlightStyle` array |
+| Bullet/ordered/inline-code marker color | `src/highlight-tags.ts` | `bulletMarker`, `numberedMarker`, `inlineCode` |
+| Bullet/ordered/inline-code marker font weight | `src/theme.ts` | `.thot-bullet-mark`, `.thot-number-mark`, `.thot-inline-code-mark` in `thotEditorTheme` |
+| Base text size | `src/theme.ts` | `fontSize` in `thotEditorTheme` `'&'` rule |
+| Line height | `src/theme.ts` | `lineHeight` in `thotEditorTheme` `.cm-scroller` rule |
+| Font family | `src/theme.ts` | `fontFamily` in `thotEditorTheme` `.cm-scroller` rule |
+| Font face declarations | `src/styles/main.css` | `@font-face` blocks |
+
+### Available font weights
+
+| Weight | Name | Example usage |
+|---|---|---|
+| 100 | Thin | Strikethrough, blockquote, comments |
+| 200 | ExtraLight | — |
+| 300 | Light | — |
+| 400 | Regular | Most elements (default) |
+| 500 | Medium | Base text (foreground) |
+| 600 | SemiBold | — |
+| 700 | Bold | List markers, link text |
+| 800 | ExtraBold | Headings, bold, italic |
+| 900 | Black | — |
+
+---
+
 ## Related Documentation
 
 - **Build Log & Roadmap**: `docs/archive/v2/v2_0_0_UPDATES.md`
 - **Testing Feedback**: `docs/archive/v2/v2_0_0_FEEDBACK.md`
 - **v2.0.8 Bug Report**: `docs/archive/v2/v2_0_8_BUG_REPORT.md`
 - **v2.0.8 Bug Log (fixes)**: `docs/archive/v2/v2_0_8_BUG_LOG.md`
+- **v2.1.4 Bug Report**: `docs/archive/v2/v2_1_4_BUG_REPORT.md`
 - **Color Reference (single source of truth)**: `src/highlight-tags.ts`
 - **Archived Color Reference**: `docs/archive/v2/old-highlight-theme-references.ts`
 - **v1 Challenges**: `docs/archive/v1/OvercomeChallenges.md`

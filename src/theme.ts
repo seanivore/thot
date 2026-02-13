@@ -24,7 +24,7 @@ export const thotEditorTheme = EditorView.theme({
   },
   '.cm-scroller': {
     fontFamily: '"JetBrains Mono NL", monospace',
-    lineHeight: '1.0',
+    lineHeight: '1.5',
     padding: '16px',
   },
   '.cm-content': {
@@ -56,6 +56,22 @@ export const thotEditorTheme = EditorView.theme({
   },
   '.cm-line': {
     padding: '0 2px',
+  },
+
+  // ViewPlugin decoration classes for context-dependent highlighting
+  // These need higher CSS specificity than HighlightStyle-generated classes,
+  // which EditorView.theme provides via scoped selectors.
+  // Only used for cases where Lezer's styleTags combine() blocks context overrides.
+  '.thot-bullet-mark': {
+    color: colors.bulletMarker,
+    fontWeight: '700',
+  },
+  '.thot-number-mark': {
+    color: colors.numberedMarker,
+    fontWeight: '700',
+  },
+  '.thot-inline-code-mark': {
+    color: colors.inlineCode,
   },
 }, { dark: true })
 
@@ -186,6 +202,9 @@ export const thotHighlightStyle = HighlightStyle.define([
 
   // ─── Links ───
   { tag: tags.link, color: colors.linkText, fontWeight: '700' },
+  // URL must be AFTER link so it wins CSS cascade when Link/... inherit
+  // propagates tags.link to the URL node (both classes on same span)
+  { tag: tags.url, color: colors.linkUrl },
 
   // ─── Content separator (horizontal rule) ───
   { tag: tags.contentSeparator, color: colors.horizontalRule },
