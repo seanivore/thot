@@ -33,6 +33,46 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'JetBrains Mono NL';
+  src: url('/src/assets/fonts/JetBrainsMonoNL-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono NL';
+  src: url('/src/assets/fonts/JetBrainsMonoNL-ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono NL';
+  src: url('/src/assets/fonts/JetBrainsMonoNL-ExtraBoldItalic.ttf') format('truetype');
+  font-weight: 800;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono NL';
+  src: url('/src/assets/fonts/JetBrainsMonoNL-Thin.ttf') format('truetype');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono NL';
+  src: url('/src/assets/fonts/JetBrainsMonoNL-ThinItalic.ttf') format('truetype');
+  font-weight: 100;
+  font-style: italic;
+  font-display: swap;
+}
+
 /* Reset & Base */
 *,
 *::before,

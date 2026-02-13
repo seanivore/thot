@@ -1,14 +1,14 @@
-# Thot v2.0 "First Thots" — Executable Implementation Plan
+# Thot v2.0.0 "First Thots" — Build & Updates Log
 
-**Version**: 2.0.0 "First Thots" 
+**Version**: 2.0.0 "First Thots"
 **Created**: February 9, 2026
-**02-10-2026 edit**: Sean has updated this document adjusting the remaining phases to include review and feedback and then document updates. 
+**Last Updated**: February 13, 2026
 
 ---
 
 ## Executive Summary
 
-**What we're building**: A web-based markdown scratchpad with IDE-like syntax highlighting, auto-save, and PWA capability for cross-platform use.
+**What we built**: A web-based markdown scratchpad with IDE-like syntax highlighting, auto-save, and PWA capability for cross-platform use.
 
 **Why web**: After extensive research and a failed native macOS implementation (see `docs/archive/v1/OvercomeChallenges.md`), we determined that:
   - SwiftUI + NSTextStorage is architecturally unsuited for responsive text editors
@@ -30,19 +30,22 @@
 │                                                             │
 │  ┌─────────────────────────────────────────────────────────┐│
 │  │  Thot App (TypeScript)                                  ││
-│  │  ├─ main.ts          — App initialization               ││
-│  │  ├─ editor.ts        — CodeMirror setup & config        ││
-│  │  ├─ persistence.ts   — localStorage/IndexedDB storage   ││
-│  │  ├─ theme.ts         — Thot dark theme for CodeMirror   ││
-│  │  └─ state.ts         — Cursor, scroll, preferences      ││
+│  │  ├─ main.ts                 — App initialization        ││
+│  │  ├─ editor.ts               — CodeMirror setup & config ││
+│  │  ├─ persistence.ts          — localStorage storage      ││
+│  │  ├─ state.ts                — Cursor/scroll state       ││
+│  │  ├─ theme.ts                — Dark theme + highlighting ││
+│  │  ├─ markdown-decorations.ts — Context-aware CSS classes ││
+│  │  └─ hanging-indent.ts       — Wrapped line indentation  ││
 │  └─────────────────────────────────────────────────────────┘│
 │                                                             │
 │  ┌─────────────────────────────────────────────────────────┐│
 │  │  CodeMirror 6                                           ││
-│  │  ├─ @codemirror/lang-markdown   — Markdown parsing      ││
-│  │  ├─ @codemirror/view            — Editor view           ││
-│  │  ├─ @codemirror/state           — Editor state          ││
-│  │  └─ @lezer/highlight            — Syntax highlighting   ││
+│  │  ├─ @codemirror/lang-markdown    — Markdown parsing     ││
+│  │  ├─ @codemirror/language-data    — Code block languages ││
+│  │  ├─ @codemirror/view             — Editor view          ││
+│  │  ├─ @codemirror/state            — Editor state         ││
+│  │  └─ @lezer/highlight             — Syntax highlighting  ││
 │  └─────────────────────────────────────────────────────────┘│
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -57,490 +60,304 @@
 | **Editor**   | CodeMirror 6                    | Purpose-built, handles 100K+ lines, incremental parsing |
 | **Build**    | Vite                            | Fast dev server, optimized production builds            |
 | **Styling**  | CSS (vanilla)                   | No framework needed for single-page app                 |
-| **Storage**  | localStorage + IndexedDB        | localStorage for state, IndexedDB for large documents   |
-| **PWA**      | Vite PWA plugin                 | Simple PWA setup                                        |
-| **Hosting**  | Vercel / Netlify / GitHub Pages | Static hosting, free tier sufficient                    |
+| **Storage**  | localStorage                    | Synchronous, fast, no permissions needed                |
+| **PWA**      | Vite PWA plugin                 | Simple PWA setup with service worker                    |
 
 ---
 
-## File Structure
+## How to Run Locally
 
+### Development (use this while working)
+
+```bash
+npm run dev
 ```
-thot/
-├── index.html                         # Entry point
-├── package.json                       # Dependencies
-├── tsconfig.json                      # TypeScript config
-├── vite.config.ts                     # Vite config with PWA
-├── public/
-│   ├── favicon.ico                    # From AppIcon (16x16)  **THESE ARE NOT ACCURATE** 
-│   ├── apple-touch-icon.png           # From AppIcon (180x180)
-│   └── manifest.json                  # PWA manifest
-├── src/
-│   ├── main.ts                        # App entry, initializes editor
-│   ├── editor.ts                      # CodeMirror setup
-│   ├── theme.ts                       # Thot dark theme
-│   ├── persistence.ts                 # Save/load content
-│   ├── state.ts                       # Cursor/scroll state
-│   ├── styles/
-│   │   └── main.css                   # Global styles, dark theme
-│   ├── assets/
-│   │   ├── fonts/                     # JetBrains Mono (4 variants) **ADDED MORE** 
-│   │   └── icons/                     # App icons (various sizes) **FRESH BATCH IN FEEDBACK** 
-│   └── types/
-│       └── index.d.ts                 # Type definitions
-├── docs/
-│   ├── YOUR_THOTS.md                  # This document (living spec)  **CHANGED THIS TO `docs/archive/v2/v2_0_0_UPDATES`**
-│   ├── archive/                       # v1 documentation for reference **THIS HAS BEEN REARRANGED** 
-│   │   ├── OvercomeChallenges.md
-│   │   ├── v1_BUILD_RESEARCHED.md
-│   │   ├── IMPL_v1_DESKPAD.md
-│   │   ├── ARCHITECTURE_OVERVIEW.md
-│   │   └── TextMateRules.md
-│   └── images/                        # UI reference images
-├── README.md                          # Updated for v2
-└── LICENSE                            # MIT
+
+  + Starts Vite dev server with Hot Module Replacement (HMR)
+  + Changes to source files appear instantly in the browser
+  + No build step needed — Vite serves source files directly
+  + **This is what you should use during development**
+
+### Production Build (use to test the final product)
+
+```bash
+npm run build
 ```
+
+  + Runs `tsc` (TypeScript type check) then `vite build`
+  + Outputs optimized, bundled files to `dist/`
+  + Generates the PWA service worker and manifest
+  + **Run this before deploying or when testing PWA behavior**
+
+### Production Preview (use to test the built output)
+
+```bash
+npm run preview
+```
+
+  + Serves the `dist/` folder as a local static server
+  + Shows exactly what users will see in production
+  + **Must run `npm run build` first** — preview only serves what's already in `dist/`
+  + If you change source files, you must `npm run build` again before `npm run preview` will show the changes
+  + The service worker can aggressively cache — use incognito or hard refresh (Cmd+Shift+R) if changes don't appear
+
+### Common Gotcha
+
+  + Changed a file but `npm run preview` shows the old version?
+    - You forgot to `npm run build` first
+    - Or the service worker cached the old version — try incognito window
+  + **Workflow**: Edit code → see changes with `npm run dev` → when satisfied, `npm run build && npm run preview` to verify production
 
 ---
 
 ## Implementation Phases
 
-### Phase 0: Project Setup
-**Status**: 
-  - [x] Complete
+### Phase 0: Project Setup — Complete
+  - [x] npm project initialized
+  - [x] TypeScript configured
+  - [x] Vite configured with PWA plugin
+  - [x] Basic `index.html` entry point
+  - [x] CSS with dark theme base
+  - [x] JetBrains Mono NL web font
 
-**Tasks**:
-  - [x] 1. Clean up Swift/Xcode files from repository (already done in pivot)
-  - [x] 2. Initialize npm project with `package.json`
-  - [x] 3. Configure TypeScript (`tsconfig.json`)
-  - [x] 4. Configure Vite (`vite.config.ts`)
-  - [x] 5. Create basic `index.html`
-  - [x] 6. Set up CSS with dark theme base
-  - [x] 7. Configure JetBrains Mono as web font
+### Phase 1: Basic CodeMirror Editor — Complete
+  - [x] CodeMirror 6 initialization
+  - [x] Markdown language support
+  - [x] Keybindings (Cmd+Z, Cmd+Shift+Z, etc.)
+  - [x] Line numbers and gutter
 
-**Dependencies to install**:
-```bash
-npm init -y
-npm install codemirror @codemirror/lang-markdown @codemirror/view @codemirror/state @codemirror/commands @lezer/highlight
-npm install -D typescript vite vite-plugin-pwa
-```
+### Phase 2: Thot Dark Theme — Complete (revised in Phase 7)
+  - [x] Editor chrome (background, cursor, selection, gutters)
+  - [x] Syntax highlighting via `HighlightStyle`
 
-**Verification**: `npm run dev` starts dev server, shows empty dark page
+### Phase 3: Persistence — Complete
+  - [x] Auto-save with 500ms debounce
+  - [x] Load content on startup
+  - [x] Welcome content for first-time users
+  - [x] Force save on `beforeunload` and `visibilitychange`
 
----
+### Phase 4: State Persistence — Complete
+  - [x] Cursor position saved/restored
+  - [x] Scroll position saved/restored
 
-### Phase 1: Basic CodeMirror Editor
-**Status**: 
-  - [x] Complete
+### Phase 5: PWA Configuration — Complete
+  - [x] Web app manifest (via vite-plugin-pwa)
+  - [x] Service worker for offline support
+  - [x] App icons (192px, 512px)
+  - [x] Installable on macOS/Chrome
 
-**Tasks**:
-  - [x] 1. Create `src/main.ts` with CodeMirror initialization
-  - [x] 2. Create `src/editor.ts` with editor configuration
-  - [x] 3. Enable markdown language support
-  - [x] 4. Configure basic keybindings (Cmd+Z, Cmd+Shift+Z, Cmd+A, etc.)
-  - [x] 5. Set JetBrains Mono as editor font
-
-**Key code pattern** (`src/editor.ts`):
-```typescript
-import { EditorView, basicSetup } from 'codemirror'
-import { markdown } from '@codemirror/lang-markdown'
-import { keymap } from '@codemirror/view'
-import { defaultKeymap, history, historyKeymap } from '@codemirror/commands'
-
-export function createEditor(parent: HTMLElement): EditorView {
-  return new EditorView({
-    extensions: [
-      basicSetup,
-      markdown(),
-      keymap.of([...defaultKeymap, ...historyKeymap]),
-      history(),
-      EditorView.theme({
-        '&': { height: '100vh' },
-        '.cm-scroller': { fontFamily: 'JetBrains Mono NL, monospace' }
-      })
-    ],
-    parent
-  })
-}
-```
-
-**Verification**: Editor appears, can type markdown, undo/redo works
-
----
-
-### Phase 2: Thot Dark Theme **NOTE: NOT CREATED FULLY IN `src/theme.ts`**
-**Status**: 
-  - [x] Complete
-
-**Tasks**:
-  - [x] 1. Create `src/theme.ts` with CodeMirror theme
-  - [x] 2. Convert TextMate colors to CodeMirror highlight styles
-  - [x] 3. Apply dark background (#1a1a1a)
-  - [x] 4. Style cursor, selection, gutters
-
-**Color mapping** (from `ThotMarkdownTheme.json`):
-
-| Element                 | Color            |
-| ----------------------- | ---------------- |
-| Background              | #1a1a1a          |
-| Foreground              | #e6e6e6          |
-| Headings                | #FF9D00 (bold)   |
-| Bold                    | #FFD866          |
-| Italic                  | #8aeefb          |
-| Inline code             | #78de8c          |
-| Fenced code             | #6767fc          |
-| Links                   | #AB9DF2          |
-| URLs                    | #8BE9FD          |
-| Blockquotes             | #E6DB74 (italic) |
-| List markers (bullet)   | #dfc532 (bold)   |
-| List markers (numbered) | #ff6b6b (bold)   |
-| List content (bullet)   | #5feda4          |
-| List content (numbered) | #f8a5c2          |
-| Checkboxes              | #50faad          |
-| Strikethrough           | #6272A4          |
-| Tables                  | #e2ff79          |
-| Horizontal rules        | #93f9c6          |
-| Comments                | #6272A4 (italic) |
-
-**Key code pattern** (`src/theme.ts`):
-```typescript
-import { HighlightStyle, syntaxHighlighting } from '@codemirror/language'
-import { tags } from '@lezer/highlight'
-
-export const thotHighlightStyle = HighlightStyle.define([
-  { tag: tags.heading, color: '#FF9D00', fontWeight: 'bold' },
-  { tag: tags.strong, color: '#FFD866', fontWeight: 'bold' },
-  { tag: tags.emphasis, color: '#8aeefb', fontStyle: 'italic' },
-  { tag: tags.monospace, color: '#78de8c' },
-  { tag: tags.link, color: '#AB9DF2' },
-  { tag: tags.url, color: '#8BE9FD' },
-  { tag: tags.quote, color: '#E6DB74', fontStyle: 'italic' },
-  // ... more mappings
-])
-
-export const thotTheme = EditorView.theme({
-  '&': {
-    backgroundColor: '#1a1a1a',
-    color: '#e6e6e6'
-  },
-  '.cm-cursor': { borderLeftColor: '#e6e6e6' },
-  '.cm-selectionBackground': { backgroundColor: '#44475a' },
-  // ... more styles
-})
-```
-
-**Verification**: Markdown renders with highlight colors — **NOTE: Not same as original theme; see FEEDBACK**
-
----
-
-### Phase 3: Persistence
-**Status**: 
-  - [x] Complete
-
-**Tasks**:
-  - [x] 1. Create `src/persistence.ts` for content storage
-  - [x] 2. Implement auto-save with debounce (500ms)
-  - [x] 3. Load content on startup
-  - [x] 4. Handle first-run (welcome content)
-
-**Storage strategy**:
-  - **Small documents (<1MB)**: localStorage key `thot:content`
-  - **Large documents (>1MB)**: IndexedDB (future enhancement)
-  - **State (cursor, scroll)**: localStorage key `thot:state`
-
-**Key code pattern** (`src/persistence.ts`):
-```typescript
-const CONTENT_KEY = 'thot:content'
-const DEBOUNCE_MS = 500
-
-let saveTimeout: number | null = null
-
-export function saveContent(content: string): void {
-  if (saveTimeout) clearTimeout(saveTimeout)
-  saveTimeout = window.setTimeout(() => {
-    localStorage.setItem(CONTENT_KEY, content)
-  }, DEBOUNCE_MS)
-}
-
-export function loadContent(): string {
-  return localStorage.getItem(CONTENT_KEY) ?? ''
-}
-
-export function forceSave(content: string): void {
-  if (saveTimeout) clearTimeout(saveTimeout)
-  localStorage.setItem(CONTENT_KEY, content)
-}
-```
-
-**Verification**: Type text, refresh page, text persists
-
----
-
-### Phase 4: State Persistence
-**Status**: 
-  - [x] Complete
-
-**Tasks**:
-  - [x] 1. Create `src/state.ts` for cursor/scroll state
-  - [x] 2. Save cursor position on change
-  - [x] 3. Save scroll position on scroll
-  - [x] 4. Restore cursor and scroll on load
-
-**Key code pattern** (`src/state.ts`):
-```typescript
-interface EditorState {
-  cursorPos: number
-  scrollTop: number
-}
-
-const STATE_KEY = 'thot:state'
-
-export function saveState(state: EditorState): void {
-  localStorage.setItem(STATE_KEY, JSON.stringify(state))
-}
-
-export function loadState(): EditorState | null {
-  const saved = localStorage.getItem(STATE_KEY)
-  return saved ? JSON.parse(saved) : null
-}
-```
-
-**Integration with CodeMirror**:
-```typescript
-// In editor setup
-EditorView.updateListener.of((update) => {
-  if (update.selectionSet || update.geometryChanged) {
-    saveState({
-      cursorPos: update.state.selection.main.head,
-      scrollTop: view.scrollDOM.scrollTop
-    })
-  }
-})
-```
-
-**Verification**: Type at line 50, scroll down, refresh — cursor and scroll position restored
-
----
-
-### Phase 5: PWA Configuration — **NOTE: THIS FILE IS NOT PRESENT; intentional?**
-**Status**: 
-  - [x] Complete
-
-**Tasks**:
-  - [x] 1. Create `public/manifest.json` (via vite-plugin-pwa)
-  - [x] 2. Configure Vite PWA plugin
-  - [x] 3. Generate icons from existing assets (192px added)
-  - [x] 4. Add service worker for offline support
-  - [x] 5. Test installation on macOS/Chrome
-
-**Manifest** (`public/manifest.json`):
-```json
-{
-  "name": "Thot",
-  "short_name": "Thot",
-  "description": "A markdown scratchpad with IDE-like highlighting",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#1a1a1a",
-  "theme_color": "#1a1a1a",
-  "icons": [
-    { "src": "/icons/192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "/icons/512.png", "sizes": "512x512", "type": "image/png" }
-  ]
-}
-```
-
-**Vite config** (`vite.config.ts`):
-```typescript
-import { defineConfig } from 'vite'
-import { VitePWA } from 'vite-plugin-pwa'
-
-export default defineConfig({
-  plugins: [
-    VitePWA({
-      registerType: 'autoUpdate',
-      manifest: false, // We use public/manifest.json
-      workbox: {
-        globPatterns: ['**/*.{js,css,html,woff2}']
-      }
-    })
-  ]
-})
-```
-
-**Verification**: Can install as PWA, works offline, appears in dock/Applications
-
----
-
-### Phase 6: Testing & Feedback 
-**Status**: 
-  - [ ] Complete — read here: `docs/archive/v2/v2_0_0_FEEDBACK.md`
-
-**Tasks**: 
-  - [x] Test local host production build on desktop  
+### Phase 6: Testing & Feedback — Complete
+  - [x] Test local host production build on desktop
   - [x] Detail feedback from testing
-  - [x] Provide & discuss feedback with agent 
-  - [ ] Integrate feedback tasks and fixes into next phase 
+  - [x] Provide & discuss feedback with agent
+  - [x] Integrate feedback tasks and fixes into next phase
+  - Detailed results: `docs/archive/v2/v2_0_0_FEEDBACK.md`
 
-**Verification**: Feedback is detailed, then made clear and actionable with agent, new document created with updates roadmap 
+### Phase 7: Feedback Fixes — Complete
+  - [x] **Theme rewrite** — colors and font weights now match `theme-reference.ts` and feedback hierarchy
+  - [x] **Heading markers** — `#` markers now same color as heading text (via `styleTags` override)
+  - [x] **Bold/italic markers** — `**`/`*` markers now same color as their content
+  - [x] **Blockquote markers** — `>` markers now same color as blockquote text
+  - [x] **List differentiation** — bullet markers (gold), numbered markers (red), bullet content (cyan), numbered content (pink)
+  - [x] **Code delimiter split** — inline code ticks match inline code color, block code ticks match block code color
+  - [x] **Code block language highlighting** — installed `@codemirror/language-data` + 5 language packages; `codeLanguages` enabled
+  - [x] **Table highlighting** — tables now show in lime (#e2ff79) via ViewPlugin CSS class
+  - [x] **Horizontal rule** — now shows in mint (#93f9c6) via ViewPlugin CSS class
+  - [x] **Highlight hierarchy** — `HighlightStyle.define` ordered by priority (strikethrough → inlineCode → bold → italic → heading → list → blockquote → foreground)
+  - [x] **Font weights** — 9 font variants declared; ExtraBold (800) for headings/bold, ExtraBoldItalic (800i) for italic, Thin (100) for strikethrough/comments, ThinItalic (100i) for blockquotes, Medium (500) for base text
+  - [x] **Font size** — 12px applied
+  - [x] **Wrapped line indentation** — `hanging-indent.ts` ViewPlugin maintains indent on wrapped lines
+  - [x] **CMD+S intercept** — triggers `forceSave()` instead of opening browser save dialog
+  - [x] **New files created**: `src/markdown-decorations.ts`, `src/hanging-indent.ts`
 
----
-
-### Phase 7: Polish **UPDATE ACCORDING TO FEEDBACK**
-**Status**: 
-  - [ ] Complete
-
-**Tasks**:
-  - [ ] 1. Add keyboard shortcut hints (optional floating UI)
-  - [ ] 2. Improve mobile responsiveness 
-  - [ ] 3. Add "clear content" confirmation dialog 
-  - [ ] 4. Add subtle save indicator (optional) 
-  - [ ] 5. Performance audit (Lighthouse)
-  - [ ] 6. Final CSS polish
-
-**Optional enhancements** (not blocking):
-  - [ ] Word, character without spaces, and token count display 
-  - [ ] Export to .md file
-  - [ ] Import from .md file 
-  - [ ] Multiple scratchpads (future) 
-
-**Verification**: Lighthouse score >90, no console errors, smooth on all devices
-
----
-
-### Phase 8: Document Updates 
-**Status**:
-  - [ ] Complete
-
-**Tasks**:
-  - [x] Keep this document as is, rename and move it to `docs/archive/v2/v2_0_0_UPDATES.md`
-  - [ ] Use template `docs/THOT_APP.md` to create new document reflecting all architecture, take into account recent changes, and adding anything else needed that it can exist as an all-in-one reference for the project
-  - [ ] Start clear `docs/UPDATE_THOTS.md` organizing updates to be made over upcoming sessions 
+### Phase 8: Document Updates — In Progress
+  - [x] This document updated to reflect Phase 7 fixes
+  - [x] `docs/THOT_APP.md` filled out as one-stop-shop project reference
+  - [ ] Forward-looking roadmap finalized below
 
 ---
 
-## Deployment
-**Status**: 
-  - [ ] On proper `main` branch with tagging 
-  - [ ] Setup Pages, Vercel, or other
-  - [x] Custom Domain DNS Setup `thots.august.style`
-  - [ ] Complete 
+## Known Limitation (Deferred)
 
-### GitHub Pages (Free) **Are there other free options? I'm just not sure I'm ready to make the repository public yet, though I would like the URL public**
-```bash
-# In vite.config.ts, set base to repo name
-# base: '/thot/'
-
-npm run build
-# Deploy dist/ to gh-pages branch
-```
-
-### Vercel (Free tier)
-```bash
-# Connect GitHub repo to Vercel
-# Auto-deploys on push to main
-```
-
-### Custom Domain
-  - Point `thots.august.style` to hosting provider 
-  - Enable HTTPS (automatic on Vercel/Netlify) *must make GitHub repo public if hosting there*
+  + **Indented text turning to code color**: Per CommonMark spec, 4+ spaces of indent creates a code block. This is parser behavior, not a theme bug. With correct code block colors (#8989e3 light purple), this will look intentional rather than broken. Deeper fix would require custom parser modification — can revisit in v2.1.0 if still bothersome.
 
 ---
 
-## Migration Checklist
+## Forward-Looking Items
 
-**Before starting implementation**:
-  - [x] Create `v2-first-thots` branch
-  - [x] Archive v1 documentation
-  - [x] Copy salvageable assets (fonts, icons, images)
-  - [x] Remove Swift source files
-  - [x] Remove Xcode project files
-  - [x] Update README.md for v2
-  - [x] Update .gitignore for Node.js project
+Everything below is captured from `v2_0_0_FEEDBACK.md` that was NOT addressed in Phase 7. Organized by planned version.
 
-**Files to delete**:
-```
-Sources/Editor/*.swift
-Sources/Highlighting/*.swift
-Sources/Persistence/*.swift
-Sources/Preferences/*.swift
-Sources/ThotApp/**
-Thot.xcodeproj/
-project.yml
-```
+### v2.1.0 — Next Update (No UI Changes)
 
-**Files to keep**:
-```
-README.md (update)
-LICENSE
-docs/**
-src/assets/fonts/*.ttf
-src/assets/icons/*.png
-```
+  1. **Spellcheck**
+     - Need to add spellcheck urgently
+     - Browser native spellcheck may be simplest (`spellcheck` attribute or CodeMirror extension)
 
----
+  2. **Counter (Words, Characters, Tokens)**
+     - Word count, character count (with spaces), token count
+     - Consider placement: status bar, or a "Count" menu that shows all four at once
+     - Clicking any count copies that number
+     - Updates live
 
-## Why This Will Work
+  3. **Auto-wrapping shortcuts**
+     - Highlight a word, press `*` and it wraps both sides: `*word*`
+     - Press again for `**word**`
+     - Same behavior for: `'single quotes'`, `"double quotes"`, `(parentheses)`, `{brackets}`, `` `backticks` ``
+     - "This is a feature I use CONSTANTLY"
 
-  1. **CodeMirror 6 handles the hard problems**:
-    - Incremental parsing (no full-document scans)
-    - Virtual scrolling (only renders visible lines)
-    - Efficient updates (minimal DOM manipulation)
-    - Battle-tested on massive files
+  4. **CMD+N behavior**
+     - Currently opens a new browser window showing duplicate text
+     - Needs investigation — should it create a new scratchpad, or be disabled?
 
-  2. **No framework coordination overhead**:
-    - No SwiftUI ↔ AppKit bridging
-    - No @Binding state synchronization
-    - Direct DOM access when needed
+  5. **4-space indent code block color** (if still bothersome)
+     - CommonMark spec issue, would need custom parser modification
 
-  3. **Web storage is simpler**:
-    - localStorage is synchronous and fast
-    - No file system permissions needed
-    - Works identically across platforms
+### v2.x — Pre-UI Updates
 
-  4. **One codebase, all platforms**:
-    - Desktop: PWA installation
-    - Mobile: Same PWA
-    - Browser: Just visit the URL
+  6. **Icons cleanup**
+     - Duplicate icons in `public/icons/` and `src/assets/icons/`
+     - Fresh favicon batch in `docs/favicon-and-other-icons/` (HTML package + Next.js package)
+     - Need to consolidate, pick correct set, update `index.html` and manifest references
+     - `manifest.json` file noted as missing from `public/`
 
----
+  7. **Export to simple PDF**
+     - Markdown rendered without markup notation
+     - Solid text colors, different size for headers
+     - No need for fancy spacing or font changes initially
 
-## Lessons from v1 (Reference)
+  8. **Print functionality**
+     - Print the markdown as you see it in the app
+     - Start simple — just the rendered view
 
-From `docs/archive/OvercomeChallenges.md`:
+  9. **Mobile/iPad responsiveness**
+     - No mobile test environment yet
+     - iPad is WAY more important than phone
+     - Defer until test environment exists
 
-| v1 Problem                          | v2 Solution                         |
-| ----------------------------------- | ----------------------------------- |
-| NSTextStorage reactive re-rendering | CodeMirror incremental parsing      |
-| SwiftUI @Binding coordination       | Direct state management             |
-| Full-document regex on keystroke    | Lezer incremental tokenizer         |
-| Flickering at 88+ lines             | Virtual viewport rendering          |
-| Font caching complexity             | CSS @font-face (browser handles it) |
+  10. **Clear content / Export / Import / Save / Open**
+      - "Clear content" button feels weird
+      - "Export" and "Import" are confusing without a save/open plan
+      - May make more sense to use native file system tools in SwiftUI wrapper (v3)
 
----
+### v3.0.0 — SwiftUI Wrapper & UI
 
-## Document Status
+  11. **macOS/iOS/iPadOS SwiftUI wrapper**
+      - PWA embedded in native SwiftUI shell for App Store
+      - Apple T&C allows PWAs if they aren't "clearly just a website"
+      - We already have more than that, plus the original SwiftUI attempt proves intent
+      - Native benefits: file system access, spellcheck, speech-to-text, haptics, Share sheet, Reminders integration, @date notation for notifications
 
-**Last updated**: February 9, 2026
-**Author**: Claude (Opus 4.5)
-**Status**: Ready for Phase 0
+  12. **Finder-style column navigation UI**
+      - Drill-down column panes into notes
+      - Configurable "post-it" preview snippets per note
+      - Tags (#ProjectTag) for connecting content across notes
+      - @mention linking between notes by title
+
+  13. **Preferences UI for highlight colors**
+      - User can customize highlight colors
+      - "Project themes" — different color schemes per section
+      - Would make different drill-down sections immediately recognizable
+
+  14. **Light view / theme**
+      - Light mode alternative to the dark theme
+
+  15. **Standard RTF option**
+      - For users who don't like markdown
+      - Prominent keyboard shortcuts shown where RTF users would click
+      - Context menu with formatting hints
+
+  16. **Declarative AI customization**
+      - Config files (JSON) defining layout, editor prefs, note metadata
+      - AI layer translating natural language to config changes
+
+### v3.0.0 — SwiftUI Wrapper & UI (Phase Breakdown)
+
+The v3 line is a major step: wrapping the PWA in native SwiftUI for App Store distribution and building the multi-note column UI. Here's how the phases could break down logically:
+
+  + **v3.0.0 — SwiftUI PWA Shell**
+    - WKWebView wrapper that loads the PWA
+    - Native window chrome (title bar, traffic lights)
+    - File system access via SwiftUI (save/open .md files replaces localStorage-only model)
+    - Native spellcheck integration (may make the v2.1.0 spellcheck implementation moot — worth considering whether to do spellcheck in v2.1.0 as a browser-native quick fix or wait for SwiftUI native)
+    - App Store submission (one single-note scratchpad, but native)
+    - Target platforms: macOS first, then iPad, then iPhone
+
+  + **v3.1.0 — Multi-Note Foundation**
+    - Data model: multiple notes with titles, metadata, tags
+    - Storage migration: localStorage single-note → file system or CoreData multi-note
+    - Sidebar or basic list view showing all notes
+    - Create / delete / rename notes
+    - CMD+N creates a new note (fixes the current duplicate-window behavior)
+
+  + **v3.2.0 — Column Navigation UI**
+    - Finder-style drill-down columns
+    - Configurable "post-it" preview snippets per note
+    - Note ordering, pinning, favorites
+
+  + **v3.3.0 — Tags & Linking**
+    - #ProjectTag for grouping notes
+    - @mention linking between notes by title
+    - Auto-generated tag sections in the column view
+    - Search across all notes
+
+  + **v3.4.0 — Native Integrations**
+    - Share sheet (share to Mail, Messages, etc.)
+    - @date notation → Reminders/notifications
+    - Speech-to-text input
+    - Haptic feedback (iPad)
+
+  + **v3.5.0 — Preferences & Theming**
+    - UI for changing highlight colors per element
+    - "Project themes" — different color schemes per section/tag
+    - Light mode theme
+    - Font size / line height preferences
+
+  + **v3.x.0 — RTF Mode (Optional)**
+    - Alternative to markdown for non-markdown users
+    - Context menu with prominent keyboard shortcuts
+    - Basically reinventing the formatting toolbar as keyboard-first
+
+  + **v4.0.0 — AI Customization**
+    - Config files (JSON) defining layout, editor prefs, note metadata
+    - Natural language → config changes ("make headings blue", "show word count in the corner")
+
+### Deployment
+
+  17. **Hosting setup**
+      - Custom domain DNS ready: `thots.august.style`
+      - **Recommendation: Vercel** — free tier supports private repos, auto-deploys from GitHub on push, generous bandwidth, HTTPS automatic on custom domains
+      - GitHub Pages requires making the repo public on free tier — not ideal if you're not ready for that
+      - Netlify also supports private repos on free tier, but Vercel's DX is slightly better for Vite projects
+      - **Bottom line**: Use Vercel, keep the repo private, deploy from `v2-first-thots` (or `main` once you fast-forward merge). No need to go public until you want to
+
+  18. **Git branching protocol**
+      - `main` — protected, no direct commits, only fast-forward merges
+      - `v2-first-thots` — primary dev branch
+      - Feature branches: `feat/spell-check`, `feat/counter`, `fix/whatever`
+      - Semantic tags: `v2.0.0`, `v2.1.0` once stable
+      - Future major phases: `v3-organization`, `v4-ai-customization`
+
+  19. **Documentation discipline**
+      - Non-trivial changes should update `docs/THOT_APP.md`
+      - Create `docs/CHANGELOG.md` for tracking changes over time
+      - Version-specific update docs stay in `docs/archive/v2/`
 
 ---
 
 ## Progress Log
 
-_Update this section as phases complete:_
-
-| Phase | Status      | Date        | Notes                                                |
-| ----- | ----------- | ----------- | ---------------------------------------------------- |
-| 0     | Complete    | Feb 8, 2026 | npm, Vite, TypeScript, CSS, fonts configured         |
-| 1     | Complete    | Feb 8, 2026 | CodeMirror 6 + markdown + keybindings + line numbers |
-| 2     | Complete    | Feb 8, 2026 | Full Thot color palette applied                      |
-| 3     | Complete    | Feb 8, 2026 | localStorage with debounce + beforeunload save       |
-| 4     | Complete    | Feb 8, 2026 | Cursor + scroll position saved/restored              |
-| 5     | Complete    | Feb 8, 2026 | PWA manifest + service worker + offline caching      |
-| 6     | Not Started | —           | —                                                    |
+| Phase | Status      | Date          | Notes                                                         |
+| ----- | ----------- | ------------- | ------------------------------------------------------------- |
+| 0     | Complete    | Feb 8, 2026   | npm, Vite, TypeScript, CSS, fonts configured                  |
+| 1     | Complete    | Feb 8, 2026   | CodeMirror 6 + markdown + keybindings + line numbers          |
+| 2     | Complete    | Feb 8, 2026   | Initial Thot color palette applied (revised in Phase 7)       |
+| 3     | Complete    | Feb 8, 2026   | localStorage with debounce + beforeunload save                |
+| 4     | Complete    | Feb 8, 2026   | Cursor + scroll position saved/restored                       |
+| 5     | Complete    | Feb 8, 2026   | PWA manifest + service worker + offline caching               |
+| 6     | Complete    | Feb 13, 2026  | Testing & feedback documented in v2_0_0_FEEDBACK.md           |
+| 7     | Complete    | Feb 13, 2026  | Feedback fixes: theme rewrite, decorations, indent, CMD+S     |
+| 8     | In Progress | Feb 13, 2026  | Document updates                                              |
 
 ---
 
-*This document is the source of truth for Thot v2 development. Update it as implementation progresses so it remains an accurate, executable specification.*
+*This document is the build log for Thot v2.0.0. For the one-stop-shop project reference, see `docs/THOT_APP.md`.*

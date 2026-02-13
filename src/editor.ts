@@ -2,9 +2,14 @@
 import { EditorView, keymap, lineNumbers, highlightActiveLineGutter, highlightSpecialChars, drawSelection, dropCursor, rectangularSelection, crosshairCursor, highlightActiveLine } from '@codemirror/view'
 import { EditorState } from '@codemirror/state'
 import { markdown } from '@codemirror/lang-markdown'
+import { languages } from '@codemirror/language-data'
 import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands'
 import { bracketMatching, indentOnInput } from '@codemirror/language'
+import { styleTags, tags } from '@lezer/highlight'
 import { thotTheme } from './theme'
+import { markdownDecorations } from './markdown-decorations'
+import { hangingIndentPlugin } from './hanging-indent'
+import { forceSave } from './persistence'
 
 export interface EditorConfig {
   parent: HTMLElement
@@ -30,6 +35,19 @@ export function createEditor(config: EditorConfig): EditorView {
     }
   })
 
+  // Custom styleTags to override markdown parser defaults
+  // Makes markers share the same tag as their content
+  const markdownStyleOverrides = {
+    props: [
+      styleTags({
+        HeaderMark: tags.heading,
+        'Emphasis/...': tags.emphasis,
+        'StrongEmphasis/...': tags.strong,
+        QuoteMark: tags.quote,
+      })
+    ]
+  }
+
   const state = EditorState.create({
     doc: initialContent,
     extensions: [
@@ -48,11 +66,28 @@ export function createEditor(config: EditorConfig): EditorView {
       crosshairCursor(),
       highlightActiveLine(),
 
-      // Markdown language support
-      markdown(),
+      // Hanging indent (line decorations — lowest priority)
+      hangingIndentPlugin,
+
+      // Markdown decorations (inline decorations for list/code context)
+      markdownDecorations,
+
+      // Markdown language support with custom style overrides and code languages
+      markdown({
+        codeLanguages: languages,
+        extensions: [markdownStyleOverrides],
+      }),
 
       // Keybindings
       keymap.of([
+        // CMD+S intercept — prevent browser save dialog, trigger forceSave
+        {
+          key: 'Mod-s',
+          run: (view: EditorView) => {
+            forceSave(view.state.doc.toString())
+            return true
+          },
+        },
         ...defaultKeymap,
         ...historyKeymap,
         indentWithTab
@@ -61,7 +96,7 @@ export function createEditor(config: EditorConfig): EditorView {
       // Line wrapping at window edge
       EditorView.lineWrapping,
 
-      // Thot dark theme (editor chrome + syntax highlighting)
+      // Thot dark theme (editor chrome + syntax highlighting — highest priority)
       thotTheme,
 
       // Change listener
