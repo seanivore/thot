@@ -72,7 +72,7 @@ thot/
 ├── tsconfig.json                      # TypeScript config
 ├── vite.config.ts                     # Vite config with PWA
 ├── public/
-│   ├── favicon.ico                    # From AppIcon (16x16)
+│   ├── favicon.ico                    # From AppIcon (16x16)  **THESE ARE NOT ACCURATE** 
 │   ├── apple-touch-icon.png           # From AppIcon (180x180)
 │   └── manifest.json                  # PWA manifest
 ├── src/
@@ -84,13 +84,13 @@ thot/
 │   ├── styles/
 │   │   └── main.css                   # Global styles, dark theme
 │   ├── assets/
-│   │   ├── fonts/                     # JetBrains Mono (4 variants)
-│   │   └── icons/                     # App icons (various sizes)
+│   │   ├── fonts/                     # JetBrains Mono (4 variants) **ADDED MORE** 
+│   │   └── icons/                     # App icons (various sizes) **FRESH BATCH IN FEEDBACK** 
 │   └── types/
 │       └── index.d.ts                 # Type definitions
 ├── docs/
-│   ├── YOUR_THOTS.md                  # This document (living spec)
-│   ├── archive/                       # v1 documentation for reference
+│   ├── YOUR_THOTS.md                  # This document (living spec)  **CHANGED THIS TO `docs/archive/v2/v2_0_0_UPDATES`**
+│   ├── archive/                       # v1 documentation for reference **THIS HAS BEEN REARRANGED** 
 │   │   ├── OvercomeChallenges.md
 │   │   ├── v1_BUILD_RESEARCHED.md
 │   │   ├── IMPL_v1_DESKPAD.md
@@ -229,7 +229,7 @@ export const thotTheme = EditorView.theme({
 })
 ```
 
-**Verification**: Markdown renders with highlight colors — **NOTE: Not same as original theme; must circle back to fix**
+**Verification**: Markdown renders with highlight colors — **NOTE: Not same as original theme; see FEEDBACK**
 
 ---
 
@@ -322,7 +322,7 @@ EditorView.updateListener.of((update) => {
 
 ---
 
-### Phase 5: PWA Configuration — **NOTE: THIS FILE IS NOT PRESENT**
+### Phase 5: PWA Configuration — **NOTE: THIS FILE IS NOT PRESENT; intentional?**
 **Status**: 
   - [x] Complete
 
@@ -386,7 +386,7 @@ export default defineConfig({
 
 ---
 
-### Phase 7: Polish
+### Phase 7: Polish **UPDATE ACCORDING TO FEEDBACK**
 **Status**: 
   - [ ] Complete
 
@@ -413,8 +413,8 @@ export default defineConfig({
   - [ ] Complete
 
 **Tasks**:
-  - [ ] Keep this document as is, rename and move it to `docs/archive/v2/v2_0_0_UPDATES.md`
-  - [ ] Use template `docs/PROJECT_NAME.md` to create a `docs/THOT_APP.md` which should reflect all architecture, take into account recent changes, and adding anything else needed that it can exist as an all-in-one reference for the project
+  - [x] Keep this document as is, rename and move it to `docs/archive/v2/v2_0_0_UPDATES.md`
+  - [ ] Use template `docs/THOT_APP.md` to create new document reflecting all architecture, take into account recent changes, and adding anything else needed that it can exist as an all-in-one reference for the project
   - [ ] Start clear `docs/UPDATE_THOTS.md` organizing updates to be made over upcoming sessions 
 
 ---
@@ -423,10 +423,10 @@ export default defineConfig({
 **Status**: 
   - [ ] On proper `main` branch with tagging 
   - [ ] Setup Pages, Vercel, or other
-  - [x] Custom Domain DNS Setup 
+  - [x] Custom Domain DNS Setup `thots.august.style`
   - [ ] Complete 
 
-### GitHub Pages (Free) **Are there other free options? I'm just not sure I'm ready to make the repository public yet.**
+### GitHub Pages (Free) **Are there other free options? I'm just not sure I'm ready to make the repository public yet, though I would like the URL public**
 ```bash
 # In vite.config.ts, set base to repo name
 # base: '/thot/'
@@ -442,7 +442,7 @@ npm run build
 ```
 
 ### Custom Domain
-  - Point `thot.august.style` to hosting provider 
+  - Point `thots.august.style` to hosting provider 
   - Enable HTTPS (automatic on Vercel/Netlify) *must make GitHub repo public if hosting there*
 
 ---

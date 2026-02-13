@@ -68,7 +68,7 @@ To export your content, simply copy/paste or use the export feature (coming soon
 
 Thot is intentionally minimal. It's a **desk pad**, not a note-taking system. Think of it as the digital equivalent of a legal pad that never leaves your desk.
 
-See [docs/YOUR_THOTS.md](docs/YOUR_THOTS.md) for the implementation specification.
+See [docs/YOUR_THOTS.md](docs/archive/v2/v2_0_0_UPDATES.md) for the implementation specification.
 
 ## License
 
