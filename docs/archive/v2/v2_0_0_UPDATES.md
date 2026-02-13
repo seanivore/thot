@@ -54,14 +54,14 @@
 
 ## Tech Stack
 
-| Component    | Choice                          | Rationale                                               |
-| ------------ | ------------------------------- | ------------------------------------------------------- |
-| **Language** | TypeScript                      | Type safety, excellent tooling                          |
-| **Editor**   | CodeMirror 6                    | Purpose-built, handles 100K+ lines, incremental parsing |
-| **Build**    | Vite                            | Fast dev server, optimized production builds            |
-| **Styling**  | CSS (vanilla)                   | No framework needed for single-page app                 |
-| **Storage**  | localStorage                    | Synchronous, fast, no permissions needed                |
-| **PWA**      | Vite PWA plugin                 | Simple PWA setup with service worker                    |
+| Component    | Choice          | Rationale                                               |
+| ------------ | --------------- | ------------------------------------------------------- |
+| **Language** | TypeScript      | Type safety, excellent tooling                          |
+| **Editor**   | CodeMirror 6    | Purpose-built, handles 100K+ lines, incremental parsing |
+| **Build**    | Vite            | Fast dev server, optimized production builds            |
+| **Styling**  | CSS (vanilla)   | No framework needed for single-page app                 |
+| **Storage**  | localStorage    | Synchronous, fast, no permissions needed                |
+| **PWA**      | Vite PWA plugin | Simple PWA setup with service worker                    |
 
 ---
 
@@ -312,7 +312,7 @@ The v3 line is a major step: wrapping the PWA in native SwiftUI for App Store di
     - Light mode theme
     - Font size / line height preferences
 
-  + **v3.x.0 — RTF Mode (Optional)**
+  + **v3.x.0 — RTF Mode**
     - Alternative to markdown for non-markdown users
     - Context menu with prominent keyboard shortcuts
     - Basically reinventing the formatting toolbar as keyboard-first
@@ -346,17 +346,17 @@ The v3 line is a major step: wrapping the PWA in native SwiftUI for App Store di
 
 ## Progress Log
 
-| Phase | Status      | Date          | Notes                                                         |
-| ----- | ----------- | ------------- | ------------------------------------------------------------- |
-| 0     | Complete    | Feb 8, 2026   | npm, Vite, TypeScript, CSS, fonts configured                  |
-| 1     | Complete    | Feb 8, 2026   | CodeMirror 6 + markdown + keybindings + line numbers          |
-| 2     | Complete    | Feb 8, 2026   | Initial Thot color palette applied (revised in Phase 7)       |
-| 3     | Complete    | Feb 8, 2026   | localStorage with debounce + beforeunload save                |
-| 4     | Complete    | Feb 8, 2026   | Cursor + scroll position saved/restored                       |
-| 5     | Complete    | Feb 8, 2026   | PWA manifest + service worker + offline caching               |
-| 6     | Complete    | Feb 13, 2026  | Testing & feedback documented in v2_0_0_FEEDBACK.md           |
-| 7     | Complete    | Feb 13, 2026  | Feedback fixes: theme rewrite, decorations, indent, CMD+S     |
-| 8     | In Progress | Feb 13, 2026  | Document updates                                              |
+| Phase | Status      | Date         | Notes                                                     |
+| ----- | ----------- | ------------ | --------------------------------------------------------- |
+| 0     | Complete    | Feb 8, 2026  | npm, Vite, TypeScript, CSS, fonts configured              |
+| 1     | Complete    | Feb 8, 2026  | CodeMirror 6 + markdown + keybindings + line numbers      |
+| 2     | Complete    | Feb 8, 2026  | Initial Thot color palette applied (revised in Phase 7)   |
+| 3     | Complete    | Feb 8, 2026  | localStorage with debounce + beforeunload save            |
+| 4     | Complete    | Feb 8, 2026  | Cursor + scroll position saved/restored                   |
+| 5     | Complete    | Feb 8, 2026  | PWA manifest + service worker + offline caching           |
+| 6     | Complete    | Feb 13, 2026 | Testing & feedback documented in v2_0_0_FEEDBACK.md       |
+| 7     | Complete    | Feb 13, 2026 | Feedback fixes: theme rewrite, decorations, indent, CMD+S |
+| 8     | In Progress | Feb 13, 2026 | Document updates                                          |
 
 ---
 

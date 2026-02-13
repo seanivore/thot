@@ -38,9 +38,9 @@ This spec aims to respect that: **Thot v1.0.0_deskpad is not a knowledge managem
 
 ### 0.3. Example Images
 
-+ ![Current use of TextEdit as a desk pad](/Sources/Docs/IMG-current_use_of_textedit-01.jpg)
-+ ![Current use of semantic highlighting in IDE](/Sources/Docs/IMG-semantic_highlighting_ide_ux-01.jpg)
-+ ![Desired UI app window simplicity](/Sources/Docs/IMG-simple_ui_window-01.jpg)
++ [Current use of TextEdit as a desk pad]()
++ [Current use of semantic highlighting in IDE]()
++ [Desired UI app window simplicity]()
 
 ---
 
@@ -177,7 +177,7 @@ This spec aims to respect that: **Thot v1.0.0_deskpad is not a knowledge managem
 **Defaults (v1.0.0_deskpad):**
 
 + Font: `JetBrains Mono, Regular, 12pt`
-  - [Fonts](/Sources/Resources/Fonts)
+  - [Fonts]()
 + Background: dark (similar luminance to standard macOS dark text editors)
 + Line spacing: modestly relaxed (e.g., 1.2–1.4) for readability in dense notes
 + Text color baseline: off-white / soft gray
@@ -190,9 +190,9 @@ This spec aims to respect that: **Thot v1.0.0_deskpad is not a knowledge managem
   - Italic: `markup.italic`, `punctuation.definition.italic.markdown`.
   - Blockquotes, fenced/inline code, links (text + URL), lists, list markers, checkboxes, strikethrough, tables, horizontal rules, footnotes, comments, diff, HTML, math, etc.
 + Foreground, background, and fontStyle (bold/italic/strikethrough) must respect the spec from `textMateRules`.
-  - [Markdown TextMate grammar](/Sources/Resources/TextMate/markdown.tmLanguage.json)
-  - [TextMateRules extracted to pure JSON](/Sources/Resources/TextMate/ThotMarkdownTheme.json)
-  - [Original](/Sources/Docs/TextMateRules.md)
+  - [Markdown TextMate grammar]()
+  - [TextMateRules extracted to pure JSON]()
+  - [Original]()
 
 **The goal is**: open a markdown file in Cursor and Thot side-by-side; they feel visually equivalent in semantics, hierarchy, highlight color, spacing.
 
@@ -328,7 +328,7 @@ This is optional for v1 but extremely cheap and makes UX feel "telepathic" on re
 
 Use provided **TextMate-style configuration** of markdown scopes and styles:
 
-  - [editor.tokenColorCustomizations.textMateRules: [...]](/Sources/Docs/TextMateRules.md)
+  - [editor.tokenColorCustomizations.textMateRules: []]()
 
 
 * **Each rule has:**

@@ -334,29 +334,29 @@
 
 ### Color Palette
 
-| Element                        | Color   | Font Weight               |
-| ------------------------------ | ------- | ------------------------- |
-| Background                     | #1a1a1a | —                         |
-| Foreground (base text)         | #e6e6e6 | Medium (500)              |
-| Headings (marker + content)    | #FF9D00 | ExtraBold (800)           |
-| Bold (marker + content)        | #FFD866 | ExtraBold (800)           |
-| Italic (marker + content)      | #BF437F | ExtraBoldItalic (800i)    |
-| Strikethrough                  | #6272A4 | Thin (100) + line-through |
-| Inline code + delimiter        | #F34D3E | Regular (400)             |
-| Fenced code delimiter (```)    | #6767fc | Regular (400)             |
-| Code block content (fallback)  | #8989e3 | Regular (400)             |
-| Code language ID               | #F1FA8C | —                         |
-| Bullet marker                  | #dfc532 | Bold (700)                |
-| Bullet content                 | #8aeefb | Regular (400)             |
-| Numbered marker                | #ff6b6b | Bold (700)                |
-| Numbered content               | #f8a5c2 | Regular (400)             |
-| Checkbox                       | #8BE9FD | Regular (400)             |
-| Blockquote (marker + content)  | #E6DB74 | ThinItalic (100i)         |
-| Table (marker + content)       | #e2ff79 | Regular (400)             |
-| Horizontal rule                | #93f9c6 | Regular (400)             |
-| Link text + markers            | #AB9DF2 | Bold (700)                |
-| Link URL                       | #8BE9FD | Regular (400)             |
-| Comment                        | #6272A4 | Thin (100) + italic       |
+| Element                       | Color   | Font Weight               |
+| ----------------------------- | ------- | ------------------------- |
+| Background                    | #1a1a1a | —                         |
+| Foreground (base text)        | #e6e6e6 | Medium (500)              |
+| Headings (marker + content)   | #FF9D00 | ExtraBold (800)           |
+| Bold (marker + content)       | #FFD866 | ExtraBold (800)           |
+| Italic (marker + content)     | #BF437F | ExtraBoldItalic (800i)    |
+| Strikethrough                 | #6272A4 | Thin (100) + line-through |
+| Inline code + delimiter       | #F34D3E | Regular (400)             |
+| Fenced code delimiter (```)   | #6767fc | Regular (400)             |
+| Code block content (fallback) | #8989e3 | Regular (400)             |
+| Code language ID              | #F1FA8C | —                         |
+| Bullet marker                 | #dfc532 | Bold (700)                |
+| Bullet content                | #8aeefb | Regular (400)             |
+| Numbered marker               | #ff6b6b | Bold (700)                |
+| Numbered content              | #f8a5c2 | Regular (400)             |
+| Checkbox                      | #8BE9FD | Regular (400)             |
+| Blockquote (marker + content) | #E6DB74 | ThinItalic (100i)         |
+| Table (marker + content)      | #e2ff79 | Regular (400)             |
+| Horizontal rule               | #93f9c6 | Regular (400)             |
+| Link text + markers           | #AB9DF2 | Bold (700)                |
+| Link URL                      | #8BE9FD | Regular (400)             |
+| Comment                       | #6272A4 | Thin (100) + italic       |
 
   The full color palette (~100 entries including code block tokens) is defined in `src/highlight-tags.ts`.
 
@@ -428,6 +428,18 @@
 
 ## Deployment
 
+**Git branching protocol**
+   - `main` — protected, no direct commits, only fast-forward merges
+   - `v2-first-thots` — primary dev branch
+   - Feature branches: `feat/spell-check`, `feat/counter`, `fix/whatever`
+   - Semantic tags: `v2.0.0`, `v2.1.0` once stable
+   - Future major phases: `v3-organization`, `v4-ai-customization`
+
+**Documentation discipline**
+  - Non-trivial changes should update `docs/THOT_APP.md`
+  - Create `docs/CHANGELOG.md` for tracking changes over time
+  - Version-specific update docs stay in `docs/archive/v2/`
+
 ### Build Process
 
   ```bash
@@ -454,18 +466,18 @@
 
 ### CLI Commands
 
-| Command           | Description                                          |
-| ----------------- | ---------------------------------------------------- |
-| `npm run dev`     | Start Vite dev server with HMR                       |
-| `npm run build`   | TypeScript check + production build to `dist/`       |
-| `npm run preview` | Serve `dist/` locally (must build first)             |
+| Command           | Description                                    |
+| ----------------- | ---------------------------------------------- |
+| `npm run dev`     | Start Vite dev server with HMR                 |
+| `npm run build`   | TypeScript check + production build to `dist/` |
+| `npm run preview` | Serve `dist/` locally (must build first)       |
 
 ### localStorage Keys
 
-| Key             | Contents                         |
-| --------------- | -------------------------------- |
-| `thot:content`  | The markdown document text       |
-| `thot:state`    | JSON: `{ cursorPos, scrollTop }` |
+| Key            | Contents                         |
+| -------------- | -------------------------------- |
+| `thot:content` | The markdown document text       |
+| `thot:state`   | JSON: `{ cursorPos, scrollTop }` |
 
 ### Dependencies
 
