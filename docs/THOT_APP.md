@@ -98,31 +98,31 @@
 ### High-Level Overview
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│  Browser / PWA Shell                                        │
-│  ├─ Service Worker (offline caching via Workbox)            │
-│  └─ Web App Manifest (installable PWA)                      │
-│                                                             │
-│  ┌─────────────────────────────────────────────────────────┐│
-│  │  Thot App (TypeScript)                                  ││
-│  │  ├─ main.ts                 — App init, event wiring    ││
-│  │  ├─ editor.ts               — CodeMirror setup          ││
-│  │  ├─ persistence.ts          — Content auto-save         ││
-│  │  ├─ state.ts                — Cursor/scroll persistence ││
-│  │  ├─ highlight-tags.ts       — Custom tags + colors      ││
-│  │  ├─ theme.ts                — HighlightStyle + chrome   ││
-│  │  └─ hanging-indent.ts       — Wrapped line indentation  ││
-│  └─────────────────────────────────────────────────────────┘│
-│                                                             │
-│  ┌─────────────────────────────────────────────────────────┐│
-│  │  CodeMirror 6                                           ││
-│  │  ├─ @codemirror/lang-markdown    — Markdown parser      ││
-│  │  ├─ @codemirror/language-data    — Code block languages ││
-│  │  ├─ @codemirror/view             — Editor view layer    ││
-│  │  ├─ @codemirror/state            — Editor state mgmt    ││
-│  │  └─ @lezer/highlight             — Token styling        ││
-│  └─────────────────────────────────────────────────────────┘│
-└─────────────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────────────┐
+│  Browser / PWA Shell                                          │
+│  ├─ Service Worker (offline caching via Workbox)              │
+│  └─ Web App Manifest (installable PWA)                        │
+│                                                               │
+│  ┌──────────────────────────────────────────────────────────┐ │
+│  │  Thot App (TypeScript)                                   │ │
+│  │  ├─ main.ts                 — App init, event wiring     │ │
+│  │  ├─ editor.ts               — CodeMirror setup           │ │
+│  │  ├─ persistence.ts          — Content auto-save          │ │
+│  │  ├─ state.ts                — Cursor/scroll persistence  │ │
+│  │  ├─ highlight-tags.ts       — Custom tags + colors       │ │
+│  │  ├─ theme.ts                — HighlightStyle + chrome    │ │
+│  │  └─ hanging-indent.ts       — Wrapped line indentation   │ │
+│  └──────────────────────────────────────────────────────────┘ │
+│                                                               │
+│  ┌──────────────────────────────────────────────────────────┐ │
+│  │  CodeMirror 6                                            │ │
+│  │  ├─ @codemirror/lang-markdown    — Markdown parser       │ │
+│  │  ├─ @codemirror/language-data    — Code block languages  │ │
+│  │  ├─ @codemirror/view             — Editor view layer     │ │
+│  │  ├─ @codemirror/state            — Editor state mgmt     │ │
+│  │  └─ @lezer/highlight             — Token styling         │ │
+│  └──────────────────────────────────────────────────────────┘ │
+└───────────────────────────────────────────────────────────────┘
 ```
 
 ### Key Architectural Decisions
@@ -260,7 +260,7 @@
   │   │       ├── v2_0_0_FEEDBACK.md   # Detailed testing feedback
   │   │       ├── v2_0_8_BUG_REPORT.md # Bug report that triggered v2.0.8
   │   │       ├── v2_0_8_BUG_LOG.md    # Bug-by-bug fix documentation
-  │   │       └── old-highlight-theme-references.ts  # Archived color reference
+  │   │       └── old-theme-ref.ts     # Archived color reference
   │   ├── images/                      # Reference screenshots
   │   └── favicon-and-other-icons/     # Favicon batches (to be consolidated)
   │
