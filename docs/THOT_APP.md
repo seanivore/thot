@@ -512,30 +512,32 @@ Font weights and styles are set in the `HighlightStyle.define()` array in `src/t
 
 ### Where to find each element
 
-| What you want to change | File | What to look for |
-|---|---|---|
-| Any color value | `src/highlight-tags.ts` | `colors.___` key name |
-| Font weight or style | `src/theme.ts` | Entry in `thotHighlightStyle` array |
-| Bullet/ordered/inline-code marker color | `src/highlight-tags.ts` | `bulletMarker`, `numberedMarker`, `inlineCode` |
-| Bullet/ordered/inline-code marker font weight | `src/theme.ts` | `.thot-bullet-mark`, `.thot-number-mark`, `.thot-inline-code-mark` in `thotEditorTheme` |
-| Base text size | `src/theme.ts` | `fontSize` in `thotEditorTheme` `'&'` rule |
-| Line height | `src/theme.ts` | `lineHeight` in `thotEditorTheme` `.cm-scroller` rule |
-| Font family | `src/theme.ts` | `fontFamily` in `thotEditorTheme` `.cm-scroller` rule |
-| Font face declarations | `src/styles/main.css` | `@font-face` blocks |
+| Want to change?     | File                    | What to look for                                                               |
+| ------------------- | ----------------------- | ------------------------------------------------------------------------------ |
+| Any color value     | `src/highlight-tags.ts` | `colors.___` key name                                                          |
+| Font weight & style | `src/theme.ts`          | Entry in `thotHighlightStyle` array                                            |
+| *Marker color       | `src/highlight-tags.ts` | `bulletMarker`, `numberedMarker`, `inlineCode`                                 |
+| *Marker font weight | `src/theme.ts`          | `thotEditorTheme` `.thot-...` `bullet-mark`, `number-mark`, `inline-code-mark` |
+| Base text size      | `src/theme.ts`          | `fontSize` in `thotEditorTheme` `'&'` rule                                     |
+| Line height         | `src/theme.ts`          | `lineHeight` in `thotEditorTheme` `.cm-scroller` rule                          |
+| Font family         | `src/theme.ts`          | `fontFamily` in `thotEditorTheme` `.cm-scroller` rule                          |
+| Font declarations   | `src/styles/main.css`   | `@font-face` blocks                                                            |
+
+    *Bullet/ordered/inline-code 
 
 ### Available font weights
 
-| Weight | Name | Example usage |
-|---|---|---|
-| 100 | Thin | Strikethrough, blockquote, comments |
-| 200 | ExtraLight | — |
-| 300 | Light | — |
-| 400 | Regular | Most elements (default) |
-| 500 | Medium | Base text (foreground) |
-| 600 | SemiBold | — |
-| 700 | Bold | List markers, link text |
-| 800 | ExtraBold | Headings, bold, italic |
-| 900 | Black | — |
+| Weight | Name       | Example usage                       |
+| ------ | ---------- | ----------------------------------- |
+| 100    | Thin       | Strikethrough, blockquote, comments |
+| 200    | ExtraLight | —                                   |
+| 300    | Light      | —                                   |
+| 400    | Regular    | Most elements (default)             |
+| 500    | Medium     | Base text (foreground)              |
+| 600    | SemiBold   | —                                   |
+| 700    | Bold       | List markers, link text             |
+| 800    | ExtraBold  | Headings, bold, italic              |
+| 900    | Black      | —                                   |
 
 ---
 
