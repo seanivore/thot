@@ -5,7 +5,7 @@ A web-based markdown scratchpad with IDE-like syntax highlighting. Works in any 
 ## Features
 
 - **Single continuous writing surface** - No file management, no note lists, just your thoughts
-- **Semantic markdown highlighting** - Headings, bold, italic, code, links, lists all visually differentiated
+- **Comprehensive markdown highlighting** - 35+ element types with distinct colors, GFM support (tables, strikethrough, task lists), and priority-based cascade for nested formatting
 - **Dark theme** - Monospaced JetBrains Mono font on a dark background
 - **Automatic persistence** - Your content is always saved to browser storage, restored exactly as you left it
 - **Zero friction** - Open, type, close. No save dialogs, no prompts.
@@ -49,7 +49,7 @@ Browser/PWA
 
 ### Why Web?
 
-Thot v1 was a native macOS app using SwiftUI + NSTextView. We discovered that this architecture has fundamental performance limitations for text editors (see `docs/archive/OvercomeChallenges.md`).
+Thot v1 was a native macOS app using SwiftUI + NSTextView. We discovered that this architecture has fundamental performance limitations for text editors (see `docs/archive/v1/OvercomeChallenges.md`).
 
 VS Code, Cursor, and modern editors use web technologies because:
 - CodeMirror/Monaco handle incremental parsing efficiently
@@ -68,7 +68,7 @@ To export your content, simply copy/paste or use the export feature (coming soon
 
 Thot is intentionally minimal. It's a **desk pad**, not a note-taking system. Think of it as the digital equivalent of a legal pad that never leaves your desk.
 
-See [docs/YOUR_THOTS.md](docs/archive/v2/v2_0_0_UPDATES.md) for the implementation specification.
+See [docs/THOT_APP.md](docs/THOT_APP.md) for complete project documentation, or [docs/archive/v2/v2_0_0_UPDATES.md](docs/archive/v2/v2_0_0_UPDATES.md) for the original build log.
 
 ## License
 

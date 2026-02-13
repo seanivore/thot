@@ -2,7 +2,7 @@
 `thots.august.style`
 
 **Last Updated**: 2026-02-13
-**Version**: v2.0.0 "First Thots"
+**Version**: v2.0.8
 **Status**: Active development on `v2-first-thots` branch
 
 ---
@@ -60,27 +60,36 @@
 
 ## Recent Changes
 
-### 2026-02-13 — Phase 7 Feedback Fixes
+### 2026-02-13 — v2.0.8: Complete Highlighting System
 
-* **Theme Rewrite**
+* **Highlighting Architecture Rewrite** (replaces previous ViewPlugin approach)
 
-  + Complete rewrite of `src/theme.ts` matching `src/theme-reference.ts`
-  + All markdown markers now share color with their content (# same as heading, ** same as bold, etc.)
-  + Bullet vs numbered lists now have distinct colors
-  + Inline code ticks vs block code ticks now differentiated
-  + Highlight hierarchy properly ordered (strikethrough → inlineCode → bold → italic → heading → list → blockquote → foreground)
+  + Root cause analysis revealed 3 systemic issues: Lezer styleTags depth mismatch, missing GFM parser, and reversed CSS cascade order
+  + All highlighting now handled through `styleTags` overrides + `HighlightStyle` cascade — no more ViewPlugin decorations
+  + Created `src/highlight-tags.ts` as single source of truth for all colors (~100 entries) and custom Lezer tags
+  + Deleted `src/markdown-decorations.ts` (ViewPlugin) — replaced by path-based styleTags at depth=1
+  + Moved `src/theme-reference.ts` to `docs/archive/v2/` — superseded by `highlight-tags.ts`
 
-* **New Plugins**
+* **8 Bugs Fixed** (see `docs/archive/v2/v2_0_8_BUG_LOG.md`)
 
-  + `src/markdown-decorations.ts` — ViewPlugin for context-aware CSS classes on list types, code types, tables, HRs, checkboxes
-  + `src/hanging-indent.ts` — ViewPlugin for maintaining indentation on wrapped lines
+  + Bold/italic markers now match their content color (depth=1 path overrides)
+  + Bullet and ordered list markers/content now correctly differentiated via custom tags
+  + Blockquote content now highlighted (CSS cascade fix)
+  + Bold in list items now properly overrides list color (priority ordering)
+  + Tables now fully highlighted (GFM enabled via `base: markdownLanguage`)
+  + Inline code delimiters now match inline code color
 
-* **Font & Input**
+* **GFM + Extensions Enabled**
 
-  + 9 font weight variants declared (Thin, Regular, Medium, Bold, ExtraBold + italics)
-  + Font weights applied per element type (800 for headings/bold, 100 for strikethrough, etc.)
-  + CMD+S now triggers auto-save instead of browser save dialog
-  + Code blocks support language-specific highlighting via `@codemirror/language-data`
+  + `markdown({ base: markdownLanguage })` enables Table, Strikethrough, TaskList, Subscript, Superscript, Emoji
+  + All 87 built-in Lezer highlight tags explicitly mapped to colors
+  + 50+ code block token types individually colored for language-specific highlighting
+
+### Previous — v2.0.0: Initial Web Rewrite
+
+* CodeMirror 6 replacing SwiftUI + NSTextStorage
+* `src/hanging-indent.ts` — ViewPlugin for wrapped line indentation
+* 9 font weight variants, CMD+S save intercept, language-specific code blocks
 
 ---
 
@@ -100,8 +109,8 @@
 │  │  ├─ editor.ts               — CodeMirror setup          ││
 │  │  ├─ persistence.ts          — Content auto-save         ││
 │  │  ├─ state.ts                — Cursor/scroll persistence ││
-│  │  ├─ theme.ts                — Colors + font weights     ││
-│  │  ├─ markdown-decorations.ts — Context-aware CSS classes ││
+│  │  ├─ highlight-tags.ts       — Custom tags + colors      ││
+│  │  ├─ theme.ts                — HighlightStyle + chrome   ││
 │  │  └─ hanging-indent.ts       — Wrapped line indentation  ││
 │  └─────────────────────────────────────────────────────────┘│
 │                                                             │
@@ -121,8 +130,8 @@
   1. **CodeMirror 6 over custom editor** — Incremental Lezer parser handles syntax highlighting without full-document scans; virtual scrolling renders only visible lines; battle-tested on massive files
   2. **Web over native** — v1 used SwiftUI + NSTextStorage which flickered at 88+ lines due to reactive re-rendering; web technologies (what VS Code uses) solve this natively
   3. **localStorage over IndexedDB** — Synchronous, simple, fast; sufficient for single-document scratchpad; no permissions needed
-  4. **ViewPlugin decorations for list/code context** — CodeMirror's `styleTags` can't differentiate bullet vs numbered lists or inline vs block code; a ViewPlugin walks the syntax tree and applies CSS classes that the theme styles
-  5. **Highlight hierarchy via HighlightStyle ordering** — First-match-wins in `HighlightStyle.define`; bold/italic override list content colors; inline code overrides everything; strikethrough blends with existing weight
+  4. **Custom Lezer tags + path-based styleTags** — Built-in Lezer tags can't differentiate bullet vs ordered lists. Custom `Tag.define()` creates unique tags; path-based styleTags (`'BulletList/ListItem/ListMark'`) override at depth=1, beating the default depth=0 processingInstruction tag
+  5. **CSS cascade ordering for priority** — `HighlightStyle.define` generates CSS rules in array order. When two classes land on one span (e.g. bold text inside a list), the LATER CSS rule wins. Low priority items go first; high priority items go last
 
 ### How It Actually Works
 
@@ -131,13 +140,26 @@
   The extensions array is ordered by priority (lowest first):
 
   ```
-  hangingIndentPlugin      // Line decorations (lowest priority)
-  markdownDecorations      // Inline decorations (CSS classes)
-  markdown({ ... })        // Language parser with styleTags overrides
-  keymap.of([...])         // Key bindings including CMD+S
-  EditorView.lineWrapping  // Soft wrap at window edge
-  thotTheme                // Theme + HighlightStyle (highest priority)
-  updateListener           // Change/state callbacks
+  hangingIndentPlugin         // Line decorations (lowest priority)
+  markdown({                  // Language parser with:
+    base: markdownLanguage,   //   GFM + extensions (Table, Strikethrough, etc.)
+    codeLanguages: languages, //   Language-specific code block highlighting
+    extensions: [overrides],  //   Path-based styleTags (custom tags for lists, tables)
+  })
+  keymap.of([...])            // Key bindings including CMD+S
+  EditorView.lineWrapping     // Soft wrap at window edge
+  thotTheme                   // Theme + HighlightStyle (highest priority)
+  updateListener              // Change/state callbacks
+  ```
+
+* **Highlighting data flow**
+
+  ```
+  highlight-tags.ts → defines custom Tags + colors object (single source of truth)
+       ↓
+  editor.ts → styleTags overrides assign tags to markdown nodes
+       ↓
+  theme.ts → HighlightStyle maps tags to CSS (cascade order = priority)
   ```
 
 * **Save flow**
@@ -209,12 +231,11 @@
   │
   ├── src/
   │   ├── main.ts                      # App init, welcome content, event wiring
-  │   ├── editor.ts                    # CodeMirror setup, extensions, keymaps
-  │   ├── theme.ts                     # Colors, font weights, CSS classes
-  │   ├── theme-reference.ts           # Color reference (not imported at runtime)
+  │   ├── editor.ts                    # CodeMirror setup, styleTags, extensions
+  │   ├── highlight-tags.ts            # Custom Lezer tags + color palette (source of truth)
+  │   ├── theme.ts                     # HighlightStyle cascade + editor chrome
   │   ├── persistence.ts               # Content save/load with debounce
   │   ├── state.ts                     # Cursor/scroll save/load
-  │   ├── markdown-decorations.ts      # ViewPlugin: list/code/table CSS classes
   │   ├── hanging-indent.ts            # ViewPlugin: wrapped line indentation
   │   │
   │   ├── styles/
@@ -236,7 +257,10 @@
   │   │   ├── v1/                      # v1 SwiftUI documentation
   │   │   └── v2/
   │   │       ├── v2_0_0_UPDATES.md    # Build log & forward-looking roadmap
-  │   │       └── v2_0_0_FEEDBACK.md   # Detailed testing feedback
+  │   │       ├── v2_0_0_FEEDBACK.md   # Detailed testing feedback
+  │   │       ├── v2_0_8_BUG_REPORT.md # Bug report that triggered v2.0.8
+  │   │       ├── v2_0_8_BUG_LOG.md    # Bug-by-bug fix documentation
+  │   │       └── old-highlight-theme-references.ts  # Archived color reference
   │   ├── images/                      # Reference screenshots
   │   └── favicon-and-other-icons/     # Favicon batches (to be consolidated)
   │
@@ -254,21 +278,23 @@
   + Wires up `beforeunload` and `visibilitychange` for force-save
 
 **`src/editor.ts`** — CodeMirror configuration
-  + Assembles the extensions array (plugins, parser, keymap, theme)
-  + Custom `styleTags` overrides: HeaderMark → heading, Emphasis → emphasis, StrongEmphasis → strong, QuoteMark → quote
-  + Enables `codeLanguages` from `@codemirror/language-data` for fenced code blocks
+  + Assembles the extensions array (parser, keymap, theme)
+  + Comprehensive `styleTags` overrides using path-based matches for all marker/content pairs
+  + Uses `base: markdownLanguage` to enable GFM (Tables, Strikethrough, TaskList) + Subscript, Superscript, Emoji
+  + Imports custom tags from `highlight-tags.ts` for bullet/ordered list and table differentiation
   + CMD+S keymap to intercept browser save and trigger `forceSave()`
   + Exports helper functions: `getContent`, `setContent`, `getCursorPos`, `setCursorPos`, `getScrollTop`, `setScrollTop`
 
-**`src/theme.ts`** — Visual styling
-  + `thotEditorTheme` — Editor chrome (background, cursor, gutters, selection) + CSS classes for ViewPlugin decorations
-  + `thotHighlightStyle` — Syntax token colors and font weights, ordered by hierarchy priority
-  + Exports `thotTheme` (combined array of both)
+**`src/highlight-tags.ts`** — Custom tags + color definitions (single source of truth)
+  + 5 custom Lezer `Tag.define()` tags: `bulletMarkTag`, `orderedMarkTag`, `bulletContentTag`, `orderedContentTag`, `tableTag`
+  + Complete `colors` object (~100 entries) organized by category: Editor Chrome, Headings, Emphasis, Code, Links, Lists, Block Elements, Special Syntax, Code Block Tokens, Future Extensions
+  + Designed as data source for a future user-customizable theme UI
 
-**`src/markdown-decorations.ts`** — Context-aware highlighting
-  + ViewPlugin that walks the Lezer syntax tree
-  + Differentiates: bullet vs numbered list markers/content, inline vs block code marks, tables, HRs, checkboxes
-  + Applies CSS classes (`.thot-bullet-mark`, `.thot-number-mark`, etc.) styled in the theme
+**`src/theme.ts`** — Visual styling
+  + `thotEditorTheme` — Editor chrome (background, cursor, gutters, selection)
+  + `thotHighlightStyle` — All 87+ Lezer tags mapped to colors, ordered by CSS cascade priority (low priority first, high priority last)
+  + Imports all colors and custom tags from `highlight-tags.ts`
+  + Exports `thotTheme` (combined array of both)
 
 **`src/hanging-indent.ts`** — Wrapped line indentation
   + ViewPlugin that calculates indent width per visible line
@@ -283,13 +309,6 @@
 **`src/state.ts`** — Editor state storage
   + Saves/loads cursor position and scroll offset to `localStorage` key `thot:state`
   + Same debounce/force pattern as persistence
-
-### Reference File
-
-**`src/theme-reference.ts`** — Color & font reference
-  + Not imported at runtime; exists as documentation
-  + Canonical source for the Thot color palette (ported from ThotMarkdownTheme.json)
-  + `theme.ts` should always match this file's color values
 
 ---
 
@@ -306,19 +325,22 @@
 | Italic (marker + content)      | #BF437F | ExtraBoldItalic (800i)    |
 | Strikethrough                  | #6272A4 | Thin (100) + line-through |
 | Inline code + delimiter        | #F34D3E | Regular (400)             |
-| Block code delimiter + content | #8989e3 | Regular (400)             |
+| Fenced code delimiter (```)    | #6767fc | Regular (400)             |
+| Code block content (fallback)  | #8989e3 | Regular (400)             |
 | Code language ID               | #F1FA8C | —                         |
-| Bullet marker                  | #dfc532 | Regular (400)             |
+| Bullet marker                  | #dfc532 | Bold (700)                |
 | Bullet content                 | #8aeefb | Regular (400)             |
-| Numbered marker                | #ff6b6b | Regular (400)             |
+| Numbered marker                | #ff6b6b | Bold (700)                |
 | Numbered content               | #f8a5c2 | Regular (400)             |
 | Checkbox                       | #8BE9FD | Regular (400)             |
 | Blockquote (marker + content)  | #E6DB74 | ThinItalic (100i)         |
 | Table (marker + content)       | #e2ff79 | Regular (400)             |
 | Horizontal rule                | #93f9c6 | Regular (400)             |
-| Link text                      | #AB9DF2 | Bold (700)                |
-| Link URL                       | #8BE9FD | Italic (400i)             |
+| Link text + markers            | #AB9DF2 | Bold (700)                |
+| Link URL                       | #8BE9FD | Regular (400)             |
 | Comment                        | #6272A4 | Thin (100) + italic       |
+
+  The full color palette (~100 entries including code block tokens) is defined in `src/highlight-tags.ts`.
 
 ### Highlight Hierarchy (Priority Order)
 
@@ -354,11 +376,11 @@
 
 ### Common Mistakes to Avoid
 
-* **Don't change theme colors without updating `src/theme-reference.ts` first**
+* **Don't change colors in `theme.ts` — edit `src/highlight-tags.ts` instead**
 
-  + `theme-reference.ts` is the canonical color source
-  + `theme.ts` should always match it
-  + Previous agents changed colors without updating the reference, causing drift
+  + `highlight-tags.ts` is the single source of truth for all colors
+  + `theme.ts` imports from it — never define colors directly in `theme.ts`
+  + Both `editor.ts` and `theme.ts` import custom tags from `highlight-tags.ts`
 
 * **Don't use `npm run preview` without `npm run build` first**
 
@@ -373,13 +395,13 @@
 ### Important Conventions
 
   + **Extension ordering matters in `editor.ts`** — lowest priority first, theme last
-  + **HighlightStyle ordering matters in `theme.ts`** — first match wins; higher priority elements go first
-  + **ViewPlugin CSS classes** have lower specificity than HighlightStyle — this is intentional so that inline code, bold, etc. override list content colors
+  + **HighlightStyle cascade order matters in `theme.ts`** — later CSS rules win; low priority items first, high priority items last (strikethrough is defined last so it always wins)
+  + **styleTags path depth matters in `editor.ts`** — path-based overrides like `'BulletList/ListItem/ListMark'` (depth=1+) beat the default `processingInstruction` (depth=0); this is how markers get colored correctly
 
 ### Performance Considerations
 
-  + `markdown-decorations.ts` and `hanging-indent.ts` only process visible lines (`view.visibleRanges`)
-  + The syntax tree is walked once per update, not on every keystroke
+  + `hanging-indent.ts` only processes visible lines (`view.visibleRanges`)
+  + Highlighting is handled entirely by Lezer's built-in styleTags system — no custom syntax tree walking needed
   + `@codemirror/language-data` loads language parsers lazily (on demand) via dynamic imports
 
 ---
@@ -401,7 +423,7 @@
 
 ### Post-Deploy Verification
 
-  1. All markdown elements display correct colors per theme-reference.ts
+  1. All markdown elements display correct colors per `src/highlight-tags.ts`
   2. Auto-save works (type, refresh, content persists)
   3. PWA installable (browser shows install prompt)
   4. Works offline after initial load
@@ -449,7 +471,10 @@
 
 - **Build Log & Roadmap**: `docs/archive/v2/v2_0_0_UPDATES.md`
 - **Testing Feedback**: `docs/archive/v2/v2_0_0_FEEDBACK.md`
-- **Color Reference**: `src/theme-reference.ts`
+- **v2.0.8 Bug Report**: `docs/archive/v2/v2_0_8_BUG_REPORT.md`
+- **v2.0.8 Bug Log (fixes)**: `docs/archive/v2/v2_0_8_BUG_LOG.md`
+- **Color Reference (single source of truth)**: `src/highlight-tags.ts`
+- **Archived Color Reference**: `docs/archive/v2/old-highlight-theme-references.ts`
 - **v1 Challenges**: `docs/archive/v1/OvercomeChallenges.md`
 
 ---
