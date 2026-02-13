@@ -1,15 +1,21 @@
 // Thot v2 - CodeMirror Editor Setup
 import { EditorView, keymap, lineNumbers, highlightActiveLineGutter, highlightSpecialChars, drawSelection, dropCursor, rectangularSelection, crosshairCursor, highlightActiveLine } from '@codemirror/view'
 import { EditorState } from '@codemirror/state'
-import { markdown } from '@codemirror/lang-markdown'
+import { markdown, markdownLanguage } from '@codemirror/lang-markdown'
 import { languages } from '@codemirror/language-data'
 import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands'
 import { bracketMatching, indentOnInput } from '@codemirror/language'
 import { styleTags, tags } from '@lezer/highlight'
 import { thotTheme } from './theme'
-import { markdownDecorations } from './markdown-decorations'
 import { hangingIndentPlugin } from './hanging-indent'
 import { forceSave } from './persistence'
+import {
+  bulletMarkTag,
+  orderedMarkTag,
+  bulletContentTag,
+  orderedContentTag,
+  tableTag,
+} from './highlight-tags'
 
 export interface EditorConfig {
   parent: HTMLElement
@@ -35,15 +41,61 @@ export function createEditor(config: EditorConfig): EditorView {
     }
   })
 
-  // Custom styleTags to override markdown parser defaults
-  // Makes markers share the same tag as their content
+  // Complete styleTags overrides for markdown parser
+  // Path-based matches (depth>0) beat default processingInstruction (depth=0)
   const markdownStyleOverrides = {
     props: [
       styleTags({
+        // ═══ MARKER OVERRIDES ═══
+
+        // Heading # markers → same color as heading text
         HeaderMark: tags.heading,
-        'Emphasis/...': tags.emphasis,
-        'StrongEmphasis/...': tags.strong,
+
+        // Bold ** markers → same color as bold text
+        'StrongEmphasis/EmphasisMark': tags.strong,
+
+        // Italic * markers → same color as italic text
+        'Emphasis/EmphasisMark': tags.emphasis,
+
+        // Blockquote > markers → same color as blockquote text
         QuoteMark: tags.quote,
+
+        // Inline code ` delimiters → same color as inline code
+        'InlineCode/CodeMark': tags.monospace,
+        // FencedCode/CodeMark stays processingInstruction → #6767fc
+
+        // Bullet list markers (- * +) → gold
+        'BulletList/ListItem/ListMark': bulletMarkTag,
+
+        // Ordered list markers (1. 2. 3.) → red
+        'OrderedList/ListItem/ListMark': orderedMarkTag,
+
+        // Strikethrough ~~ markers → same as strikethrough text
+        StrikethroughMark: tags.strikethrough,
+
+        // Link []() markers → same color as link text
+        LinkMark: tags.link,
+
+        // Superscript ^ markers → same as superscript text
+        SuperscriptMark: tags.special(tags.content),
+
+        // Subscript ~ markers → same as subscript text
+        SubscriptMark: tags.special(tags.content),
+
+        // Horizontal rule --- → mint
+        HorizontalRule: tags.contentSeparator,
+
+        // ═══ CONTENT OVERRIDES ═══
+        // Inherit mode (/...) propagates to all descendants
+
+        // Bullet list content → cyan
+        'BulletList/...': bulletContentTag,
+
+        // Ordered list content → pink
+        'OrderedList/...': orderedContentTag,
+
+        // Table content → lime (overrides GFM defaults)
+        'Table/...': tableTag,
       })
     ]
   }
@@ -69,11 +121,9 @@ export function createEditor(config: EditorConfig): EditorView {
       // Hanging indent (line decorations — lowest priority)
       hangingIndentPlugin,
 
-      // Markdown decorations (inline decorations for list/code context)
-      markdownDecorations,
-
-      // Markdown language support with custom style overrides and code languages
+      // Markdown language support with GFM base, custom style overrides, and code languages
       markdown({
+        base: markdownLanguage,  // Enables GFM (Table, Strikethrough, TaskList) + Subscript, Superscript, Emoji
         codeLanguages: languages,
         extensions: [markdownStyleOverrides],
       }),

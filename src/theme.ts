@@ -1,47 +1,19 @@
 // Thot v2 - Dark Theme for CodeMirror 6
-// Complete rewrite matching theme-reference.ts and feedback hierarchy
+// All colors imported from highlight-tags.ts (single source of truth)
 import { EditorView } from '@codemirror/view'
 import { HighlightStyle, syntaxHighlighting } from '@codemirror/language'
 import { tags } from '@lezer/highlight'
-
-const colors = {
-  bg: '#1a1a1a',
-  fg: '#e6e6e6',
-  selection: '#44475a',
-  cursor: '#e6e6e6',
-  gutter: '#6272a4',
-
-  heading: '#FF9D00',
-  bold: '#FFD866',
-  italic: '#BF437F',
-  strikethrough: '#6272A4',
-
-  inlineCode: '#F34D3E',
-  blockCodeDelimiter: '#8989e3',
-  codeBlockContent: '#8989e3',
-  codeLanguage: '#F1FA8C',
-
-  linkText: '#AB9DF2',
-  linkUrl: '#8BE9FD',
-
-  bulletMarker: '#dfc532',
-  bulletContent: '#8aeefb',
-  numberedMarker: '#ff6b6b',
-  numberedContent: '#f8a5c2',
-  checkbox: '#8BE9FD',
-
-  blockquote: '#E6DB74',
-  hr: '#93f9c6',
-  table: '#e2ff79',
-
-  html: '#FF79C6',
-  comment: '#6272A4',
-  escape: '#FF79C6',
-}
+import {
+  colors,
+  bulletMarkTag,
+  orderedMarkTag,
+  bulletContentTag,
+  orderedContentTag,
+  tableTag,
+} from './highlight-tags'
 
 /**
  * Editor chrome theme (gutters, cursor, selection, scrollbar, etc.)
- * Also includes CSS classes for ViewPlugin decorations.
  */
 export const thotEditorTheme = EditorView.theme({
   '&': {
@@ -85,60 +57,151 @@ export const thotEditorTheme = EditorView.theme({
   '.cm-line': {
     padding: '0 2px',
   },
-
-  // ViewPlugin decoration classes (lower specificity than HighlightStyle)
-  '.thot-bullet-mark': {
-    color: colors.bulletMarker,
-  },
-  '.thot-number-mark': {
-    color: colors.numberedMarker,
-  },
-  '.thot-bullet-content': {
-    color: colors.bulletContent,
-  },
-  '.thot-number-content': {
-    color: colors.numberedContent,
-  },
-  '.thot-inline-code-mark': {
-    color: colors.inlineCode,
-  },
-  '.thot-block-code-mark': {
-    color: colors.blockCodeDelimiter,
-  },
-  '.thot-table': {
-    color: colors.table,
-  },
-  '.thot-hr': {
-    color: colors.hr,
-  },
-  '.thot-checkbox': {
-    color: colors.checkbox,
-  },
 }, { dark: true })
 
 /**
  * Syntax highlighting styles
- * Order matters: HighlightStyle.define uses first-match-wins.
- * Hierarchy: strikethrough → inlineCode → codeBlock → checkbox →
- *            bold → italic → table → heading → list → blockquote → foreground
+ *
+ * CASCADE ORDER: LOW priority first → HIGH priority last.
+ * When the Lezer inherit mechanism puts two CSS classes on one span,
+ * the LATER CSS rule in the stylesheet wins. This ordering ensures
+ * the desired priority hierarchy.
+ *
+ * Priority (highest wins):
+ *   strikethrough → inlineCode → bold → italic → table →
+ *   heading → list markers/content → blockquote → foreground
  */
 export const thotHighlightStyle = HighlightStyle.define([
-  // 1. Strikethrough — BLEND (color + decoration, inherits weight)
-  { tag: tags.strikethrough, color: colors.strikethrough, textDecoration: 'line-through', fontWeight: '100' },
+  // ╔══════════════════════════════════════════════════════════════╗
+  // ║  LOWEST PRIORITY — defined first, CSS rule appears earliest ║
+  // ╚══════════════════════════════════════════════════════════════╝
 
-  // 2. Inline code — FULL override
-  { tag: tags.monospace, color: colors.inlineCode },
+  // ─── Base text fallback ───
+  { tag: tags.content, color: colors.fg, fontWeight: '500' },
 
-  // 3. Code block content — BLEND
-  // (handled by language-specific tags + fallback)
+  // ─── Diff markers ───
+  { tag: tags.inserted, color: colors.diffAddition },
+  { tag: tags.deleted, color: colors.diffDeletion },
+  { tag: tags.changed, color: colors.diffChange },
 
-  // 4. Bold — FULL
-  { tag: tags.strong, color: colors.bold, fontWeight: '800' },
+  // ─── Invalid / error tokens ───
+  { tag: tags.invalid, color: colors.codeInvalid },
 
-  // 5. Italic — FULL
-  { tag: tags.emphasis, color: colors.italic, fontWeight: '800', fontStyle: 'italic' },
+  // ─── Brackets and punctuation ───
+  { tag: tags.punctuation, color: colors.codePunctuation },
+  { tag: tags.separator, color: colors.codeSeparator },
+  { tag: tags.bracket, color: colors.codePunctuation },
+  { tag: tags.paren, color: colors.codeParen },
+  { tag: tags.squareBracket, color: colors.codeSquareBracket },
+  { tag: tags.brace, color: colors.codeBrace },
+  { tag: tags.angleBracket, color: colors.codeAngleBracket },
 
-  // 6. Headings — FULL (all levels)
+  // ─── Code block: Names & Identifiers ───
+  { tag: tags.name, color: colors.codeVariable },
+  { tag: tags.variableName, color: colors.codeVariable },
+  { tag: tags.definition(tags.variableName), color: colors.codeVariableDef },
+  { tag: tags.function(tags.variableName), color: colors.codeFunction },
+  { tag: tags.local(tags.variableName), color: colors.codeLocal },
+  { tag: tags.constant(tags.variableName), color: colors.codeConstant },
+  { tag: tags.standard(tags.variableName), color: colors.codeStandard },
+  { tag: tags.propertyName, color: colors.codeProperty },
+  { tag: tags.definition(tags.propertyName), color: colors.codePropertyDef },
+  { tag: tags.function(tags.propertyName), color: colors.codeFunction },
+  { tag: tags.special(tags.propertyName), color: colors.codePrivateProperty },
+  { tag: tags.typeName, color: colors.codeType },
+  { tag: tags.definition(tags.typeName), color: colors.codeTypeDef },
+  { tag: tags.className, color: colors.codeClass },
+  { tag: tags.definition(tags.className), color: colors.codeClassDef },
+  { tag: tags.namespace, color: colors.codeNamespace },
+  { tag: tags.macroName, color: colors.codeMacro },
+  { tag: tags.labelName, color: colors.codeLabel },
+
+  // ─── Code block: Literals ───
+  { tag: tags.literal, color: colors.fg },
+  { tag: tags.string, color: colors.codeString },
+  { tag: tags.docString, color: colors.codeDocString },
+  { tag: tags.special(tags.string), color: colors.codeTemplateString },
+  { tag: tags.character, color: colors.emoji },
+  { tag: tags.number, color: colors.codeNumber },
+  { tag: tags.integer, color: colors.codeInteger },
+  { tag: tags.float, color: colors.codeFloat },
+  { tag: tags.bool, color: colors.codeBool },
+  { tag: tags.null, color: colors.codeNull },
+  { tag: tags.atom, color: colors.codeAtom },
+  { tag: tags.regexp, color: colors.codeRegexp },
+  { tag: tags.escape, color: colors.codeEscape },
+  { tag: tags.color, color: colors.codeColor },
+  { tag: tags.url, color: colors.codeUrl },
+  { tag: tags.unit, color: colors.codeUnit },
+
+  // ─── Code block: Keywords ───
+  { tag: tags.keyword, color: colors.codeKeyword },
+  { tag: tags.self, color: colors.codeSelf },
+  { tag: tags.controlKeyword, color: colors.codeControlKeyword },
+  { tag: tags.definitionKeyword, color: colors.codeDefinitionKeyword },
+  { tag: tags.moduleKeyword, color: colors.codeModuleKeyword },
+  { tag: tags.operatorKeyword, color: colors.codeOperatorKeyword },
+  { tag: tags.modifier, color: colors.codeModifier },
+
+  // ─── Code block: Operators ───
+  { tag: tags.operator, color: colors.codeOperator },
+  { tag: tags.derefOperator, color: colors.codeDeref },
+  { tag: tags.arithmeticOperator, color: colors.codeArithmeticOp },
+  { tag: tags.logicOperator, color: colors.codeLogicOp },
+  { tag: tags.bitwiseOperator, color: colors.codeBitwiseOp },
+  { tag: tags.compareOperator, color: colors.codeCompareOp },
+  { tag: tags.updateOperator, color: colors.codeUpdateOp },
+  { tag: tags.definitionOperator, color: colors.codeDefinitionOp },
+  { tag: tags.typeOperator, color: colors.codeTypeOp },
+  { tag: tags.controlOperator, color: colors.codeControlOp },
+
+  // ─── Code block: Comments ───
+  { tag: tags.lineComment, color: colors.codeLineComment, fontWeight: '100', fontStyle: 'italic' },
+  { tag: tags.blockComment, color: colors.codeBlockComment, fontWeight: '100', fontStyle: 'italic' },
+  { tag: tags.docComment, color: colors.codeDocComment, fontWeight: '100', fontStyle: 'italic' },
+
+  // ─── Code block: HTML/JSX ───
+  { tag: tags.tagName, color: colors.codeTagName },
+  { tag: tags.standard(tags.tagName), color: colors.codeStdTagName },
+  { tag: tags.attributeName, color: colors.codeAttributeName },
+  { tag: tags.attributeValue, color: colors.codeAttributeValue },
+
+  // ─── Code block: Meta ───
+  { tag: tags.meta, color: colors.codeMeta },
+  { tag: tags.annotation, color: colors.codeAnnotation },
+  { tag: tags.processingInstruction, color: colors.fencedCodeDelimiter },
+
+  // ─── Document metadata ───
+  { tag: tags.documentMeta, color: colors.frontmatter },
+
+  // ╔══════════════════════════════════════════════════════════════╗
+  // ║  MARKDOWN ELEMENTS — priority increases downward             ║
+  // ╚══════════════════════════════════════════════════════════════╝
+
+  // ─── Comments (markdown <!-- --> ) ───
+  { tag: tags.comment, color: colors.comment, fontWeight: '100', fontStyle: 'italic' },
+
+  // ─── Special content (superscript, subscript) ───
+  { tag: tags.special(tags.content), color: colors.superscript },
+
+  // ─── Links ───
+  { tag: tags.link, color: colors.linkText, fontWeight: '700' },
+
+  // ─── Content separator (horizontal rule) ───
+  { tag: tags.contentSeparator, color: colors.horizontalRule },
+
+  // ─── Blockquote ───
+  { tag: tags.quote, color: colors.blockquote, fontWeight: '100', fontStyle: 'italic' },
+
+  // ─── List content (custom tags) ───
+  { tag: orderedContentTag, color: colors.numberedContent },
+  { tag: bulletContentTag, color: colors.bulletContent },
+
+  // ─── List markers (custom tags) ───
+  { tag: orderedMarkTag, color: colors.numberedMarker, fontWeight: '700' },
+  { tag: bulletMarkTag, color: colors.bulletMarker, fontWeight: '700' },
+
+  // ─── Headings ───
   { tag: tags.heading, color: colors.heading, fontWeight: '800' },
   { tag: tags.heading1, color: colors.heading, fontWeight: '800' },
   { tag: tags.heading2, color: colors.heading, fontWeight: '800' },
@@ -147,60 +210,22 @@ export const thotHighlightStyle = HighlightStyle.define([
   { tag: tags.heading5, color: colors.heading, fontWeight: '800' },
   { tag: tags.heading6, color: colors.heading, fontWeight: '800' },
 
-  // 7. Blockquote — FULL
-  { tag: tags.quote, color: colors.blockquote, fontWeight: '100', fontStyle: 'italic' },
+  // ─── Table (custom tag) ───
+  { tag: tableTag, color: colors.table },
 
-  // 8. Links
-  { tag: tags.link, color: colors.linkText, fontWeight: '700' },
-  { tag: tags.url, color: colors.linkUrl, fontStyle: 'italic' },
+  // ╔══════════════════════════════════════════════════════════════╗
+  // ║  HIGHEST PRIORITY — defined last, CSS rule wins cascade     ║
+  // ╚══════════════════════════════════════════════════════════════╝
 
-  // 9. Content separator (horizontal rule)
-  { tag: tags.contentSeparator, color: colors.hr },
-  { tag: tags.separator, color: colors.hr },
+  // ─── Emphasis ───
+  { tag: tags.emphasis, color: colors.italic, fontWeight: '800', fontStyle: 'italic' },
+  { tag: tags.strong, color: colors.bold, fontWeight: '800' },
 
-  // 10. Comments and HTML
-  { tag: tags.comment, color: colors.comment, fontWeight: '100', fontStyle: 'italic' },
-  { tag: tags.angleBracket, color: colors.html },
-  { tag: tags.tagName, color: colors.html },
-  { tag: tags.attributeName, color: colors.bold },
-  { tag: tags.attributeValue, color: colors.inlineCode },
+  // ─── Inline code ───
+  { tag: tags.monospace, color: colors.inlineCode },
 
-  // 11. Code block language identifier
-  { tag: tags.labelName, color: colors.codeLanguage },
-
-  // 12. processingInstruction — used by markdown parser for various delimiters
-  // We override most with styleTags, but keep a fallback
-  { tag: tags.processingInstruction, color: colors.blockCodeDelimiter },
-
-  // 13. Escape characters
-  { tag: tags.escape, color: colors.escape },
-
-  // 14. Code block language-specific tokens
-  { tag: tags.keyword, color: colors.html },
-  { tag: tags.operator, color: colors.italic },
-  { tag: tags.definitionKeyword, color: colors.html },
-  { tag: tags.controlKeyword, color: colors.html },
-  { tag: tags.variableName, color: colors.fg },
-  { tag: tags.definition(tags.variableName), color: colors.bold },
-  { tag: tags.function(tags.variableName), color: colors.linkText },
-  { tag: tags.propertyName, color: colors.italic },
-  { tag: tags.typeName, color: colors.heading },
-  { tag: tags.className, color: colors.heading },
-  { tag: tags.string, color: colors.inlineCode },
-  { tag: tags.number, color: colors.checkbox },
-  { tag: tags.bool, color: colors.checkbox },
-  { tag: tags.null, color: colors.strikethrough },
-
-  // 15. Brackets and punctuation
-  { tag: tags.punctuation, color: colors.fg },
-  { tag: tags.paren, color: colors.linkText },
-  { tag: tags.squareBracket, color: colors.linkUrl },
-
-  // 16. Lists (fallback — ViewPlugin classes handle most list styling)
-  { tag: tags.list, color: colors.bulletContent },
-
-  // 17. Base content — fallback
-  { tag: tags.content, color: colors.fg, fontWeight: '500' },
+  // ─── Strikethrough ───
+  { tag: tags.strikethrough, color: colors.strikethrough, textDecoration: 'line-through', fontWeight: '100' },
 ])
 
 /**
