@@ -55,27 +55,32 @@ function buildMarkerDecorations(view: EditorView): DecorationSet {
   const decos: { from: number; to: number; deco: Decoration }[] = []
 
   for (const { from, to } of view.visibleRanges) {
+    // Stack-based context tracking — avoids .node.parent which can fail
+    // on Lezer buffer nodes. enter/leave callbacks track which list type
+    // we're currently inside, so ListMark just checks the stack.
+    const listStack: string[] = []
+
     tree.iterate({
       from,
       to,
       enter(node) {
-        // List markers — differentiate bullet vs numbered
-        if (node.name === 'ListMark') {
-          let parent = node.node.parent
-          while (parent) {
-            if (parent.name === 'BulletList') {
-              decos.push({ from: node.from, to: node.to, deco: bulletMarkDeco })
-              return
-            }
-            if (parent.name === 'OrderedList') {
-              decos.push({ from: node.from, to: node.to, deco: numberMarkDeco })
-              return
-            }
-            parent = parent.parent
+        // Track list context via stack
+        if (node.name === 'BulletList') { listStack.push('bullet'); return }
+        if (node.name === 'OrderedList') { listStack.push('ordered'); return }
+
+        // List markers — use stack to determine bullet vs numbered
+        if (node.name === 'ListMark' && listStack.length > 0) {
+          const listType = listStack[listStack.length - 1]
+          if (listType === 'bullet') {
+            decos.push({ from: node.from, to: node.to, deco: bulletMarkDeco })
+          } else {
+            decos.push({ from: node.from, to: node.to, deco: numberMarkDeco })
           }
+          return
         }
 
         // Inline code marks — backticks should match code text color
+        // CodeMark inside InlineCode → red-orange; inside FencedCode → stays blue-purple
         if (node.name === 'CodeMark') {
           let parent = node.node.parent
           while (parent) {
@@ -84,10 +89,15 @@ function buildMarkerDecorations(view: EditorView): DecorationSet {
               return
             }
             if (parent.name === 'FencedCode') {
-              return // FencedCode marks stay as processingInstruction (blue-purple)
+              return
             }
             parent = parent.parent
           }
+        }
+      },
+      leave(node) {
+        if (node.name === 'BulletList' || node.name === 'OrderedList') {
+          listStack.pop()
         }
       }
     })
