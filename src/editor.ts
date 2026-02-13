@@ -11,6 +11,7 @@ import { thotTheme } from './theme'
 import { hangingIndentPlugin } from './hanging-indent'
 import { forceSave } from './persistence'
 import {
+  colors,
   bulletContentTag,
   orderedContentTag,
   tableTag,
@@ -42,9 +43,11 @@ export interface EditorConfig {
 // Everything else works through styleTags + HighlightStyle cascade.
 // ═══════════════════════════════════════════════════════════════════
 
-const bulletMarkDeco = Decoration.mark({ class: 'thot-bullet-mark' })
-const numberMarkDeco = Decoration.mark({ class: 'thot-number-mark' })
-const inlineCodeMarkDeco = Decoration.mark({ class: 'thot-inline-code-mark' })
+// Inline styles guarantee these override any HighlightStyle CSS class,
+// since inline style attributes have the highest CSS specificity.
+const bulletMarkDeco = Decoration.mark({ attributes: { style: `color: ${colors.bulletMarker}; font-weight: 700` } })
+const numberMarkDeco = Decoration.mark({ attributes: { style: `color: ${colors.numberedMarker}; font-weight: 700` } })
+const inlineCodeMarkDeco = Decoration.mark({ attributes: { style: `color: ${colors.inlineCode}` } })
 
 function buildMarkerDecorations(view: EditorView): DecorationSet {
   const builder = new RangeSetBuilder<Decoration>()

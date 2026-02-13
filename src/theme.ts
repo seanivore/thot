@@ -57,22 +57,6 @@ export const thotEditorTheme = EditorView.theme({
   '.cm-line': {
     padding: '0 2px',
   },
-
-  // ViewPlugin decoration classes for context-dependent highlighting
-  // These need higher CSS specificity than HighlightStyle-generated classes,
-  // which EditorView.theme provides via scoped selectors.
-  // Only used for cases where Lezer's styleTags combine() blocks context overrides.
-  '.thot-bullet-mark': {
-    color: colors.bulletMarker,
-    fontWeight: '700',
-  },
-  '.thot-number-mark': {
-    color: colors.numberedMarker,
-    fontWeight: '700',
-  },
-  '.thot-inline-code-mark': {
-    color: colors.inlineCode,
-  },
 }, { dark: true })
 
 /**
