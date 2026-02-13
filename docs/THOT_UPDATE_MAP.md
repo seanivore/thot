@@ -1,6 +1,13 @@
 # Thot App Developmental Roadmap 
 `thots.august.style`
 
+**NOTE**: I think it is important that we update the `docs/THOT_APP.md` document's 'about' type section at the top so that it is representative of the entire vision of the project instead of just the first version of the project. The same thing should be done to the `README.md` file. 
+
+  1. Let's pull from here to build out those details for those requested document updates. 
+  2. We then needs to organize this roadmap document; there are currently a bunch of duplicate information form my consolidating 
+  3. I'd like to try to see if we can organize things so that there are two parallel development opportunities 
+  4. Set ourselves up so that an agent can come through later and do research and everything else necessary to turn this document into separate UPDATE documents that are exclusively executable, with all details figured out down to the smallest details; the highlighting was a perfect example of a failure to do this well for this project because our v2.1.0 update was a complete revamp of how they are applied after the agent did research to figure out what we 'thought' were bugs but really were a result of us guessing at how things get put together instead of doing research and confirming everything from the start. We could have saved half of a day sorting out those bugs if we had done the research from the start. Not sure where the best place to put this information is, but it is just too perfect of an example of why this is so important. LLMs presume they have the knowledge-base and use common solutions, but so often the reality is that there are many details that need to be sorted beforehand for us to be truly effective.  
+
 ## Project Vision 
 
 The organization of Finder column view + the convenience of Apple Notes + the flexibility of markdown + the document exports of Google Docs + the cognitive load easing nature of syntax highlighting. 
