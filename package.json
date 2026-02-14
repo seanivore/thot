@@ -1,6 +1,6 @@
 {
   "name": "thot",
-  "version": "2.0.0",
+  "version": "2.1.4",
   "description": "A markdown scratchpad with IDE-like syntax highlighting",
   "type": "module",
   "scripts": {
