@@ -460,6 +460,15 @@
   3. PWA installable (browser shows install prompt)
   4. Works offline after initial load
 
+### Future Updates To New Feature Branches 
+
+* **Use this when `main` exists and you want to fast-forward it to a new branch**
+
+```bash 
+git merge --ff-only 
+git push origin main v1-project-name # pushes both branches in one command
+```
+
 ---
 
 ## Quick Reference
