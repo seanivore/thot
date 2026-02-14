@@ -1,5 +1,79 @@
-# Thot App Developmental Roadmap 
+# Thot App Developmental Roadmap & Update Planning 
 `thots.august.style`
+
+## Thot v2.1.4: Current build ready for launch ✅
+
+* **Problem**: Existing markdown editors are either too simple (no highlighting) or too complex (full IDEs with irrelevant features)
+* **Solution**: A single-purpose scratchpad that opens instantly, highlights beautifully, and never loses your work
+
+  + Open the app, start typing, see instant highlighting
+  + Close the browser, come back later, everything is exactly where you left it
+  + Install as a PWA for an app-like experience without the App Store
+
+
+### Deployment From My Notes 
+
+* **Please review and confirm actual process so that I can do it next time**
+
+  1. We want to push the current build to `main`
+  2. The `main` branch doesn't exist yet 
+  3. Include version tag in the launch 
+  4. Custom Domain  
+     - Currently set up for GitHub Pages `thots.august.style`
+     - Need to change so we don't need to use GitHub Pages so I can keep that repo private
+  5. Hosting configuration 
+     - Vercel because free tier, private repository is okay 
+     - Build source is `dist/` directory from `npm run build` 
+  6. Post-Deploy Verification
+     - All markdown elements display correct colors per `src/highlight-tags.ts`
+     - Auto-save works (type, refresh, content persists)
+     - PWA installable (browser shows install prompt)
+     - Works offline after initial load
+
+
+```
+## Versioning Branch Management 
+
+* **Development happens on various branches & Production ready product is pushed to a specific branch**
+
+  1. Leave 'main' branch empty or uncreated 
+  2. Do all development and complete testing on appropriately named branches 
+  3. Finalized updates are then **MERGED** onto 'main' with a **VERSION TAG** 
+
+### Update Ready To Ship
+
++ In this example `main` already exists 
+  - "v1" update is tested and ready to go live 
+  - v1 branch is named `v1-project-name`
+
+| Step                                 | Command                                       |
+| ------------------------------------ | --------------------------------------------- |
+| 1. From shippable update branch      | `git checkout main`                           |
+| 2. Fast-forward `main` to `v1` state | `git merge --ff-only v1-project-name`         |
+| 3. Push that clean update to `main`  | `git push origin main v1-project-name`        |
+| 4. Give clean push a version tag     | `git tag v1.0.0-project-version-name`         |
+| 5. Push version tag to clean update  | `git push origin v1.0.0-project-version-name` |
+
++ In this example you're working on one branch at a time
+  - Only preparing "v1" on branch `v1-project-name`
+  - Follow steps below when ready to have `main` as stable mirror
+
+| Step                                     | Command                                |
+| ---------------------------------------- | -------------------------------------- |
+| 1. Create `main` branch at current state | `git checkout -b main v1-project-name` |
+| 2. Treat stable v1 as 'release'          | `git push -u origin main`              |
+| 3. Tag the release                       | `git tag v1.0.0-release-name`          |
+| 4. Push the tag to the clean release     | `git push origin v1.0.0-release-name`  |
+
++ Protect `main` on GitHub 
+  - No direct pushes 
+  - PRs only 
+  - Keep doing day-to-day work on `v1-release-name`, `v2-update`, `v3-feature`, etc. 
+```
+
+
+
+
 
 **NOTE**: I think it is important that we update the `docs/THOT_APP.md` document's 'about' type section at the top so that it is representative of the entire vision of the project instead of just the first version of the project. The same thing should be done to the `README.md` file. 
 
@@ -86,7 +160,7 @@ The organization of Finder column view + the convenience of Apple Notes + the fl
   + Close the browser, come back later, everything is exactly where you left it
   + Install as a PWA for an app-like experience without the App Store
 
-### Thot v2.X.X (Upcoming)
+### Thot v2.x (Upcoming)
 
 #### Paired-Delimiters Behavior
 
