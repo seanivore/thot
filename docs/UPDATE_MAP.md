@@ -10,145 +10,39 @@
 
 ## Table of Contents
 
-1. [Development Process & Protocols](#development-process--protocols)
+1. [Development Process & Protocols](#development-process--protocols) — See [`.agent/DEV_RULES.md`](.agent/DEV_RULES.md)
 2. [Priority-Based Update Tracking](#priority-based-update-tracking)
 3. [Version Roadmap](#version-roadmap)
 4. [Parallel Development Tracks](#parallel-development-tracks)
 5. [Research Needs & Open Questions](#research-needs--open-questions)
 6. [Consolidated Notes & Ideas](#consolidated-notes--ideas)
 7. [Project Vision](#project-vision)
+8. [Future Vision (v5.0+)](#future-vision-v50)
 
 ---
 
 ## Development Process & Protocols
 
-### Purpose & Philosophy
+**Note**: Full development protocols have been extracted to [`.agent/DEV_RULES.md`](.agent/DEV_RULES.md) for reuse across projects. This section provides Thot-specific context.
 
-**Why This Matters**: The v2.0.8 highlighting system rewrite taught us that LLMs often presume knowledge they don't have. We could have saved half a day if we'd done proper research upfront instead of guessing at implementation. These protocols ensure every update starts with thorough investigation before execution.
+### Thot-Specific Branching
 
-**Core Principle**: Projects start with research and planning to the point of an exclusively executable implementation plan. No guessing, no "we'll figure it out when we get there."
-
-### Git Branching Protocol
-
-**Branch Types:**
-
-- `main` — Protected, no direct commits, only fast-forward merges
+- `main` — Protected, production-ready code
 - `v2-first-thots` — Current primary dev branch
-- `feat/feature-name` — New features (e.g., `feat/paired-delimiters`, `feat/file-operations`)
-- `fix/bug-name` — Bug fixes (e.g., `fix/inline-code-markers`, `fix/ipad-scrolling`)
-- `research/topic` — Investigation branches (e.g., `research/custom-highlighter`, `research/file-system-api`)
-- `docs/update-name` — Documentation updates
+- Feature branches follow standard protocol (see DEV_RULES.md)
 
-**Semantic Versioning:**
+### Thot-Specific Documentation
 
-- `v2.x.x` — PWA refinements, bug fixes, incremental features
-- `v3.x.x` — Major features (file operations, formatting modes, SwiftUI wrapper)
-- `v4.x.x` — AI integration, advanced features
+- `docs/THOT_APP.md` — Main technical reference (update for architecture changes)
+- `docs/UPDATE_MAP.md` — This file, strategic roadmap
+- `docs/plans/` — Active feature implementation plans
+- `docs/archive/vX/` — Completed update documentation
 
-**Branch Lifecycle:**
+### Key Lesson from v2.0.8
 
-1. Create feature branch from `v2-first-thots`
-2. Complete work with tests
-3. Merge back to `v2-first-thots`
-4. Tag stable releases (e.g., `v2.2.0`)
-5. Fast-forward merge to `main` when production-ready
+The highlighting system rewrite could have been avoided with proper upfront research. Always verify assumptions about complex systems (like CodeMirror/Lezer) before implementing.
 
-### Exclusively Executable Implementation Plans
-
-**Requirements for Every Update Document:**
-
-1. **Research Phase Complete**
-   - All APIs/libraries documented with current (2026) best practices
-   - Browser compatibility confirmed
-   - Performance implications understood
-   - Alternative approaches evaluated
-
-2. **Architecture Decisions Documented**
-   - Why this approach over alternatives
-   - What trade-offs were made
-   - What constraints influenced the decision
-
-3. **Implementation Details Specified**
-   - Exact file changes needed
-   - Dependencies to add (with versions)
-   - Configuration changes required
-   - Test cases defined
-
-4. **Common Pitfalls Identified**
-   - Known issues with this approach
-   - Edge cases to handle
-   - Rollback strategy if needed
-
-**Template Structure:**
-
-```
-# [Feature Name] Implementation Plan
-
-## Research Summary
-[What we learned, what APIs/libraries we'll use, why]
-
-## Architecture Decision
-[Approach chosen, alternatives considered, trade-offs]
-
-## Implementation Steps
-[Detailed, sequential steps with file paths]
-
-## Testing Strategy
-[How to verify it works]
-
-## Rollback Plan
-[How to undo if it breaks]
-```
-
-### Context Management Strategy
-
-**Problem**: Agents working on `feat/paired-delimiters` don't need the entire UPDATE_MAP in their context — it's noise and wastes tokens.
-
-**Solution**:
-
-1. **UPDATE_MAP.md** stays in `docs/` as strategic overview (this file)
-2. **Feature-specific plans** go in `docs/plans/v3_0_0_paired_delimiters.md`
-3. **Agent instructions**: "Read `docs/plans/v3_0_0_paired_delimiters.md` for your task. Do NOT read UPDATE_MAP.md"
-4. **After completion**: Update UPDATE_MAP.md with status, then archive the plan to `docs/archive/v3/`
-
-### Parallel Development Workflow
-
-**How Companies Do This (and How We Can):**
-
-1. **Multiple agents on different branches simultaneously**
-   - Agent A: `feat/paired-delimiters` (v3.0.0)
-   - Agent B: `feat/file-operations` (v3.0.0)
-   - Agent C: `research/custom-highlighter` (future)
-
-2. **Merge Conflict Prevention**
-   - Each feature plan specifies which files it will modify
-   - Check for overlaps before starting parallel work
-   - If two features touch the same file, do them sequentially
-
-3. **Integration Protocol**
-   - Complete feature A, merge to `v2-first-thots`
-   - Feature B rebases on updated `v2-first-thots` before merging
-   - Run full test suite after each merge
-
-4. **Detailed Change Logs**
-   - Each agent creates `docs/archive/v3/v3_0_X_UPDATES.md` documenting:
-     - What changed (file-by-file)
-     - Why it changed
-     - Git diff confirmation
-     - Test results
-
-### Agent Documentation Standards
-
-**Every agent working on an update must:**
-
-1. **Start with research** (even if it seems simple)
-2. **Document assumptions** and verify them
-3. **Create before/after examples** for testing
-4. **Confirm changes via git diff** before marking complete
-5. **Update THOT_APP.md** if architecture changes
-6. **Create archive document** in `docs/archive/vX/`
-
-**Question for Future Standardization**: Should agents confirm diffs against git automatically as part of their completion checklist?
+**For detailed protocols on git workflow, implementation plans, parallel development, and agent standards, see [`.agent/DEV_RULES.md`](.agent/DEV_RULES.md).**
 
 ---
 
@@ -160,7 +54,9 @@
 **Goal**: Fix blocking issues preventing smooth user experience
 **Timeline**: Complete before starting v3.0.0 features
 
-#### 1. Highlighting Bugs (4 issues from v2.1.4_BUG_REPORT.md)
+**Strategic Note**: These bugs don't break core functionality but create "unpolished" feeling. Must fix before launching paid tiers.
+
+#### 1. Highlighting Bugs (5 issues from v2.1.4_BUG_REPORT.md + nested emphasis)
 
 **Issues:**
 
@@ -168,6 +64,7 @@
 2. **Bullet markers** — Should be gold (#dfc532), currently infected by cyan content color
 3. **Numbered markers** — Should be red (#ff6b6b), currently infected by pink content color
 4. **Link URLs** — Should be cyan (#8BE9FD), currently not differentiating from link text
+5. **Nested emphasis** — Italics in bold doesn't work, but bold in italics does; **Like *this* line** vs *Like **this** line* should work both ways (both should apply: ExtraBoldItalic 800i)
 
 **Files to modify**: `src/highlight-tags.ts`, `src/theme.ts`, possibly `src/editor.ts`
 
@@ -203,6 +100,36 @@
 
 **Files to investigate**: `src/theme.ts` (viewport/padding), `index.html` (meta viewport tag)
 
+#### 4. YAML Highlighting Bug
+
+**Issue**: Hyphens after numbered list items trigger heading style
+
+**Behavior:**
+1. Write numbered list
+2. Delete number, add hyphen (for sub-list)
+3. Text above hyphen turns heading color
+4. Only happens after numbered list, not after headings
+5. Goes away when character added after hyphen
+
+**Likely cause**: YAML frontmatter detection (three hyphens at document start) incorrectly triggering after list items
+
+**Fix needed**: YAML rules should only apply at document start, not after list items
+
+**Files to investigate**: `src/editor.ts` (styleTags for YAML), possibly markdown parser configuration
+
+#### 5. Undo/Redo Issue (iPad)
+
+**Issue**: "Ctrl-Z doesn't undo my deletion of the full page!!"
+
+**Investigation needed**: 
+- Is this a CodeMirror history issue?
+- iOS-specific behavior?
+- Reproducible on desktop?
+
+**Priority**: Critical if reproducible consistently, otherwise defer
+
+**Files to investigate**: `src/editor.ts` (history extension configuration)
+
 ### HIGH — v3.0.0 (Monetization Ready)
 
 **Status**: Planning phase
@@ -211,7 +138,7 @@
 
 **Strategic Reasoning**: This version makes Thot competitive with existing note apps while maintaining unique semantic highlighting advantage. By supporting both markdown and visual formatting, we capture two user segments instead of one.
 
-#### 4. Native Browser Spellcheck
+#### 6. Native Browser Spellcheck
 
 **Why now**: Users expect this in any text editor; absence feels broken
 
@@ -222,7 +149,7 @@
 
 **Research needed**: How to toggle on/off (menu item or settings)
 
-#### 5. Paired Delimiters Behavior
+#### 7. Paired Delimiters Behavior
 
 **Why now**: Standard text editor behavior; users expect it
 
@@ -238,7 +165,7 @@
 
 **Research needed**: CodeMirror closeBrackets extension compatibility
 
-#### 6. Intelligent Formatting Mode ⚠️ RESEARCH NEEDED
+#### 8. Intelligent Formatting Mode ⚠️ RESEARCH NEEDED
 
 **Why now**: This is the killer feature that differentiates us from every other markdown editor
 
@@ -272,7 +199,7 @@
 
 **Strategic Note**: This is complex enough to warrant its own exclusively executable plan after research. Consider starting with Option A for v3.0.0, then Option B for v3.1.0.
 
-#### 7. File Operations ⚠️ RESEARCH NEEDED
+#### 9. File Operations ⚠️ RESEARCH NEEDED
 
 **Why now**: Opening/saving .md files + multiple windows = table stakes for "normal users" market
 
@@ -293,7 +220,7 @@
 
 **Strategic Note**: This fundamentally changes the app from "scratchpad" to "markdown editor." Need to maintain backward compatibility with localStorage-only mode.
 
-#### 8. Light Theme Option
+#### 10. Light Theme Option
 
 **Why now**: Some users prefer light backgrounds; accessibility consideration
 
@@ -307,7 +234,7 @@
 
 **Status**: Deferred until v3.0.0 complete
 
-#### 9. Simple Export (HTML/PDF)
+#### 11. Simple Export (HTML/PDF)
 
 **Why later**: Not blocking monetization; users can copy/paste for now
 
@@ -319,7 +246,7 @@
 
 **Reference**: `docs/archive/v3/typora-app-css-themes/` — but verify these are for export, not editor highlighting
 
-#### 10. Mobile/Tablet UX Improvements
+#### 12. Mobile/Tablet UX Improvements
 
 **Issues to address:**
 
@@ -330,7 +257,7 @@
 
 **Research needed**: PWA display modes, iOS standalone mode customization
 
-#### 11. Settings UI for Preferences
+#### 13. Settings UI for Preferences
 
 **Settings to expose:**
 
@@ -344,7 +271,7 @@
 
 **Implementation**: Settings panel (modal or sidebar)
 
-#### 12. Clickable Paths & URLs
+#### 14. Clickable Paths & URLs
 
 **Features:**
 
@@ -353,7 +280,7 @@
 - Setting to enable/disable
 - Relative path support for allowed directories
 
-#### 13. Anchor Links to Headings
+#### 14. Anchor Links to Headings
 
 **Feature**: Click heading to get anchor link, click anchor link to jump to heading
 
@@ -653,57 +580,90 @@ By supporting both, we expand addressable market significantly. File operations 
 
 **Technical approach**: All relatively straightforward implementations, no major research needed.
 
-### v3.x.x → v4.0.0: Native Wrapper
+### v3.x.x → v4.0.0: SwiftUI Native Wrapper
 
-**What**: SwiftUI wrapper for App Store distribution
-**Why**: Premium tier, native OS integration
+**What**: Minimal SwiftUI wrapper for App Store distribution with native OS integration
+**Why**: Premium tier that adds value only native apps can provide
 **When**: After PWA established and user base exists
-
-**Includes:**
-- WKWebView wrapper loading PWA
-- Native window chrome
-- File system integration (replaces File System Access API)
-- System Share sheet
-- Reminders/Calendar integration
-- Spotlight search integration
 
 **Strategic reasoning**: 
 
-Don't build SwiftUI wrapper until PWA is proven and monetizing. Why?
+Wait until PWA is proven and monetizing before investing in native wrapper. Why?
 
-1. **Validate demand** — Confirm people will pay before spending $100 on App Store
+1. **Validate demand** — Confirm people will pay before App Store investment
 2. **Avoid duplication** — PWA features work on web AND in wrapper
-3. **Two revenue streams** — Web subscription ($3/mo) + Native app ($10 one-time or $5/mo premium)
-4. **Market positioning** — Web app for everyone, native app for power users who want OS integration
+3. **Two revenue streams** — Web subscription + Native app premium
+4. **Market positioning** — Web app for everyone, native app for OS integration features
 
 **What SwiftUI adds** (and ONLY what it adds):
-- True native feel (not just wrapped web view)
-- System-level integrations (Share, Reminders, Calendar)
-- Better keyboard shortcut support
-- Possibly: Spotlight search, Quick Look preview
+
+**Core wrapper:**
+- WKWebView loading PWA
+- Native window chrome (traffic lights, title bar)
+- Native file picker (enhances File System Access API)
+
+**Native integrations:**
+- System Share sheet (share to Mail, Messages, other apps)
+- Import from Apple Notes (via Share sheet)
+- Reminders/Calendar integration (@date notation → native Reminders)
+- Spotlight search integration
+- Quick Look preview for .md files
+
+**Platform-specific features:**
+- Apple Pencil support (iPad)
+  - Handwriting to text conversion
+  - Red pen editing mode
+  - Standard pen colors (blue, black, red, Sharpie)
+- Biometric security (Face ID/Touch ID)
+  - Locked notes or sections
+  - Privacy for journal entries
+- Apple Intelligence Writing Tools (iOS 18+)
+  - Proofread, refine, rewrite, summarize
+  - Available via right-click in native app only
 
 **What SwiftUI does NOT rebuild**:
-- Text editor (use PWA)
+- Text editor UI (use PWA)
 - Highlighting system (use PWA)
-- File operations (use PWA, enhance with native file picker)
+- File operations logic (use PWA, enhance with native picker)
+- Multi-note organization UI (build in PWA if possible)
 
-**Technical approach**: Minimal SwiftUI shell around WKWebView, bridge for native features.
+**Technical approach**: Minimal SwiftUI shell around WKWebView with bridges for native features. PWA remains the core product.
 
-### v4.0.0 → v4.x.x: Multi-Note & AI
+**Reference**: See `docs/archive/v4/v4_UPDATE_SWIFTUI.md` for detailed native feature exploration
 
-**What**: Transform from single-note editor to full note-taking system
-**Why**: Competitive with Notion, Obsidian, Apple Notes
-**When**: After native app established
+### v4.0.0 → v4.x.x: Multi-Note Organization
+
+**What**: Transform from single-note editor to multi-note system
+**Why**: Competitive with Apple Notes, Google Keep
+**When**: After native app launched
 
 **Includes:**
-- Multi-note organization (Finder column view)
+- Multi-note storage and management
+- Finder-style column view navigation
 - Workspace/project hierarchy
-- #tags and @mentions
-- AI auto-organization
-- AI chat with notes
-- Workspace-specific themes
+- #tags for organization
+- @mentions for linking between notes
+- Search across all notes
+- "Post-it note" preview cards
 
-**Strategic reasoning**: This is a completely different product category (note-taking system vs. text editor). Requires significant architecture changes. Only pursue if single-note editor proves successful.
+**Strategic reasoning**: This is a different product category (note-taking system vs. text editor). Only pursue if single-note editor proves successful. Consider building UI in PWA if performance allows, or in SwiftUI if needed.
+
+### v4.x.x → v5.0.0: AI Integration
+
+**What**: AI-powered organization and interaction
+**Why**: Differentiate from traditional note apps
+**When**: After multi-note system established
+
+**Includes:**
+- AI auto-organization (command: "@ai organize these documents")
+- AI chat with notes (query across documents)
+- Extract action items
+- Summarize long documents
+- Workspace-specific themes (AI-customizable)
+
+**Strategic reasoning**: AI features require multi-note foundation. Premium tier feature that justifies subscription cost.
+
+**Technical approach**: Claude Code SDK or similar for AI integration
 
 ---
 
@@ -1445,7 +1405,7 @@ Don't build SwiftUI wrapper until PWA is proven and monetizing. Why?
 
 ### Immediate (This Week)
 
-1. **Fix v2.2.0 bugs** — 7 critical issues
+1. **Fix v2.2.0 bugs** — 9 critical issues (5 highlighting + icons + iPad scrolling + YAML + undo/redo)
 2. **Research File System Access API** — Browser support, implementation approach
 3. **Research Intelligent Formatting** — Technical feasibility, UX approach
 
@@ -1484,6 +1444,144 @@ Don't build SwiftUI wrapper until PWA is proven and monetizing. Why?
 - `docs/plans/` — Feature-specific implementation plans
 - `docs/archive/v2/` — Historical update logs
 - `docs/archive/v3/` — Future update logs
+
+---
+
+## Future Vision (v5.0+)
+
+**Note**: These are "dream big" ideas that are way out there — potentially v12 someday. They're captured here for inspiration but not actively planned.
+
+### Live Activities & Widgets
+
+**Potential**: Extend "post-it" preview concept to Lock Screen, Home Screen, Dynamic Island
+
+**Ideas:**
+- Interactive journal prompts when you get home
+- Different "schemas" or vibes (therapy, creative writing, memoir)
+- Glanceable data on Lock Screen
+- Home Screen widgets showing recent notes
+- Dynamic Island integration for quick capture
+
+**Strategic note**: This has real potential for differentiation. Live Activities are uniquely native and could make note-taking more ambient/contextual.
+
+### Apple Watch Integration
+
+**Concept**: Voice-to-text note capture on the go
+
+**Features:**
+- Record voice messages → WhisperAI → text
+- Automatic meeting notes (Watch listens, transcribes)
+- Quick capture button on Watch
+- Sync to main app automatically
+
+**Strategic note**: Most apps don't think about Watch integration — huge missed opportunity for note-taking use case.
+
+### Spatial Computing (visionOS)
+
+**Vision**: Immersive writing environments
+
+**Ideas:**
+- "Go to the beach to write"
+- "Sit under a tree and draw"
+- 3D elements, volumetric windows
+- RealityKit integration
+- Development environment in visionOS
+
+**Strategic note**: Keep on radar. visionOS is early but could be compelling for focused writing experiences.
+
+### Advanced AI Integration Scopes
+
+**Specialized AI assistants for different use cases:**
+
+**Memoir Assistant/Journal Buddy:**
+- Prompts and guidance for personal writing
+- Memory organization
+- Timeline generation
+
+**SEO Buddy:**
+- Type headline → get SEO keywords
+- Paste image → generate caption
+- Include caption → generate hashtags
+
+**Completion Tasks:**
+- Auto-formatting for specific content types (recipes, meeting notes, etc.)
+- Paste basics → AI cleans up and formats
+- Export to appropriate destination
+
+**Meditation Buddy:**
+- Guided journaling prompts
+- Reflection exercises
+- Mood tracking
+
+### Notion Integration
+
+**Concept**: Use Thot as "pre-planning" space, send to Notion when ready to organize
+
+**Why**: "Taking notes in Notion sucks there's no 'draftpad' vibe it forces organization"
+
+**Implementation**: 
+- Thot = freeform thinking space
+- Export to Notion when ready to organize
+- Use Notion API for seamless integration
+
+**Strategic note**: "How can you win over the Notion cult?" — This could be the answer.
+
+### Social Media & Automation Features
+
+**Ideas:**
+- Social media post scheduling
+- Integrated grocery list management
+- Auto-formatting for specific content types
+- Export to various platforms
+
+**Strategic note**: Jump over the automation step and offer popular features directly.
+
+### Apple Wallet Integration
+
+**Wild idea**: "How cool would it be to be the person who made it normal to buy things from your notes app"
+
+**Possibilities:**
+- LLM token purchases
+- Premium feature unlocks
+- Subscription management
+
+### MCP Server Integration
+
+**Concept**: Where Apple restricts API access, use MCP tools as bridges
+
+**Example**: Access Apple Notes data via local server-side scripting that bridges AI models and desktop Notes app
+
+**Strategic note**: Future-proof by including MCP integration rather than relying on external tools.
+
+### Advanced Formatting Features
+
+**Tab-style auto-formatting** (like Cursor/Anti-Gravity):
+- Format entire 10-page document with styles in minutes
+- Google Docs users don't know this is possible
+- Bring this UX to note-taking
+
+**Recipe formatting:**
+- Paste recipe basics
+- AI cleans up and formats beautifully
+- Export to recipe app of choice
+
+### Push Notifications & Background Processing
+
+**Native app benefits:**
+- Reliable push notifications (without browser dependence)
+- Background syncing
+- Location-based prompts (e.g., "You're home, time to journal")
+
+**Strategic note**: PWA notifications are unreliable. Native app makes this viable.
+
+### Platform-Specific UI Components
+
+**SwiftUI-exclusive features:**
+- NavigationSplitView for iPad/Mac
+- Material backgrounds
+- SwiftCharts for data visualization
+- Custom haptic feedback (Taptic Engine)
+- System-level animations ("signature Apple feel")
 
 ---
 
