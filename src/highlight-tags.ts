@@ -6,40 +6,40 @@ import { Tag } from '@lezer/highlight'
 // For elements that need unique colors beyond built-in Lezer tags
 
 // List markers (need different colors for bullet vs ordered)
-export const bulletMarkTag = Tag.define()    // Bullet list markers: -, *, +
-export const orderedMarkTag = Tag.define()   // Ordered list markers: 1., 2., 3.
+export const bulletMarkTag = Tag.define()     // Bullet list markers: -, *, +
+export const orderedMarkTag = Tag.define()    // Ordered list markers: 1., 2., 3.
 
 // List content (need different colors for bullet vs ordered)
-export const bulletContentTag = Tag.define() // Text in bullet list items
+export const bulletContentTag = Tag.define()  // Text in bullet list items
 export const orderedContentTag = Tag.define() // Text in ordered list items
 
 // Table (all parts unified to one color)
-export const tableTag = Tag.define()         // Table pipes, headers, cells, delimiters
+export const tableTag = Tag.define()          // Table pipes, headers, cells, delimiters
 
 // ═══ Complete Color Palette ═══
 // Every highlightable element in the app, organized by category
 
 export const colors = {
   // ─── Editor Chrome ───
-  bg: '#1a1a1a',               // Editor background
-  fg: '#e6e6e6',               // Default text / foreground
-  selection: '#44475a',         // Selected text background
-  cursor: '#e6e6e6',           // Cursor color
-  gutter: '#6272a4',           // Line number gutter
+  bg: '#1a1a1a',                  // Editor background
+  fg: '#e6e6e6',                  // Default text / foreground
+  selection: '#44475a',           // Selected text background
+  cursor: '#e6e6e6',              // Cursor color
+  gutter: '#6272a4',              // Line number gutter
 
   // ─── Headings ───
-  heading: '#FF9D00',           // Heading text and # markers (all levels)
+  heading: '#FF9D00',             // Heading text and # markers (all levels)
 
   // ─── Text Emphasis ───
-  bold: '#FFD866',              // **bold text** and ** markers
-  italic: '#BF437F',           // *italic text* and * markers
-  strikethrough: '#6272A4',    // ~~strikethrough~~ text and ~~ markers
+  bold: '#FFD866',                // **bold text** and ** markers
+  italic: '#BF437F',              // *italic text* and * markers
+  strikethrough: '#6272A4',       // ~~strikethrough~~ text and ~~ markers
 
   // ─── Code ───
-  inlineCode: '#F34D3E',       // `inline code` text and ` delimiters
+  inlineCode: '#F34D3E',          // `inline code` text and ` delimiters
   fencedCodeDelimiter: '#6767fc', // ``` markers on fenced code blocks
-  codeBlockContent: '#8989e3', // Fallback color for plain code block text
-  codeLanguage: '#F1FA8C',     // Language identifier after ``` (e.g. "javascript")
+  codeBlockContent: '#8989e3',    // Fallback color for plain code block text
+  codeLanguage: '#F1FA8C',        // Language identifier after ``` (e.g. "javascript")
 
   // ─── Links ───
   linkText: '#AB9DF2',         // [link text] and []() markers

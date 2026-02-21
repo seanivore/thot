@@ -10,7 +10,7 @@
 
 ## Table of Contents
 
-1. [Development Process & Protocols](#development-process--protocols) — See [`.agent/DEV_RULES.md`](.agent/DEV_RULES.md)
+1. [Development Process & Protocols](#development-process--protocols) — See [`.agent/DEV_RULES.md`](/.agent/DEV_RULES.md)
 2. [Priority-Based Update Tracking](#priority-based-update-tracking)
 3. [Version Roadmap](#version-roadmap)
 4. [Parallel Development Tracks](#parallel-development-tracks)
@@ -23,7 +23,7 @@
 
 ## Development Process & Protocols
 
-**Note**: Full development protocols have been extracted to [`.agent/DEV_RULES.md`](.agent/DEV_RULES.md) for reuse across projects. This section provides Thot-specific context.
+**Note**: Full development protocols have been extracted to [`.agent/DEV_RULES.md`](/.agent/DEV_RULES.md) for reuse across projects. This section provides Thot-specific context.
 
 ### Thot-Specific Branching
 
@@ -42,7 +42,7 @@
 
 The highlighting system rewrite could have been avoided with proper upfront research. Always verify assumptions about complex systems (like CodeMirror/Lezer) before implementing.
 
-**For detailed protocols on git workflow, implementation plans, parallel development, and agent standards, see [`.agent/DEV_RULES.md`](.agent/DEV_RULES.md).**
+**For detailed protocols on git workflow, implementation plans, parallel development, and agent standards, see [`.agent/DEV_RULES.md`](/.agent/DEV_RULES.md).**
 
 ---
 
@@ -69,6 +69,44 @@ The highlighting system rewrite could have been avoided with proper upfront rese
 **Files to modify**: `src/highlight-tags.ts`, `src/theme.ts`, possibly `src/editor.ts`
 
 **Reference**: `docs/archive/v2/v2_1_4_BUG_REPORT.md`
+
+--- 
+
+*EDIT:* **REGARDING INLINE TEXT DELIMITER NOT CHANGING COLOR OF INLINE TEXT**
+
++ First see `docs/THOT_APP.md` Line 158 in the extensions array ordered by priority 
+  - Note that it says the tag `markerDecorations`, via ViewPlugin controls list markers + inline code marks (3 cases) 
+
++ Next see `src/highlight-tags.ts` Line 39 where the tag `color.inlineCode` indicated as the label and "color for inline code text and ` delimiters" 
+
++ Now go to `src/editor.ts` Line 13 we see that the color group from `src/highlight-tags.ts` is imported, good, and at Line 50 the `const inlineCodeMarkDeco` is being given the `colors.inlineCode`
+
+  - In actuality the inline code delimiter remains the same color as code gating instead of turning the same color as the inline code content 
+  - The `markerDecorations` will be 'built' and made further down on the `src/editor.ts` document 
+  - I think that this mismatch of `markerDecorations` and `const inlineCodeMarkDeco` is causing the issue 
+
+*EDIT:* **REGARDING ORDERED AND UNORDERED LIST MARKERS ADOPTING LIST CONTENT COLOR**
+
+1. Next, staying with the `markerDecorations` for list markers, on `src/highlight-tags.ts` it lists `const bulletMarkTag` and `const orderedMarkTag` in Line 9 and 10 — then down further at Line 58 to 61 we are using `color.bulletMarker`, `color.bulletContent`, `color.numberedMarker`, and `color.numberedContent`
+
+2. Now moving to `src/editor.ts` Line 15 and 16 we import from `src/highlight-tags.ts` a `const bulletContentTag` and a `const orderedContentTag` as well as the `colors` that included the four from 58 to 61 — this seems to become problematic when you continue down to Line 48 and 49 it is `const bulletMarkDeco` being applied to `color.bulletMarker` and `const numberMarkDeco` being applied to `color.numberedMarker`
+
+- In actuality, the bulleted lists are using the blue from `color.bulletContent` on BOTH the unordered list marker and the unordered list item content, and the numbered lists are using the pink from `color.numberedContent` on BOTH the ordered list marker and ordered l ist content 
+- I see a disconnect between `src/highlight-tag.ts` using `const bulletMarkTag` and `const orderedMarkTag` — BUT THEN  —  `src/editor.ts` using `const bulletContentTag` and `const orderedContentTag` 
+- The "MarkTag" or "ContentTag" mismatch is probably allowing the "Content" colors to override them 
+- 
+
+**THIS IS INSANE. LEGITIMATELY INSANE. WHY ALIAS IN THE FIRST PLACE? CAN THE COLOR NOT BE THE CONST? AND THEN, I JUST SEARCHED, AND I THE CONTENT TAGS AKA THE WORKING COLORS, ARE NOT MENTIONED ANYWHERE EXCEPT THE ONE, SIMPLE src/highlight-tag.ts DOCUMENT. MEANWHILE, NO IDEA WHY AFTER THE CONST AND COLOR ARE CONNECTED IN THE CODE WE HAVE TO LATER BUILD A markerDecorations AT ALL. I guess it doesn't recognize the markers to tag them but if it doesn't, which seems like a possible oversight because how and why would it be skipped out of all these tag scopes** 
+
+**HONESTLY, IN TRYING TO SORT THAT I WANT TO LOOK INTO BUILDING OUR OWN RIGHT NOW**
+
+**I THINK WHEN YOU SEE THE WEIRD HIERARCHY OF PLUGINS  NEEDED AND THEN CSS ORDERING BY PRIORITY AND ALL THESE ALIAS NAMES**
+
+**WHY? I WANT TO USE CODE TO DEFINE CHARACTER PATTERNS, GIVE THAT TAG ONE NAME, DEFINE THE COLOR. NOTHING MORE. NO MULTIPLE PLUGINS AND FILES AND CSS STUFF. JUST NAMES AND A PRIORITY LISTS** 
+
+*EDIT*: I also see "Autolinks" listed as a scope which reminds me that hyperlinks do not work at all, they get underlined but you cannot click them. 
+
+---
 
 #### 2. Icons Consolidation
 
