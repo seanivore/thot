@@ -1,6 +1,7 @@
 // Thot v2 - CodeMirror Editor Setup
 import { EditorView, ViewPlugin, ViewUpdate, Decoration, DecorationSet, keymap, lineNumbers, highlightActiveLineGutter, highlightSpecialChars, drawSelection, dropCursor, rectangularSelection, crosshairCursor, highlightActiveLine } from '@codemirror/view'
-import { EditorState, RangeSetBuilder } from '@codemirror/state'
+import { EditorState, RangeSetBuilder, Compartment } from '@codemirror/state'
+import { closeBrackets } from '@codemirror/autocomplete'
 import { markdown, markdownLanguage } from '@codemirror/lang-markdown'
 import { languages } from '@codemirror/language-data'
 import { syntaxTree } from '@codemirror/language'
@@ -10,6 +11,7 @@ import { styleTags, tags } from '@lezer/highlight'
 import { thotTheme } from './theme'
 import { hangingIndentPlugin } from './hanging-indent'
 import { forceSave } from './persistence'
+import { openFile, saveFileAs, newWindow } from './file-system'
 import {
   colors,
   bulletContentTag,
@@ -125,8 +127,11 @@ const markerDecorations = ViewPlugin.fromClass(
   { decorations: (v) => v.decorations }
 )
 
+export const spellcheckCompartment = new Compartment()
+
 export function createEditor(config: EditorConfig): EditorView {
   const { parent, initialContent = '', onChange, onStateChange } = config
+  const isSpellcheckEnabled = localStorage.getItem('thot-spellcheck') !== 'false'
 
   const updateListener = EditorView.updateListener.of((update) => {
     // Content changes
@@ -200,6 +205,14 @@ export function createEditor(config: EditorConfig): EditorView {
       lineNumbers(),
       highlightActiveLineGutter(),
 
+      spellcheckCompartment.of(EditorView.contentAttributes.of({
+        spellcheck: isSpellcheckEnabled ? "true" : "false",
+      })),
+      EditorView.contentAttributes.of({
+        autocorrect: "off",
+        autocapitalize: "off"
+      }),
+
       // Basic editor features
       highlightSpecialChars(),
       history(),
@@ -207,6 +220,7 @@ export function createEditor(config: EditorConfig): EditorView {
       dropCursor(),
       indentOnInput(),
       bracketMatching(),
+      closeBrackets(),
       rectangularSelection(),
       crosshairCursor(),
       highlightActiveLine(),
@@ -233,6 +247,49 @@ export function createEditor(config: EditorConfig): EditorView {
             forceSave(view.state.doc.toString())
             return true
           },
+        },
+        // CMD+Shift+S — Save As
+        {
+          key: 'Mod-Shift-s',
+          run: (view: EditorView) => {
+            saveFileAs(view.state.doc.toString())
+            return true
+          },
+        },
+        // CMD+O — Open File
+        {
+          key: 'Mod-o',
+          run: (view: EditorView) => {
+            openFile((content) => {
+              view.dispatch({
+                changes: { from: 0, to: view.state.doc.length, insert: content }
+              })
+            })
+            return true
+          }
+        },
+        // CMD+N — New Window
+        {
+          key: 'Mod-n',
+          run: () => {
+            newWindow()
+            return true
+          }
+        },
+        // CMD+Shift+C — Toggle Spellcheck
+        {
+          key: 'Mod-Shift-c',
+          run: (view: EditorView) => {
+            const current = localStorage.getItem('thot-spellcheck') !== 'false'
+            const newState = !current
+            localStorage.setItem('thot-spellcheck', String(newState))
+            view.dispatch({
+              effects: spellcheckCompartment.reconfigure(EditorView.contentAttributes.of({
+                spellcheck: newState ? "true" : "false"
+              }))
+            })
+            return true
+          }
         },
         ...defaultKeymap,
         ...historyKeymap,

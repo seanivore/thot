@@ -105,4 +105,36 @@ body {
   width: 100vw;
 }
 
+/* UI Layer */
+.thot-actions {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 100;
+  display: flex;
+  gap: 8px;
+}
+
+.thot-btn {
+  background-color: transparent;
+  color: #6272A4; /* Muted code.comment color */
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.thot-btn:hover {
+  background-color: rgba(68, 71, 90, 0.4);
+  color: #E6E6E6;
+}
+
+.thot-btn.hidden {
+  display: none !important;
+}
+
 /* CodeMirror overrides will be in theme.ts */

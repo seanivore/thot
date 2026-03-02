@@ -1,8 +1,9 @@
 // Thot v2 - Main Entry Point
 import './styles/main.css'
-import { createEditor, getContent, getCursorPos, getScrollTop, setCursorPos, setScrollTop } from './editor'
+import { createEditor, getContent, getCursorPos, getScrollTop, setCursorPos, setScrollTop, setContent } from './editor'
 import { saveContent, loadContent, forceSave, hasSavedContent } from './persistence'
 import { saveState, loadState, forceSaveState } from './state'
+import { shareDocument } from './file-system'
 
 // Welcome content for first-time users
 const welcomeContent = `# Thot
@@ -122,6 +123,24 @@ function init() {
 
   // Focus the editor
   view.focus()
+
+  // PWA Share Button Logic
+  const shareBtn = document.getElementById('btn-share')
+  if (shareBtn && 'share' in navigator) {
+    shareBtn.classList.remove('hidden')
+    shareBtn.addEventListener('click', () => {
+      shareDocument(getContent(view))
+    })
+  }
+
+  // Handle multi-window sync
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'thot:content' && e.newValue !== null) {
+      if (getContent(view) !== e.newValue) {
+        setContent(view, e.newValue)
+      }
+    }
+  })
 
   console.log('Thot v2 initialized', hasSavedContent() ? '(restored session)' : '(first run)')
 }

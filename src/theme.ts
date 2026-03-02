@@ -30,6 +30,7 @@ export const thotEditorTheme = EditorView.theme({
   '.cm-content': {
     caretColor: colors.cursor,
     fontWeight: '500',
+    paddingBottom: '30vh !important',
   },
   '.cm-cursor, .cm-dropCursor': {
     borderLeftColor: colors.cursor,
@@ -46,6 +47,7 @@ export const thotEditorTheme = EditorView.theme({
     color: colors.gutter,
     border: 'none',
     paddingRight: '8px',
+    minWidth: '40px',
   },
   '.cm-activeLineGutter': {
     backgroundColor: 'transparent',
