@@ -1,9 +1,9 @@
 # Thot — Project Reference
 `thots.august.style`
 
-**Last Updated**: 2026-02-13
-**Version**: v2.1.4
-**Status**: Active development on `v2-first-thots` branch
+**Last Updated**: 2026-03-02
+**Version**: v3.1.0
+**Status**: Active development on `v3-rainbow-moat` branch
 
 ---
 
@@ -60,6 +60,21 @@
 ---
 
 ## Recent Changes
+
+### 2026-03-02 — v3.1.0: Usability & Autocorrect Engine
+
+* **Native usability enhancements**
+  - Enabled browser spellcheck via `spellcheck: "true"`
+  - Integrated `@codemirror/autocomplete` for `closeBrackets()` paired delimiters
+  - Added baseline File System abstraction for multi-window saving
+  - Polished mobile spacing (bottom 30vh padding, line number fix, share button)
+
+* **Custom Autocorrect Engine**
+  - Overcame iOS/macOS Safari contenteditable limitations by building a robust `TransactionFilter` auto-correct engine
+  - Employs a local dictionary mapped with common typos and markdown symbols (`:moon:` -> `☽`)
+  - Tracks user corrections via a bespoke `StateField` to enable seamless `Backspace` undo without re-triggering
+  - Detects semantic context using CodeMirror's `syntaxTree` to safely abort autocorrect operations inside of `InlineCode`, `FencedCode`, and `URL`/`Link` nodes
+  - Applies dynamic sentence Auto-Capitalization
 
 ### 2026-02-13 — v2.1.4: Context-Dependent Marker Fix
 

@@ -1,9 +1,9 @@
 # Thot Development Roadmap & Strategic Planning
 `thots.august.style`
 
-**Updated**: 2026-02-20
-**Current Version**: v2.1.4
-**Current Branch**: `v2-first-thots`
+**Updated**: 2026-03-02
+**Current Version**: v3.1.0
+**Current Branch**: `v3-rainbow-moat`
 **Status**: Strategic planning for parallel development
 
 ---
@@ -409,18 +409,19 @@ The highlighting system rewrite could have been avoided with proper upfront rese
 
 **Strategic Note**: These bugs don't break core functionality but create "unpolished" feeling. Must fix before asking users to pay.
 
-### HIGH — v3.0.0: Monetization Ready
+### HIGH — v3.1.0: Monetization Ready (Usability Core)
 
 **Target**: Web app subscription launch
 **Strategy**: Feature parity with basic note apps + unique semantic highlighting
 
 | Update                      | Status  | Research Needed | Notes                                 |
 | --------------------------- | ------- | --------------- | ------------------------------------- |
-| Native browser spellcheck   | Pending | No              | Enable spellcheck attribute           |
-| Paired delimiters           | Pending | Minor           | Check CodeMirror closeBrackets        |
-| File operations             | Pending | **YES**         | File System Access API research       |
-| Multiple windows            | Pending | Minor           | window.open() + localStorage strategy |
-| Intelligent formatting mode | Pending | **YES**         | Major research needed                 |
+| Native browser spellcheck   | Done    | No              | Enable spellcheck attribute           |
+| Paired delimiters           | Done    | Minor           | Check CodeMirror closeBrackets        |
+| File operations             | Done    | **YES**         | File System Access API research       |
+| Multiple windows            | Done    | Minor           | window.open() + localStorage strategy |
+| Custom Autocorrect          | Done    | No              | Proprietary TransactionFilter engine  |
+| Intelligent formatting mode | Pending | **YES**         | Track 3: Major research needed        |
 | Light theme                 | Pending | No              | Duplicate color palette               |
 
 **Strategic Note**: File operations + formatting mode = competitive with Apple Notes, Google Keep, Notion (for basic use). Semantic highlighting = unique differentiator.

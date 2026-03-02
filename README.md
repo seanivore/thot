@@ -38,7 +38,7 @@ npm run preview
 
 ## Architecture
 
-Thot v2 is a pure web application:
+Thot v3 is a pure web application:
 
 ```
 Browser/PWA
@@ -68,7 +68,7 @@ To export your content, simply copy/paste or use the export feature (coming soon
 
 Thot is intentionally minimal. It's a **desk pad**, not a note-taking system. Think of it as the digital equivalent of a legal pad that never leaves your desk.
 
-See [docs/THOT_APP.md](docs/THOT_APP.md) for complete project documentation, or [docs/archive/v2/v2_0_0_UPDATES.md](docs/archive/v2/v2_0_0_UPDATES.md) for the original build log.
+See [docs/THOT_APP.md](docs/THOT_APP.md) for complete project documentation, or [docs/archive/v3/v3_1_0_USABILITY.md](docs/archive/v3/v3_1_0_USABILITY.md) for the latest v3.1.0 usability and autocorrect build log.
 
 ## License
 

@@ -132,12 +132,13 @@ export const AUTOCORRECT_DICTIONARY: Record<string, string> = {
 
 import { EditorState, Transaction, TransactionSpec, StateField, StateEffect } from '@codemirror/state'
 import { syntaxTree } from '@codemirror/language'
+import { EditorView } from '@codemirror/view'
 
-export const autocorrectApplied = StateEffect.define<{ from: number, to: number, original: string }>()
+export const autocorrectApplied = StateEffect.define<{ from: number, to: number, original: string, triggerPos: number }>()
 export const autocorrectIgnored = StateEffect.define<number>()
 
 export const autocorrectState = StateField.define<{
-  lastCorrection: { from: number, to: number, original: string } | null,
+  lastCorrection: { from: number, to: number, original: string, triggerPos: number } | null,
   ignoredPositions: Set<number>
 }>({
   create() {
@@ -150,10 +151,12 @@ export const autocorrectState = StateField.define<{
     if (lastCorrection && tr.docChanged) {
       lastCorrection = {
         from: tr.changes.mapPos(lastCorrection.from),
-        to: tr.changes.mapPos(lastCorrection.to, 1),
-        original: lastCorrection.original
+        to: tr.changes.mapPos(lastCorrection.to),
+        original: lastCorrection.original,
+        triggerPos: tr.changes.mapPos(lastCorrection.triggerPos)
       }
     }
+
     if (tr.docChanged && ignoredPositions.size > 0) {
       const newIgn = new Set<number>()
       for (const pos of ignoredPositions) {
@@ -177,6 +180,7 @@ export const autocorrectState = StateField.define<{
 export const customAutocorrect = () => {
   return [
     autocorrectState,
+
     EditorState.transactionFilter.of((tr: Transaction) => {
       if (!tr.docChanged) return tr
       if (!tr.isUserEvent('input.type') && !tr.isUserEvent('delete.backward')) return tr
@@ -184,84 +188,38 @@ export const customAutocorrect = () => {
       let newSpec: TransactionSpec | null = null
 
       tr.changes.iterChanges((fromA, toA, _fromB, _toB, inserted) => {
-        if (newSpec) return // Only handle one change per transaction
+        if (newSpec) return
 
         const state = tr.startState.field(autocorrectState, false)
 
-        // UNDO FLOW: If user hits backspace exactly after a correction
+        // FLOW 1: Backspace exactly after a correction
         if (tr.isUserEvent('delete.backward') && state?.lastCorrection) {
           if (fromA === state.lastCorrection.to && inserted.length === 0) {
             newSpec = {
-              changes: { from: state.lastCorrection.from, to: toA, insert: state.lastCorrection.original },
+              changes: [
+                { from: state.lastCorrection.from, to: state.lastCorrection.to, insert: state.lastCorrection.original },
+                { from: fromA, to: toA, insert: "" }
+              ],
               effects: autocorrectIgnored.of(state.lastCorrection.from + state.lastCorrection.original.length),
+              selection: { anchor: state.lastCorrection.from + state.lastCorrection.original.length },
               userEvent: "delete.backward"
             }
           }
           return
         }
 
-        if (!tr.isUserEvent('input.type')) return
+        // AUTO-CAPITALIZATION
+        if (tr.isUserEvent('input.type')) {
+          const insertedStr = inserted.toString()
+          if (insertedStr.length === 1 && /[a-z]/.test(insertedStr)) {
+            const line = tr.startState.doc.lineAt(fromA)
+            const textBefore = line.text.slice(0, fromA - line.from)
+            const isStartOfSentence = /^$|([.!?]\s+)$/.test(textBefore)
 
-        const insertedStr = inserted.toString()
-
-        // SYNTAX BLOCK DETECTION: Disable inside code, URLs and links
-        const node = syntaxTree(tr.startState).resolveInner(fromA, -1)
-        if (
-          node.name.includes("Code") ||
-          node.name === "URL" ||
-          node.name.includes("Link")
-        ) {
-          return
-        }
-
-        // IGNORE TRIGGER on manually reverted words
-        if (state?.ignoredPositions.has(fromA)) {
-          return
-        }
-
-        // AUTO-CAPITALIZATION: Capitalize first letter of new sentences
-        if (insertedStr.length === 1 && /[a-z]/.test(insertedStr)) {
-          const line = tr.startState.doc.lineAt(fromA)
-          const textBefore = line.text.slice(0, fromA - line.from)
-
-          // Match: start of line, OR [.!?] followed by a space
-          const isStartOfSentence = /^$|([.!?]\s+)$/.test(textBefore)
-
-          if (isStartOfSentence) {
-            newSpec = {
-              changes: { from: fromA, to: toA, insert: insertedStr.toUpperCase() },
-              selection: { anchor: fromA + 1 },
-              userEvent: "input.type"
-            }
-            return
-          }
-        }
-
-        // AUTOCORRECT DICTIONARY: Swap words on space/punctuation
-        if (insertedStr.length === 1 && /^[\s.,!?;:\n]$/.test(insertedStr)) {
-          const line = tr.startState.doc.lineAt(fromA)
-          const textBefore = line.text.slice(0, fromA - line.from)
-
-          // Match the last adjacent alphanumeric word or emoji colon syntax
-          const match = textBefore.match(/([a-zA-Z0-9_:-]+)$/)
-          if (match) {
-            const word = match[1]
-            if (AUTOCORRECT_DICTIONARY[word]) {
-              const replacement = AUTOCORRECT_DICTIONARY[word]
-              const wordStart = fromA - word.length
-
+            if (isStartOfSentence) {
               newSpec = {
-                changes: [
-                  { from: wordStart, to: fromA, insert: replacement },
-                  { from: fromA, to: toA, insert: insertedStr }
-                ],
-                // Set the cursor after the inserted space/punctuation
-                selection: { anchor: wordStart + replacement.length + insertedStr.length },
-                effects: autocorrectApplied.of({
-                  from: wordStart,
-                  to: wordStart + replacement.length + insertedStr.length,
-                  original: word + insertedStr // Keep track of the inserted word
-                }),
+                changes: { from: fromA, to: toA, insert: insertedStr.toUpperCase() },
+                selection: { anchor: fromA + 1 },
                 userEvent: "input.type"
               }
               return
@@ -271,6 +229,56 @@ export const customAutocorrect = () => {
       })
 
       return newSpec || tr
+    }),
+
+    EditorView.updateListener.of((update) => {
+      if (!update.docChanged) return
+
+      const isInput = update.transactions.some(tr => tr.isUserEvent('input.type'))
+      if (!isInput) return
+
+      update.changes.iterChanges((_fromA, _toA, fromB, _toB, inserted) => {
+        const insertedStr = inserted.toString()
+
+        if (insertedStr.length === 1 && /^[\s.,!?;:\n]$/.test(insertedStr)) {
+          const line = update.state.doc.lineAt(fromB)
+          const textBefore = line.text.slice(0, fromB - line.from)
+
+          const match = textBefore.match(/([a-zA-Z0-9_:-]+)$/)
+          if (match) {
+            const word = match[1]
+            if (AUTOCORRECT_DICTIONARY[word]) {
+              const replacement = AUTOCORRECT_DICTIONARY[word]
+              const wordStart = fromB - word.length
+
+              const node = syntaxTree(update.state).resolveInner(wordStart, 1)
+              if (
+                node.name.includes("Code") ||
+                node.name === "URL" ||
+                node.name.includes("Link")
+              ) {
+                return
+              }
+
+              const state = update.state.field(autocorrectState, false)
+              if (state?.ignoredPositions.has(wordStart + word.length)) {
+                return
+              }
+
+              update.view.dispatch({
+                changes: { from: wordStart, to: fromB, insert: replacement },
+                effects: autocorrectApplied.of({
+                  from: wordStart,
+                  to: wordStart + replacement.length,
+                  original: word,
+                  triggerPos: wordStart + replacement.length
+                }),
+                userEvent: "autocorrect"
+              })
+            }
+          }
+        }
+      })
     })
   ]
 }
