@@ -37,7 +37,7 @@ export const thotEditorTheme = EditorView.theme({
     borderLeftWidth: '2px',
   },
   '&.cm-focused .cm-selectionBackground, .cm-selectionBackground, .cm-content ::selection': {
-    backgroundColor: colors.selection,
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
   },
   '.cm-activeLine': {
     backgroundColor: 'rgba(68, 71, 90, 0.3)',
@@ -47,14 +47,25 @@ export const thotEditorTheme = EditorView.theme({
     color: colors.gutter,
     border: 'none',
     paddingRight: '8px',
-    minWidth: '40px',
   },
   '.cm-activeLineGutter': {
     backgroundColor: 'transparent',
     color: colors.fg,
   },
+  '.cm-gutter.cm-lineNumbers': {
+    display: 'flex !important',
+    flexDirection: 'column',
+    flexShrink: '0',
+    boxSizing: 'border-box',
+    minHeight: '100%',
+    overflow: 'hidden',
+    alignItems: 'flex-end',
+    alignContent: 'flex-end',
+    flexWrap: 'wrap',
+  },
   '.cm-lineNumbers .cm-gutterElement': {
-    padding: '0 8px 0 16px',
+    width: '16px',
+    alignContent: 'flex-end',
   },
   '.cm-line': {
     padding: '0 2px',

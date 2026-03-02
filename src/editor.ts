@@ -208,10 +208,6 @@ export function createEditor(config: EditorConfig): EditorView {
       spellcheckCompartment.of(EditorView.contentAttributes.of({
         spellcheck: isSpellcheckEnabled ? "true" : "false",
       })),
-      EditorView.contentAttributes.of({
-        autocorrect: "off",
-        autocapitalize: "off"
-      }),
 
       // Basic editor features
       highlightSpecialChars(),
@@ -221,6 +217,9 @@ export function createEditor(config: EditorConfig): EditorView {
       indentOnInput(),
       bracketMatching(),
       closeBrackets(),
+      EditorState.languageData.of(() => [{
+        closeBrackets: { brackets: ['(', '[', '{', "'", '"', '`', '*', '_', '~', '<'] }
+      }]),
       rectangularSelection(),
       crosshairCursor(),
       highlightActiveLine(),
