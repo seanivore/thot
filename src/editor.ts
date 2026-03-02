@@ -12,6 +12,7 @@ import { thotTheme } from './theme'
 import { hangingIndentPlugin } from './hanging-indent'
 import { forceSave } from './persistence'
 import { openFile, saveFileAs, newWindow } from './file-system'
+import { customAutocorrect } from './autocorrect'
 import {
   colors,
   bulletContentTag,
@@ -208,6 +209,9 @@ export function createEditor(config: EditorConfig): EditorView {
       spellcheckCompartment.of(EditorView.contentAttributes.of({
         spellcheck: isSpellcheckEnabled ? "true" : "false",
       })),
+
+      // Auto-formatting (custom typos and capitalization)
+      customAutocorrect(),
 
       // Basic editor features
       highlightSpecialChars(),
