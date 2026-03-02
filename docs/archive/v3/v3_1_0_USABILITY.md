@@ -11,6 +11,12 @@ Implement current build UX updates to improve fundamental text editor expectatio
 - **Technical Specifics**: Use `EditorView.contentAttributes.of({spellcheck: "true"})`.
 - **Toggle State**: Store user preference in `localStorage`. Toggle dynamically by reconfiguring the extension array with a `Compartment`.
 
+### 1.5 Custom Autocorrect Engine
+- **Implementation**: A lightweight proprietary text replacement engine built via `EditorState.transactionFilter`.
+- **Dictionary**: `src/autocorrect.ts` maps common typos and symbols to replacements.
+- **Input Interceptor**: Detects space or punctuation, checks preceding word against dictionary, and replaces it on the fly.
+- **Feedback Refinements**: Includes undo support (backspace restores autocorrected word without re-triggering) and syntax block detection (disables inside inline code, block code, URLs, and links).
+
 ### 2. Paired Delimiters Behavior
 - **Behaviors**:
   - *Pair insertion*: Typing `(` inserts `()` with cursor between.
