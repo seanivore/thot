@@ -53,6 +53,17 @@
     - `docs/THOT_APP.md`
     - `docs/UPDATE_MAP.md`
 
+### Flow, Branching Specifics 
+
+  - We should create feat/ branches off of our main v3 branch 
+  - Start with our usability UX issues which I've detailed better at the bottom of this document 
+  - Move to that branch 
+  - Do all that can be done preparing that document 
+  - Then move to the next update on a new feat/ branch off of our main v3 branch again 
+    - Meanwhile I'll have the first feat/ branch we created started 
+    - We can run agents working on non-local branches through Claude Code and using Cursor 
+  - Continue for all three 
+
 ---
 *End of planning document by Sean created 2026-03-01* 
 
