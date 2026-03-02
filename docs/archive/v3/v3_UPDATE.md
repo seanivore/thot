@@ -1,21 +1,29 @@
 # v3.0.0: Custom Highlighting System & Intelligent Formatting UI
 
 **Branch**: `v3-rainbow-moat`
-**Status**: Research & Planning Phase
+**Status**: Research Complete — Ready for Implementation
 **Updated**: 2026-02-20
+**Master**: `docs/THOT_APP.md`
+**Updates WIP**: `docs/UPDATE_MAP.md`
 
 ---
 
 ## Executive Summary
 
-**What**: Build custom highlighting system from scratch for markdown AND plain text, with intelligent formatting UI
+**What**: Build a custom, fully-owned pattern matching highlight engine for markdown AND plain text, with intelligent formatting UI
 
-**Why**: Current CodeMirror/Lezer system is overcomplicated, fragile, and impossible to extend for user-customizable themes or plain text highlighting
+**Why**: Current system coordinates across `styleTags` + `HighlightStyle` CSS cascade + `ViewPlugin` inline overrides — adding one new scope requires understanding all three layers. We replace all of this with one file, one function, one mental model: Pattern → Scope → Color → Priority.
+
+**Architectural Decision (updated 2026-02-20)**: No third-party parser. The entire highlighting system is our IP — we define the patterns, the scopes, the priority model. This enables user-customizable themes and plain text semantic highlighting that no other app does.
+
+**Recommended Approach**: Custom Pattern Matching ViewPlugin — regex patterns over visible text, outer-first rendering, inner-wins-visually. ~150 lines replacing ~500 lines of coordination logic across 3 files.
+
+**Scope Definitions**: See `docs/archive/v3/v3_SCOPE_DEFINITIONS.md` — the master spec for all scopes.
 
 **Strategic Importance**: 
 - This IS the moat — semantic highlighting for plain text that nobody else does
-- Enables user-customizable themes (future revenue feature)
-- Makes formatting UI possible (hide notation, show formatting)
+- Enables user-customizable themes (future revenue feature: just change `scopes.ts`)
+- Makes formatting UI possible (hide notation, show formatting — controlled per-scope)
 - Serves both markdown power users AND normal text editor users
 
 ---
@@ -32,7 +40,10 @@
 
 ---
 
-## The Problem: Current System Complexity
+## The Problems
+
+  1. Current System Complexity
+  2. Future Use Case Inflexibility 
 
 ### What We Discovered
 
@@ -362,22 +373,23 @@ function applyHighlighting(doc: string): Decoration[] {
 
 ## Implementation Approach
 
-### Phase 1: Research (Current)
+### Phase 1: Research ✅ COMPLETE (2026-02-20)
 
-**Timeline**: Until research complete
-**Deliverable**: This document with findings and recommended approach
+**Deliverable**: Research findings + recommended approach documented in [Implementation Approach](#implementation-approach-1) and [Research Log](#research-log) below
 
-**Tasks:**
-1. Study TextMate, Prism.js, Monarch, highlight.js
-2. Prototype 3-4 approaches on test branches
-3. Test performance on large documents (100K+ lines)
-4. Compare complexity, maintainability, extensibility
-5. Recommend approach with reasoning
+**Completed tasks:**
+1. ✅ Studied TextMate, Prism.js, Monarch, StreamParser, highlight.js approaches
+2. ✅ Deep-dove current system: traced three-layer complexity (styleTags + HighlightStyle + ViewPlugin)
+3. ✅ Analyzed CM6 decoration patterns and visible-range performance model
+4. ✅ Evaluated all approaches in comparison matrix
+5. ✅ Recommended approach with full architecture and implementation sketch
 
-### Phase 2: Core System Implementation
+**Finding**: No test branch prototyping needed — the current `buildMarkerDecorations` ViewPlugin IS the correct pattern and already works at scale. The recommendation is to generalize it, not replace it.
 
-**Timeline**: After research approved
-**Deliverable**: Working custom highlighter for markdown
+### Phase 2: Core System Implementation — NEXT STEP
+
+**Timeline**: Start now (research approved)
+**Deliverable**: Working custom highlighter for markdown, replacing current three-layer system
 
 **Tasks:**
 1. Build core highlighting engine
@@ -751,29 +763,431 @@ function applyHighlighting(doc: string): Decoration[] {
 
 ---
 
-## Implementation Approach
+## Implementation Approach (Research Findings & Architecture)
 
-**Note**: This section will be filled in after research phase completes.
+**Research Complete**: 2026-02-20
 
-### Recommended Approach
+### Recommended Approach: Lezer Tree Walk + Regex for Plain Text (B + D Hybrid)
 
-[To be determined after research]
+**The root cause of the current complexity is not CodeMirror or Lezer. It is three styling systems layered on top of each other.**
+
+The current system has:
+1. `styleTags` — maps Lezer node types to Lezer `Tag` objects
+2. `HighlightStyle` — maps `Tag` objects to CSS classes via a cascade where ORDER matters
+3. `ViewPlugin` — overrides specific cases with inline styles to escape the cascade
+
+**The fix**: Remove layers 1 and 2 entirely for markdown. Replace with one `ViewPlugin` that does what `buildMarkerDecorations` already does — except for ALL scopes, not just the 3 edge cases.
+
+**Why this works:**
+- `Decoration.mark({ attributes: { style: 'color: X' } })` applies inline styles — no CSS class, no cascade
+- Tree structure handles nesting priority naturally: inner spans win over outer spans
+- `**bold *italic* text**` → Lezer tree `Strong > Emphasis > Text` → walk tree → bold deco on Strong range, italic deco on Emphasis range — inner wins automatically
+- The `ruleNodeProp.combine()` depth problem goes away entirely because we bypass `styleTags`/`HighlightStyle` completely
+- The `buildMarkerDecorations` pattern is already proven to work at scale (it handles list markers today)
+
+**What we keep:**
+- `@codemirror/lang-markdown` — the Lezer markdown parser is excellent, handles all GFM edge cases. We keep the parser, dump the styling hooks.
+- `EditorView.theme()` — editor chrome only (background, gutter, cursor, selection)
+- A minimal `HighlightStyle` for code block language tokens only (JS keywords, Python strings, etc. — these don't have context-dependency problems and keeping them separate is cleaner)
+
+**Why not Pure Regex (Approach A)?**
+- Nested markdown (`**bold *italic***`) is genuinely hard with regex
+- Regex cannot determine if a `*` is bold or italic based on nesting context without lookahead hell
+- The Lezer parser already handles these edge cases correctly — we'd be throwing away real value
+- Performance: Lezer's incremental parser only re-parses changed regions; regex over full visible range is more work
+
+**Why not Custom Parser (Approach C)?**
+- Reinventing CommonMark correctly is months of work
+- Edge cases: escaped characters, mixed indentation, setext headings, reference links — CommonMark has 651 spec tests
+- Lezer's markdown parser already passes these; ours wouldn't for a long time
+- No gain over Approach B — same result with much more upfront investment
+
+**Why not StreamParser?**
+- StreamParser only tokenizes (left-to-right stream) — no syntax tree
+- Can't determine context (e.g., is this `*` bold or italic?) without stack management
+- We'd basically be rebuilding a parser anyway, just a worse one
+
+**Prism.js takeaway:**
+- Pattern-first definition (token name → regex array) is EXACTLY the pattern we want for scopes
+- Prism's "tokens cannot overlap with previous tokens" is a limitation we can improve on by using tree nesting
+- We borrow Prism's definition philosophy but use Lezer tree structure for correctness
+
+---
 
 ### Architecture
 
-[Detailed architecture of chosen approach]
+```
+Pattern → Scope → Color/Style → Decoration (Priority from tree nesting)
+```
+
+**The single mental model:**
+
+```typescript
+// scopes.ts — the ONLY file you need to read to understand all highlighting
+const MARKDOWN_SCOPES: Record<string, ScopeStyle> = {
+  // Lezer node name → { color, fontWeight?, fontStyle? }
+  'ATXHeading1':        { color: colors.heading, fontWeight: '800' },
+  'ATXHeading2':        { color: colors.heading, fontWeight: '800' },
+  'Emphasis':           { color: colors.italic, fontStyle: 'italic', fontWeight: '800' },
+  'StrongEmphasis':     { color: colors.bold, fontWeight: '800' },
+  'InlineCode':         { color: colors.inlineCode },
+  'BulletList':         { color: colors.bulletContent },
+  'OrderedList':        { color: colors.numberedContent },
+  // ... all markdown elements
+}
+
+// For list markers and inline code delimiters, we keep the context-aware
+// logic from buildMarkerDecorations — just consolidated into one walker
+```
+
+**Priority resolution (automatic from tree structure):**
+- Outer node (lower priority): `BulletList` → cyan
+- Inner node (higher priority): `StrongEmphasis` inside bullet → gold
+- Inner span rendered inside outer → gold wins automatically
+- No CSS cascade. No `!important`. No ordering headaches.
+
+---
+
+### Implementation Sketch
+
+**`src/scopes.ts`** — the single source of truth:
+
+```typescript
+import { EditorView } from '@codemirror/view'
+
+export interface ScopeStyle {
+  color: string
+  fontWeight?: string
+  fontStyle?: string
+  textDecoration?: string
+}
+
+// All highlight colors — keep current palette, just reorganized
+export const colors = {
+  // ... (moved from highlight-tags.ts, unchanged values)
+}
+
+// Lezer node name → style
+// For context-dependent cases (ListMark, CodeMark), we use CONTEXT_SCOPES below
+export const MARKDOWN_SCOPES: Record<string, ScopeStyle> = {
+  // Headings
+  'ATXHeading1': { color: colors.heading, fontWeight: '800' },
+  'ATXHeading2': { color: colors.heading, fontWeight: '800' },
+  // ... through heading6
+  'HeaderMark': { color: colors.heading },
+
+  // Emphasis
+  'StrongEmphasis': { color: colors.bold, fontWeight: '800' },
+  'Emphasis': { color: colors.italic, fontStyle: 'italic', fontWeight: '800' },
+  'Strikethrough': { color: colors.strikethrough, textDecoration: 'line-through', fontWeight: '100' },
+  'StrikethroughMark': { color: colors.strikethrough },
+
+  // Code
+  'InlineCode': { color: colors.inlineCode },
+  'FencedCode': { color: colors.fencedCodeDelimiter },
+  'CodeText': { color: colors.codeBlockContent },
+  'CodeInfo': { color: colors.codeLanguage },     // language identifier
+
+  // Blockquote
+  'Blockquote': { color: colors.blockquote, fontStyle: 'italic', fontWeight: '100' },
+  'QuoteMark': { color: colors.blockquote },
+
+  // Lists (base — markers handled contextually in highlighter.ts)
+  'BulletList': { color: colors.bulletContent },
+  'OrderedList': { color: colors.numberedContent },
+
+  // Links
+  'Link': { color: colors.linkText, fontWeight: '700' },
+  'URL': { color: colors.linkUrl },
+  'LinkTitle': { color: colors.linkTitle },
+
+  // Tables
+  'Table': { color: colors.table },
+
+  // Special
+  'HorizontalRule': { color: colors.horizontalRule },
+  'Comment': { color: colors.comment, fontStyle: 'italic', fontWeight: '100' },
+  'Escape': { color: colors.escapeChar },
+
+  // YAML frontmatter
+  'YAMLFrontMatter': { color: colors.frontmatter },
+}
+
+// Context-dependent styles (need parent node check)
+// These are handled by special-case logic in highlighter.ts
+export const CONTEXT_SCOPES = {
+  listMark: {
+    bullet: { color: colors.bulletMarker, fontWeight: '700' },
+    ordered: { color: colors.numberedMarker, fontWeight: '700' },
+  },
+  codeMark: {
+    inline: { color: colors.inlineCode },
+    fenced: { color: colors.fencedCodeDelimiter },
+  }
+}
+
+// Plain text regex scopes (for plain text mode)
+// Order matters: higher priority scopes should be LAST (last applied wins)
+export interface RegexScope {
+  name: string
+  pattern: RegExp
+  style: ScopeStyle
+}
+
+export const PLAIN_TEXT_SCOPES: RegexScope[] = [
+  // Lower priority first
+  { name: 'text.body', pattern: /^.+$/mg, style: { color: colors.fg } },
+  { name: 'text.indented', pattern: /^( {4}|\t).+$/mg, style: { color: colors.bulletContent } },
+  { name: 'text.list-like', pattern: /^[\s]*[-*•–—]\s.+$/mg, style: { color: colors.bulletContent } },
+  { name: 'text.question', pattern: /^.+\?$/mg, style: { color: colors.linkText } },
+  { name: 'text.heading-like', pattern: /^.{1,60}:$/mg, style: { color: colors.heading } },
+  // Higher priority last
+  { name: 'text.allcaps', pattern: /\b[A-Z]{3,}\b/g, style: { color: colors.bold, fontWeight: '800' } },
+]
+```
+
+**`src/highlighter.ts`** — the single ViewPlugin:
+
+```typescript
+import { ViewPlugin, ViewUpdate, Decoration, DecorationSet } from '@codemirror/view'
+import { RangeSetBuilder } from '@codemirror/state'
+import { syntaxTree } from '@codemirror/language'
+import { MARKDOWN_SCOPES, CONTEXT_SCOPES, PLAIN_TEXT_SCOPES, ScopeStyle } from './scopes'
+
+function styleToAttr(s: ScopeStyle): string {
+  const parts: string[] = []
+  if (s.color) parts.push(`color: ${s.color}`)
+  if (s.fontWeight) parts.push(`font-weight: ${s.fontWeight}`)
+  if (s.fontStyle) parts.push(`font-style: ${s.fontStyle}`)
+  if (s.textDecoration) parts.push(`text-decoration: ${s.textDecoration}`)
+  return parts.join('; ')
+}
+
+function makeDeco(style: ScopeStyle) {
+  return Decoration.mark({ attributes: { style: styleToAttr(style) } })
+}
+
+function buildHighlightDecorations(view: EditorView): DecorationSet {
+  const builder = new RangeSetBuilder<Decoration>()
+  const decos: { from: number; to: number; deco: Decoration }[] = []
+  const tree = syntaxTree(view.state)
+  const isMarkdown = /* detect mode */ true  // Phase 4: mode detection
+
+  if (isMarkdown) {
+    const listStack: string[] = []
+
+    for (const { from, to } of view.visibleRanges) {
+      tree.iterate({
+        from, to,
+        enter(node) {
+          // Track list context for markers
+          if (node.name === 'BulletList') { listStack.push('bullet'); return }
+          if (node.name === 'OrderedList') { listStack.push('ordered'); return }
+
+          // Context-dependent: list markers
+          if (node.name === 'ListMark' && listStack.length > 0) {
+            const ctx = listStack[listStack.length - 1] as 'bullet' | 'ordered'
+            decos.push({ from: node.from, to: node.to, deco: makeDeco(CONTEXT_SCOPES.listMark[ctx]) })
+            return
+          }
+
+          // Context-dependent: code marks
+          if (node.name === 'CodeMark') {
+            let p = node.node.parent
+            while (p) {
+              if (p.name === 'InlineCode') {
+                decos.push({ from: node.from, to: node.to, deco: makeDeco(CONTEXT_SCOPES.codeMark.inline) })
+                return
+              }
+              if (p.name === 'FencedCode') return
+              p = p.parent
+            }
+            return
+          }
+
+          // All other markdown scopes
+          const style = MARKDOWN_SCOPES[node.name]
+          if (style) {
+            decos.push({ from: node.from, to: node.to, deco: makeDeco(style) })
+          }
+        },
+        leave(node) {
+          if (node.name === 'BulletList' || node.name === 'OrderedList') listStack.pop()
+        }
+      })
+    }
+  } else {
+    // Plain text mode: regex-based
+    for (const { from, to } of view.visibleRanges) {
+      const text = view.state.doc.sliceString(from, to)
+      for (const scope of PLAIN_TEXT_SCOPES) {
+        scope.pattern.lastIndex = 0
+        let match
+        while ((match = scope.pattern.exec(text)) !== null) {
+          decos.push({
+            from: from + match.index,
+            to: from + match.index + match[0].length,
+            deco: makeDeco(scope.style)
+          })
+        }
+      }
+    }
+  }
+
+  decos.sort((a, b) => a.from - b.from || a.to - b.to)
+  for (const { from, to, deco } of decos) {
+    if (from < to) builder.add(from, to, deco)
+  }
+  return builder.finish()
+}
+
+export const thotHighlighter = ViewPlugin.fromClass(
+  class {
+    decorations: DecorationSet
+    constructor(view: EditorView) {
+      this.decorations = buildHighlightDecorations(view)
+    }
+    update(update: ViewUpdate) {
+      if (update.docChanged || update.viewportChanged) {
+        this.decorations = buildHighlightDecorations(update.view)
+      }
+    }
+  },
+  { decorations: v => v.decorations }
+)
+```
+
+This is the complete implementation. It's ~100 lines for `highlighter.ts` and ~80 lines of actual scope definitions in `scopes.ts`. Current system spans 3 files at ~500 lines of coordination logic.
+
+---
 
 ### File Structure
 
-[New files to create, files to modify, files to delete]
+**Files to CREATE:**
+
+```
+src/scopes.ts          — Scope definitions (node type → color/style lookup table)
+src/highlighter.ts     — Single ViewPlugin handling ALL highlighting
+```
+
+**Files to MODIFY:**
+
+```
+src/editor.ts          — Remove: styleTags, markdownStyleOverrides, markerDecorations
+                         Remove: ViewPlugin import, inline deco vars
+                         Add: import { thotHighlighter } from './highlighter'
+                         Add: thotHighlighter to extensions array
+
+src/theme.ts           — Remove: thotHighlightStyle (all markdown rules)
+                         Keep: thotEditorTheme (chrome only)
+                         Keep: minimal HighlightStyle for code block tokens ONLY
+                         Export: thotTheme = [thotEditorTheme, codeBlockHighlight]
+```
+
+**Files to DELETE (after Phase 2 verified):**
+
+```
+src/highlight-tags.ts  — All custom Lezer tags become unnecessary
+                         Color palette moves to src/scopes.ts
+```
+
+**New file dependency graph:**
+
+```
+editor.ts
+  └── highlighter.ts
+        └── scopes.ts (scope definitions + colors)
+  └── theme.ts (chrome + code blocks only)
+```
+
+vs. current:
+```
+editor.ts
+  └── highlight-tags.ts (colors + tags)
+  └── theme.ts (chrome + HighlightStyle)
+       └── highlight-tags.ts
+  └── [ViewPlugin inline, styleTags, HighlightStyle all in play simultaneously]
+```
+
+---
 
 ### Migration Strategy
 
-[How to transition from current system without breaking anything]
+**Phase 1: Parallel implementation (zero-risk)**
+
+1. Create `src/scopes.ts` with all scope definitions (colors from current `highlight-tags.ts`)
+2. Create `src/highlighter.ts` as a NEW ViewPlugin — don't remove anything yet
+3. Add `thotHighlighter` to the extensions array in `editor.ts` temporarily alongside the old system
+4. Test: new system runs parallel to old, visual conflicts will show what needs adjustment
+5. Use this phase to verify parity: every element should look identical
+
+**Phase 2: Remove old system**
+
+1. Remove `markerDecorations` from `editor.ts`
+2. Remove `markdownStyleOverrides` (the `styleTags` block) from `editor.ts`
+3. Remove `thotHighlightStyle` from `theme.ts` (keep chrome theme + code block style)
+4. Remove import of `styleTags, tags` from `@lezer/highlight` in `editor.ts`
+5. Remove imports of custom tags from `highlight-tags.ts` in `editor.ts`
+6. Test everything
+
+**Phase 3: Clean up**
+
+1. Move color palette from `highlight-tags.ts` to `scopes.ts`
+2. Delete `src/highlight-tags.ts`
+3. Update all imports
+
+**Safety**: Branch `v3-rainbow-moat` protects `v2-first-thots`. Don't merge until thoroughly tested.
+
+---
 
 ### Testing Strategy
 
-[How to verify all markdown elements work correctly]
+**Manual test document** — create `test/markdown-test.md` with every element:
+
+```markdown
+# Heading 1
+## Heading 2  
+### Heading 3
+
+**bold text** and *italic text* and ~~strikethrough~~
+
+**bold with *italic inside* text** ← the hard case
+*italic with **bold inside** text* ← must also work
+
+`inline code` and normal text
+
+- bullet item one
+- **bold bullet** and *italic bullet*
+  - nested bullet
+
+1. ordered item
+2. **bold ordered** and *italic ordered*
+
+> blockquote text with **bold** inside
+
+[link text](https://url.com)
+
+```javascript
+const x = 1  // syntax highlighted
+```
+
+---
+
+| table | header |
+| ----- | ------ |
+| cell  | cell   |
+```
+
+**Automated checks** (visual regression — screenshot comparison):
+- Each scope has the correct color
+- Nested scopes resolve correctly
+- List markers differ from list content
+- Inline code delimiters match content color
+
+**Performance test** (manual):
+- Open 10,000 line document, verify no lag
+- Type rapidly, verify no flicker
+- Scroll quickly, verify smooth rendering
 
 ---
 
@@ -1063,9 +1477,82 @@ Current system complexity traced:
 3. Test performance
 4. Compare to Lezer-based approach
 
-### [Date]: [Research Update]
+---
 
-[To be filled in as research progresses]
+### 2026-02-20: Research Phase Complete
+
+**Sources consulted:**
+- CodeMirror 6 documentation + community forums
+- Prism.js documentation (token-first definition pattern)
+- Obsidian editor architecture (CM6 live preview implementation)
+- Current codebase deep dive: `src/editor.ts`, `src/highlight-tags.ts`, `src/theme.ts`
+- `docs/archive/v1/TextMateRules.md` — TextMate scope reference
+
+**Key Finding 1: The complexity is in our layering, not in CM6 or Lezer**
+
+The current system works by stacking three mechanisms:
+- Layer 1: `styleTags` — registers Lezer nodes to Lezer `Tag` objects
+- Layer 2: `HighlightStyle` — maps `Tag` objects to CSS classes via a cascade where ORDER of definition matters
+- Layer 3: `ViewPlugin` inline styles — escapes the cascade for 3 context-dependent cases
+
+Each layer was added to work around the previous layer's limitations. The result is that adding a new highlighting rule requires understanding all three layers and their interaction — which explains the "INSANE" complexity you identified.
+
+**Key Finding 2: `buildMarkerDecorations` IS the right pattern — just too limited**
+
+The ViewPlugin in `editor.ts` (the `buildMarkerDecorations` function) is clean, direct, easy to understand, and already works correctly. It:
+1. Walks the Lezer syntax tree for visible ranges only (performance ✓)
+2. Maps tree node types directly to decorations (no indirection ✓)
+3. Uses inline styles (highest specificity, no cascade ✓)
+4. Handles context (stack-based list tracking) correctly ✓
+
+The solution is: **expand this pattern to handle ALL markdown highlighting**, removing layers 1 and 2 entirely.
+
+**Key Finding 3: Regex approach loses too much**
+
+Pure regex cannot reliably handle nested markdown. `**bold *italic***` requires understanding that the inner `*` is italic context inside bold — regex cannot know this without the parse tree. Lezer already handles all 651 CommonMark spec test cases. Throwing it away would mean months of re-implementing edge cases.
+
+**Key Finding 4: Prism.js gives us the right DEFINITION pattern**
+
+Prism.js defines languages as: `{ 'token-name': /regex/, 'token-name': [/regex1/, /regex2/] }`. This is the mental model we want for `scopes.ts`: a simple key-value lookup where token name → style. We borrow this philosophy while using Lezer's tree structure for correctness.
+
+**Key Finding 5: Tree nesting naturally resolves priority**
+
+This is the core insight that makes everything click:
+- When `StrongEmphasis` contains `Emphasis` contains `Text`
+- Our ViewPlugin applies bold decoration to the StrongEmphasis range
+- Then applies italic decoration to the inner Emphasis range
+- The inner span renders inside the outer span — inner wins for color
+- **Priority = tree depth. No CSS cascade management needed.**
+
+This is actually more correct than both CSS cascade AND explicit priority numbers, because the tree represents the actual semantic structure.
+
+**Key Finding 6: Code block syntax highlighting stays separate (and that's fine)**
+
+For language-specific syntax highlighting inside fenced code blocks (JS keywords, Python strings, etc.), keeping a minimal `HighlightStyle` is the right call. These code token types:
+- Don't interact with markdown-level styles
+- Don't have context-dependency problems
+- Are already handled correctly by the current system
+- Would require significant work to replicate in the ViewPlugin approach
+
+The clean architecture: one ViewPlugin for ALL markdown highlighting, one minimal HighlightStyle for code block tokens only.
+
+**Comparison Matrix:**
+
+|                       | Pure Regex | StreamParser   | Custom Parser | **Lezer + ViewPlugin** | Full Lezer Rewrite |
+| --------------------- | ---------- | -------------- | ------------- | ---------------------- | ------------------ |
+| Handles nested syntax | ❌ Hard     | ⚠️ Stack needed | ✅             | ✅                      | ✅                  |
+| Handles plain text    | ✅ Easy     | ✅              | ✅             | ✅ (regex mode)         | ⚠️                  |
+| Lines of code         | ~200       | ~500           | ~2000+        | **~150**               | ~500               |
+| Weeks to implement    | 3          | 4              | 12+           | **1-2**                | 3                  |
+| Code block tokens     | ❌ Lost     | ❌ Lost         | Need to redo  | **✅ Keep**             | ✅                  |
+| Uses existing infra   | ❌          | ❌              | ❌             | **✅ maximal**          | ❌                  |
+| Priority model        | Manual     | Manual         | Custom        | **Tree depth**         | Tag hierarchy      |
+| Plain text extension  | ✅          | ⚠️              | ✅             | **✅**                  | ❌                  |
+| Risk                  | Medium     | Medium         | High          | **Low**                | Medium             |
+
+**Decision**: Lezer Tree Walk + Inline Style ViewPlugin (**Approach B**), with regex for plain text mode
+
+**Rationale**: Least risk, least work, leverages existing proven infrastructure, solves the exact problem identified (three-layer complexity) without throwing away the things that work (Lezer parser, visible-range performance optimization, code block highlighting).
 
 ---
 

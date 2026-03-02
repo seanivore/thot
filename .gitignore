@@ -42,3 +42,7 @@ Thumbs.db
 
 # Development Example Images (keep in docs/images)
 **/IMG*
+
+# Design Spec Images 
+.agent/apple-ui-design/**.jpeg
+.agent/apple-ui-design/**.jpg

@@ -1,0 +1,6 @@
+{
+  "color-highlight.markerType": "dot-before",
+  "color-highlight.matchRgbWithNoFunction": true,
+  "color-highlight.matchHslWithNoFunction": true,
+  "editor.colorDecorators": true
+}
