@@ -96,13 +96,9 @@ The highlighting system rewrite could have been avoided with proper upfront rese
 - The "MarkTag" or "ContentTag" mismatch is probably allowing the "Content" colors to override them 
 - 
 
-**THIS IS INSANE. LEGITIMATELY INSANE. WHY ALIAS IN THE FIRST PLACE? CAN THE COLOR NOT BE THE CONST? AND THEN, I JUST SEARCHED, AND I THE CONTENT TAGS AKA THE WORKING COLORS, ARE NOT MENTIONED ANYWHERE EXCEPT THE ONE, SIMPLE src/highlight-tag.ts DOCUMENT. MEANWHILE, NO IDEA WHY AFTER THE CONST AND COLOR ARE CONNECTED IN THE CODE WE HAVE TO LATER BUILD A markerDecorations AT ALL. I guess it doesn't recognize the markers to tag them but if it doesn't, which seems like a possible oversight because how and why would it be skipped out of all these tag scopes** 
+**THIS IS TOO MUCH. WHY ALIAS IN THE FIRST PLACE? CAN THE COLOR NOT BE THE CONST? AND THEN, I JUST SEARCHED, AND I THE CONTENT TAGS AKA THE WORKING COLORS, ARE NOT MENTIONED ANYWHERE EXCEPT THE ONE, SIMPLE src/highlight-tag.ts DOCUMENT. MEANWHILE, NO IDEA WHY AFTER THE CONST AND COLOR ARE CONNECTED IN THE CODE WE HAVE TO LATER BUILD A markerDecorations AT ALL. I guess it doesn't recognize the markers to tag them but if it doesn't, which seems like a possible oversight because how and why would it be skipped out of all these tag scopes** 
 
-**HONESTLY, IN TRYING TO SORT THAT I WANT TO LOOK INTO BUILDING OUR OWN RIGHT NOW**
-
-**I THINK WHEN YOU SEE THE WEIRD HIERARCHY OF PLUGINS  NEEDED AND THEN CSS ORDERING BY PRIORITY AND ALL THESE ALIAS NAMES**
-
-**WHY? I WANT TO USE CODE TO DEFINE CHARACTER PATTERNS, GIVE THAT TAG ONE NAME, DEFINE THE COLOR. NOTHING MORE. NO MULTIPLE PLUGINS AND FILES AND CSS STUFF. JUST NAMES AND A PRIORITY LISTS** 
+**IN TRYING TO SORT THAT I WANT TO LOOK INTO BUILDING OUR OWN — we will need it for plain text anyway, plus it really is the only way we'll be able to have only one system. Bonus points = It is IP and we won't give it away for free. I THINK WHEN YOU SEE THE WEIRD HIERARCHY OF PLUGINS NEEDED AND THEN CSS ORDERING BY PRIORITY AND ALL THESE ALIAS NAMES you'll understand. WHY? I WANT TO USE CODE TO DEFINE CHARACTER PATTERNS, GIVE THAT TAG ONE NAME, DEFINE THE COLOR. NOTHING MORE. NO MULTIPLE PLUGINS AND FILES AND CSS STUFF. JUST NAMES AND A PRIORITY LISTS** 
 
 *EDIT*: I also see "Autolinks" listed as a scope which reminds me that hyperlinks do not work at all, they get underlined but you cannot click them. 
 
@@ -176,33 +172,6 @@ The highlighting system rewrite could have been avoided with proper upfront rese
 
 **Strategic Reasoning**: This version makes Thot competitive with existing note apps while maintaining unique semantic highlighting advantage. By supporting both markdown and visual formatting, we capture two user segments instead of one.
 
-#### 6. Native Browser Spellcheck
-
-**Why now**: Users expect this in any text editor; absence feels broken
-
-**Implementation**: Enable browser's built-in spellcheck
-- Add `spellcheck="true"` attribute to CodeMirror
-- Respects user's system preferences automatically
-- Works on desktop, iPad, mobile
-
-**Research needed**: How to toggle on/off (menu item or settings)
-
-#### 7. Paired Delimiters Behavior
-
-**Why now**: Standard text editor behavior; users expect it
-
-**Behaviors to implement:**
-
-1. **Pair insertion** — Typing `(` inserts `()` with cursor between
-   - Pairs: `() [] {} '' "" ` ` `
-2. **Skip-over** — Typing `)` when cursor is before auto-inserted `)` moves cursor past it
-3. **Wrap selection** — Highlight word, type `(`, wraps as `(word)`
-4. **Pair deletion** — Backspace on `(` deletes both `()` if empty
-
-**Files to modify**: `src/editor.ts` (keymap extensions)
-
-**Research needed**: CodeMirror closeBrackets extension compatibility
-
 #### 8. Intelligent Formatting Mode ⚠️ RESEARCH NEEDED
 
 **Why now**: This is the killer feature that differentiates us from every other markdown editor
@@ -237,27 +206,6 @@ The highlighting system rewrite could have been avoided with proper upfront rese
 
 **Strategic Note**: This is complex enough to warrant its own exclusively executable plan after research. Consider starting with Option A for v3.0.0, then Option B for v3.1.0.
 
-#### 9. File Operations ⚠️ RESEARCH NEEDED
-
-**Why now**: Opening/saving .md files + multiple windows = table stakes for "normal users" market
-
-**Features needed:**
-
-1. **Open file** — Browse and open existing .md files
-2. **Save as** — Save current content to new file
-3. **Multiple windows** — CMD+N opens new window (not duplicate)
-4. **Auto-save to file** — Once file is opened, auto-save to that file (not just localStorage)
-5. **File name in title bar** — Show which file is open
-
-**Research Questions:**
-
-1. **File System Access API** — Browser support in 2026? Safari support?
-2. **Fallback strategy** — Download/upload for unsupported browsers?
-3. **Multiple windows** — `window.open()` with separate localStorage keys?
-4. **Persistence model** — How to track "current file" vs. "scratchpad"?
-
-**Strategic Note**: This fundamentally changes the app from "scratchpad" to "markdown editor." Need to maintain backward compatibility with localStorage-only mode.
-
 #### 10. Light Theme Option
 
 **Why now**: Some users prefer light backgrounds; accessibility consideration
@@ -283,17 +231,6 @@ The highlighting system rewrite could have been avoided with proper upfront rese
 3. **Phase 3**: Export to .docx (if needed)
 
 **Reference**: `docs/archive/v3/typora-app-css-themes/` — but verify these are for export, not editor highlighting
-
-#### 12. Mobile/Tablet UX Improvements
-
-**Issues to address:**
-
-- Predictive text bar appearing above keyboard (weird form field with checkmark)
-- Lack of share buttons on iPhone PWA (no URL bar)
-- Different PWA behavior: iOS (no UI) vs. iPadOS (browser window)
-- Bottom padding when typing on last line (auto-grow buffer)
-
-**Research needed**: PWA display modes, iOS standalone mode customization
 
 #### 13. Settings UI for Preferences
 
@@ -372,34 +309,6 @@ The highlighting system rewrite could have been avoided with proper upfront rese
 
 **Strategic Note**: This enables the "user-customizable themes per workspace" vision and makes highlighting work for plain text (non-markdown) mode.
 
-#### Research Track B: File System Access API
-
-**Questions to answer:**
-
-1. **Browser support in 2026**
-   - Chrome/Edge: Full support?
-   - Safari: Support added when?
-   - Firefox: Status?
-   - Mobile browsers: iOS Safari, Chrome Mobile?
-
-2. **API capabilities**
-   - Open file picker
-   - Save file picker
-   - Directory access (for relative paths)
-   - Permissions model
-   - Auto-save to open file
-
-3. **Fallback strategies**
-   - Download/upload for unsupported browsers
-   - localStorage as fallback
-   - Graceful degradation
-
-4. **Multiple windows**
-   - How to track which file is open in which window
-   - localStorage key strategy
-   - BroadcastChannel for sync?
-
-**Deliverable**: Implementation plan with browser compatibility matrix and fallback strategy
 
 #### Research Track C: Intelligent Formatting Implementation
 
@@ -488,15 +397,15 @@ The highlighting system rewrite could have been avoided with proper upfront rese
 **Target**: Complete before starting v3.0.0
 **Blocks**: User experience, monetization readiness
 
-| Update | Status | Blocks | Notes |
-|--------|--------|--------|-------|
-| Fix inline code tick marks | Pending | UX | Markers should match content color |
-| Fix bullet markers | Pending | UX | Gold color not applying |
-| Fix numbered markers | Pending | UX | Red color not applying |
-| Fix link URL highlighting | Pending | UX | Cyan not differentiating from link text |
-| Consolidate icons | Pending | PWA install | Use new batch, update manifest |
-| Fix iPad scrolling | Pending | Mobile UX | Content doesn't scroll to top/bottom on load |
-| Fix YAML highlighting | Pending | UX | Hyphens after numbered list trigger heading style |
+| Update                     | Status  | Blocks      | Notes                                             |
+| -------------------------- | ------- | ----------- | ------------------------------------------------- |
+| Fix inline code tick marks | Pending | UX          | Markers should match content color                |
+| Fix bullet markers         | Pending | UX          | Gold color not applying                           |
+| Fix numbered markers       | Pending | UX          | Red color not applying                            |
+| Fix link URL highlighting  | Pending | UX          | Cyan not differentiating from link text           |
+| Consolidate icons          | Pending | PWA install | Use new batch, update manifest                    |
+| Fix iPad scrolling         | Pending | Mobile UX   | Content doesn't scroll to top/bottom on load      |
+| Fix YAML highlighting      | Pending | UX          | Hyphens after numbered list trigger heading style |
 
 **Strategic Note**: These bugs don't break core functionality but create "unpolished" feeling. Must fix before asking users to pay.
 
@@ -505,14 +414,14 @@ The highlighting system rewrite could have been avoided with proper upfront rese
 **Target**: Web app subscription launch
 **Strategy**: Feature parity with basic note apps + unique semantic highlighting
 
-| Update | Status | Research Needed | Notes |
-|--------|--------|-----------------|-------|
-| Native browser spellcheck | Pending | No | Enable spellcheck attribute |
-| Paired delimiters | Pending | Minor | Check CodeMirror closeBrackets |
-| File operations | Pending | **YES** | File System Access API research |
-| Multiple windows | Pending | Minor | window.open() + localStorage strategy |
-| Intelligent formatting mode | Pending | **YES** | Major research needed |
-| Light theme | Pending | No | Duplicate color palette |
+| Update                      | Status  | Research Needed | Notes                                 |
+| --------------------------- | ------- | --------------- | ------------------------------------- |
+| Native browser spellcheck   | Pending | No              | Enable spellcheck attribute           |
+| Paired delimiters           | Pending | Minor           | Check CodeMirror closeBrackets        |
+| File operations             | Pending | **YES**         | File System Access API research       |
+| Multiple windows            | Pending | Minor           | window.open() + localStorage strategy |
+| Intelligent formatting mode | Pending | **YES**         | Major research needed                 |
+| Light theme                 | Pending | No              | Duplicate color palette               |
 
 **Strategic Note**: File operations + formatting mode = competitive with Apple Notes, Google Keep, Notion (for basic use). Semantic highlighting = unique differentiator.
 
@@ -521,30 +430,30 @@ The highlighting system rewrite could have been avoided with proper upfront rese
 **Target**: After monetization launch
 **Strategy**: Quality of life improvements based on user feedback
 
-| Update | Status | Priority | Notes |
-|--------|--------|----------|-------|
-| Simple export (print/PDF) | Pending | Medium | Strip notation + browser print |
-| Bottom padding auto-grow | Pending | Low | Incremental padding as cursor nears bottom |
-| Clickable paths/URLs | Pending | Medium | With permission settings |
-| Anchor links to headings | Pending | Low | Jump to heading functionality |
-| Settings UI panel | Pending | Medium | Toggle preferences |
-| Max line width setting | Pending | Low | For wide screens |
-| Word/character/token counters | Pending | Low | Toggle display |
+| Update                        | Status  | Priority | Notes                                      |
+| ----------------------------- | ------- | -------- | ------------------------------------------ |
+| Simple export (print/PDF)     | Pending | Medium   | Strip notation + browser print             |
+| Bottom padding auto-grow      | Pending | Low      | Incremental padding as cursor nears bottom |
+| Clickable paths/URLs          | Pending | Medium   | With permission settings                   |
+| Anchor links to headings      | Pending | Low      | Jump to heading functionality              |
+| Settings UI panel             | Pending | Medium   | Toggle preferences                         |
+| Max line width setting        | Pending | Low      | For wide screens                           |
+| Word/character/token counters | Pending | Low      | Toggle display                             |
 
 ### FUTURE — v4.0.0+: Native & AI Integration
 
 **Target**: After PWA established
 **Strategy**: Premium tier with native OS integration
 
-| Update | Status | Requires | Notes |
-|--------|--------|----------|-------|
-| SwiftUI wrapper | Pending | v3.0.0 complete | Native wrapper only, not UI rebuild |
-| Multi-note organization | Pending | SwiftUI | Finder column view navigation |
-| System Share sheet | Pending | SwiftUI | Native iOS/macOS sharing |
-| Reminders integration | Pending | SwiftUI | @date notation → Reminders |
-| AI organization | Pending | v3.0.0 + API | Auto-organize notes |
-| AI chat with notes | Pending | Multi-note | Query across documents |
-| Workspace themes | Pending | Multi-note | Different colors per workspace |
+| Update                  | Status  | Requires        | Notes                               |
+| ----------------------- | ------- | --------------- | ----------------------------------- |
+| SwiftUI wrapper         | Pending | v3.0.0 complete | Native wrapper only, not UI rebuild |
+| Multi-note organization | Pending | SwiftUI         | Finder column view navigation       |
+| System Share sheet      | Pending | SwiftUI         | Native iOS/macOS sharing            |
+| Reminders integration   | Pending | SwiftUI         | @date notation → Reminders          |
+| AI organization         | Pending | v3.0.0 + API    | Auto-organize notes                 |
+| AI chat with notes      | Pending | Multi-note      | Query across documents              |
+| Workspace themes        | Pending | Multi-note      | Different colors per workspace      |
 
 ---
 

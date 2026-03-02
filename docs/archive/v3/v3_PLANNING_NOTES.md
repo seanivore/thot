@@ -70,9 +70,129 @@ We will be using a **Priority-based, Multi-Tag System** of our own creation. Thi
 ### Multi-Tag Application
 
   - When text has multiple tags applied to it, the highest priority tag will be the only one that is visually applied to the text.
-  - E.g. if 
 
-## Requirements
+---
 
-### 
+**USING UPDATES FOR USABILITY BUILD VERSION**
 
+---
+
+# v3-USABILITY 
+
+## Summary 
+
+I have been using Thot on all devices, particularly on my desktop, all day every day. The follow are the biggest UX struggles I have encountered. 
+
+### Process 
+
+  1. Move to new branch v3-usability 
+  2. Every update must be THOROUGHLY researched; this includes already understood concepts, they must all be confirmed accurate and up to date.
+  3. Group or separate the feature updates however makes sense based on the complexity of each change. 
+  4. Create exclusively executable implementation guides for each update or group of updates and name it appropriately, adding a v3.1 or v3.2 etc. based on the order they will be addressed — at, for example, `docs/archive/v3/v3_1-UPDATE-USABILITY.md`
+
+### Not In This Update 
+
+  + The highlight issues can be skipped 
+    - Skip the "bugs" needed for "polish" as well 
+    - Re: `docs/UPDATE_MAP.md`
+  + Ignore "Icons Consolidation" 
+  + Skip "iPad/Mobile Viewport Issues" 
+  + Skip "YAML Highlighting Bug" and "Undo/Redo Issue (iPad)" 
+
+---
+
+## Thot Feature & Usability Updates 
+
+### Spellcheck, Autocorrect (Native Browser)
+
+  * **What exactly**: Writing on Apple devices, no matter where the text field is, any blogging website, etc. it *autocorrects* like automatically capitalizes the first word of every line, makes sure I'm using periods, makes small spelling errors like plurals and fixes misuse of "their" or "there" and so much more. It is very hard to type on a mobile or tablet device without this. And then *spellcheck* is similarly needed but it is noticeably missing even on desktop. Really, these features being **ON** is very likely to be a default that got turned off somewhere. 
+
+  * **Why now**: It is expected and absence feels broken and increases UX frustration 10X. 
+
+  * **Implementation**: Enable browser's built-in spellcheck
+    - Add `spellcheck="true"` attribute to CodeMirror
+    - Respects user's system preferences automatically
+    - Works on desktop, iPad, mobile
+
+  * **Research needed**: How to toggle on/off (menu item or settings)
+
+### Paired Delimiters Behavior
+
+  * **What exactly**: 
+
+    1. *Pair insertion* — Typing `(` inserts `()` with cursor between
+     - Pairs: `() [] {} '' "" ` ` `
+    2. *Skip-over* — Typing `)` when cursor is before auto-inserted `)` moves cursor past it
+    3. *Wrap selection* — Highlight word, type `(`, wraps as `(word)`
+    4. *Pair deletion* — Backspace on `(` deletes both `()` if empty
+
+  * **Why now**: Standard text editor behavior; markdown users expect it, are it is frustrating to go to use it and end up deleting a word instead. 
+
+  * **Files to modify**: `src/editor.ts` (keymap extensions)
+
+  * **Research needed**: CodeMirror closeBrackets extension compatibility
+
+### File Operations 
+
+  * **What exactly**: Fundamental shift away from the "scratchpad" and to "markdown editor" because we need the following. 
+
+    1. *Multiple windows* — CMD+N opens new window (not duplicate)
+    2. *Edit files across devices* — just initial scratchpad is persistent, but also access to the Files app on mobile/tablet and then normal on desktop 
+    3. *Auto-save to file* — Once file is opened, auto-save to that file (not just localStorage)
+    4. *Save as* — CMD-SHIFT-S; save current content to new file name and location 
+    5. *Open file* — Browse and open existing .md files
+    6. *File name in title bar* — Show which file is open 
+
+*NOTE* that contrary to the previous note here, we do NOT need backwards compatibility. I am the only user, and these are expected changes that are necessary to get the tool up to expected basics. We only did the scratch pad as a stepping stone. Plus, I'm fairly sure if I went to the GitHub and downloaded the tagged previous version, it would work; no backwards compatibility extra adjustments wanted or needed. 
+
+  * **Why now**: Opening/saving .md files + multiple windows = table stakes for "normal users". This is 100% expected behavior of even just a simple notes app to some degree. 
+
+  * **Research Questions:**
+
+    1. *How does Google Docs handle this?* Is it possible that the TextEdit base tool we're using might have a similar system? 
+    2. *File System Access API* — Browser support in 2026? Safari support?
+    3. *Mobile/tablet Apple Files app* — Web apps have access to Files app on mobile?
+    4. *Find comparable example* — When you go do download a PDF from any website, or save an image (on mobile or tablet), you can download it and then open it in Files or save it directly to Files 
+
+  * **Behavior nuance**: 
+    - When using the Text Edit tool, the 'untitled' document is automatically saved and persists even if you close and open the app. This is much like the current behavior of the scratchpad. 
+
+#### Research File System Access API
+
+* **Questions to answer:**
+
+  1. **Browser support in 2026**
+     - Chrome/Edge: Full support?
+     - Safari: Support added when?
+     - Firefox: Status?
+     - Mobile browsers: iOS Safari, Chrome Mobile?
+
+  2. **API capabilities**
+     - Open file picker
+     - Save file picker
+     - Directory access (for relative paths)
+     - Permissions model
+     - Auto-save to open file
+
+  3. **Fallback strategies**
+     - Download/upload for unsupported browsers
+     - localStorage as fallback
+     - Graceful degradation
+
+  4. **Multiple windows**
+     - How to track which file is open in which window
+     - localStorage key strategy
+     - BroadcastChannel for sync?
+
+  * **Deliverable**: Implementation plan with browser compatibility matrix and fallback strategy
+
+### Mobile/Tablet UX Improvements
+
+  * **Issues to address:**
+
+    - Predictive text bar appearing above keyboard (weird form field with checkmark)
+    - Lack of share buttons on iPhone PWA (no URL bar)
+    - Different PWA behavior: iOS (no UI) vs. iPadOS (browser window)
+    - Bottom padding when typing on last line (auto-grow buffer)
+
+  * **Research needed**: PWA display modes, iOS standalone mode customization
