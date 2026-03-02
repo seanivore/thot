@@ -1,4 +1,11 @@
-# Notes On v3 Development
+# v3 Development Updates 
+
+**Created**: 2026-03-02 
+**Version**: v3.0 
+**Status**: Planning and researching for implementation of updates 
+**Branch**: `v3-rainbow-moat` (main v3 product branch that all v3.1, v3.2, etc. updates will be merged into; stable builds well be sent to `main` whenever makes sense)
+
+---
 
 ## Current State
 
@@ -38,9 +45,9 @@
     - `docs/archive/v3/v3_SCOPE_DEFINITIONS.md`
     - `docs/archive/v3/v3_PLANNING_NOTES.md` 
 
-  1. For the **CURRENT BUILD UPDATES**, we can create `docs/archive/v3/v3_USABILITY.md` for the implementation planning, and then set it off on a similarly named branch `v3-usability`.
-  2. For the **PROPRIETARY HIGHLIGHTING SYSTEM**, we can create `docs/archive/v3/v3_HIGHLIGHTING.md` for the implementation planning, and then it can use this current branch that we're on now, which is branch `v3-rainbow-moat`. 
-  3. For the **INTELLIGENT FORMATTING UI**, we can create `docs/archive/v3/v3_FORMATTING.md` for the implementation planning, and then set it off on a similarly named branch `v3-formatting`.
+  1. For the **CURRENT BUILD UPDATES**, we can create `docs/archive/v3/v3_USABILITY.md` for the implementation planning, and then set it off on a similarly named feature branch off the main v3-rainbow-moat product branch that we will merge all the v3.1, v3.2, etc. updates into the v3 updates. 
+  2. For the **PROPRIETARY HIGHLIGHTING SYSTEM**, we can create `docs/archive/v3/v3_HIGHLIGHTING.md` for the implementation planning, and then set it off on a similarly named feature branch off the main v3-rainbow-moat product branch that we will merge all the v3.1, v3.2, etc. updates into the v3 updates. 
+  3. For the **INTELLIGENT FORMATTING UI**, we can create `docs/archive/v3/v3_FORMATTING.md` for the implementation planning, and then set it off on a similarly named feature branch off the main v3-rainbow-moat product branch that we will merge all the v3.1, v3.2, etc. updates into the v3 updates. 
 
   + You may need both of these documents for details as well: 
     - `docs/THOT_APP.md`
@@ -85,7 +92,7 @@ I have been using Thot on all devices, particularly on my desktop, all day every
 
 ### Process 
 
-  1. Move to new branch v3-usability 
+  1. Move to new branch (we are on v3-rainbow-moat so can we create a feature update that is related to this? We can consider v3-rainbow-moat the name of the FULL v3 product)
   2. Every update must be THOROUGHLY researched; this includes already understood concepts, they must all be confirmed accurate and up to date.
   3. Group or separate the feature updates however makes sense based on the complexity of each change. 
   4. Create exclusively executable implementation guides for each update or group of updates and name it appropriately, adding a v3.1 or v3.2 etc. based on the order they will be addressed — at, for example, `docs/archive/v3/v3_1-UPDATE-USABILITY.md`
