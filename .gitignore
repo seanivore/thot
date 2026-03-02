@@ -46,3 +46,6 @@ Thumbs.db
 # Design Spec Images 
 .agent/apple-ui-design/**.jpeg
 .agent/apple-ui-design/**.jpg
+**.jpg
+**.jpeg
+**.png
