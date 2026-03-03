@@ -78,8 +78,8 @@ function init() {
     const legacyContent = localStorage.getItem('thot:content')
     const legacyState = localStorage.getItem('thot:state')
 
-    // Generate a random 6-character alphanumeric string 
-    windowId = Math.random().toString(36).substring(2, 8)
+    // Default to the central 'main' draftpad
+    windowId = 'main'
 
     // Update URL without refreshing the page
     const newUrl = new URL(window.location.href)

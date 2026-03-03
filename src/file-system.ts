@@ -85,10 +85,11 @@ export async function saveFileAs(content: string, suggestedName: string = 'thots
   }
 }
 
-export function newWindow(): void {
-  const newUrl = new URL(window.location.href);
-  newUrl.searchParams.delete('id');
-  window.open(newUrl.href, '_blank');
+export function newWindow() {
+  const url = new URL(window.location.href)
+  // Spawn a temporary, isolated scratchpad so it doesn't collide with 'main'
+  url.searchParams.set('id', 'temp-' + Math.random().toString(36).substring(2, 8))
+  window.open(url.href, '_blank', 'noopener,noreferrer')
 }
 
 export async function shareDocument(content: string): Promise<void> {
