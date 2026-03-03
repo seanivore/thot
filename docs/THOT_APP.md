@@ -3,7 +3,7 @@
 
 **Last Updated**: 2026-03-02
 **Version**: v3.1.0
-**Status**: Active development on `v3-rainbow-moat` branch
+**Status**: Active development on `dev` branch
 
 ---
 
@@ -443,12 +443,54 @@
 
 ## Deployment
 
-**Git branching protocol**
-   - `main` — protected, no direct commits, only fast-forward merges
-   - `v2-first-thots` — primary dev branch
-   - Feature branches: `feat/spell-check`, `feat/counter`, `fix/whatever`
-   - Semantic tags: `v2.0.0`, `v2.1.0` once stable
-   - Future major phases: `v3-organization`, `v4-ai-customization`
+### Git Branching & Merging Protocol
+
+We use a persistent `dev` branch for ongoing development integration, and `main` is strictly reserved for production-ready, tagged releases. 
+
+**Branch Structure:**
+*   `main` — Production-ready code only. No direct commits; only fast-forward merges from stable releases.
+*   `dev` — The primary integration branch for all ongoing development (replaces phase-specific branches like `v3-rainbow-moat` or `v2-first-thots`).
+*   `feat/*` or `fix/*` — Temporary branches for specific features or bug fixes.
+
+**1. Starting a New Feature**
+Always branch off the latest `main` to ensure a clean slate:
+```bash
+git checkout main
+git pull origin main
+git checkout -b feat/your-feature-name
+```
+
+**2. Update Ready To Ship (Merging to Main)**
+When a feature is tested and ready to go live, use this exact 5-step process to ensure tags and remote repositories stay perfectly synced:
+```bash
+# 1. Move to the production branch
+git checkout main
+
+# 2. Fast-forward main to your feature branch state
+git merge --ff-only feat/your-feature-name
+
+# 3. Push the clean update to remote main
+git push origin main
+
+# 4. Give the clean push a version tag
+git tag vX.Y.Z-descriptive-name
+
+# 5. Push the version tag to the remote
+git push origin vX.Y.Z-descriptive-name
+```
+
+**3. Syncing the Development Branch**
+After successfully releasing a feature to `main`, keep `dev` up to date with the latest production state so parallel features don't drift:
+```bash
+# 1. Switch to the persistent development branch
+git checkout dev
+
+# 2. Merge the latest production code into dev
+git merge main
+
+# 3. Push the updated dev branch to remote
+git push origin dev
+```
 
 **Documentation discipline**
   - Non-trivial changes should update `docs/THOT_APP.md`
