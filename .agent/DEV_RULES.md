@@ -13,30 +13,69 @@
 
 ---
 
-## Git Branching Protocol
+## Git Branching & Merging Protocol
 
-### Branch Types
+We use a persistent `dev` branch for ongoing development integration, and `main` is strictly reserved for production-ready, tagged releases. 
 
-- `main` — Protected, no direct commits, only fast-forward merges
-- `develop` or `v2-first-thots` — Primary development branch
-- `feat/feature-name` — New features (e.g., `feat/user-auth`, `feat/dark-mode`)
-- `fix/bug-name` — Bug fixes (e.g., `fix/login-error`, `fix/mobile-layout`)
-- `research/topic` — Investigation branches (e.g., `research/database-choice`, `research/api-design`)
-- `docs/update-name` — Documentation updates
+### Branch Structure
+*   `main` — Production-ready code only. No direct commits; only fast-forward merges from stable releases.
+*   `dev` — The primary integration branch for all ongoing development.
+*   `feat/*` or `fix/*` — Temporary branches for specific features or bugfixes.
 
-### Semantic Versioning
+### 0. Initializing a New Project
+When starting a brand new repository, you must create the `main` branch first before setting up the `dev` environment:
+```bash
+# 1. Initialize git and make the first commit
+git init
+git add .
+git commit -m "chore: initial commit"
 
-- `v1.x.x` — Initial release, bug fixes, minor features
-- `v2.x.x` — Major features, breaking changes
-- `v3.x.x` — Next major iteration
+# 2. Assign the primary branch as main (if not default)
+git branch -M main
 
-### Branch Lifecycle
+# 3. Create and switch to the development branch immediately
+git checkout -b dev
+```
 
-1. Create feature branch from primary dev branch
-2. Complete work with tests
-3. Merge back to primary dev branch
-4. Tag stable releases (e.g., `v2.2.0`)
-5. Fast-forward merge to `main` when production-ready
+### 1. Starting a New Feature
+Always branch off the latest `main` to ensure a clean slate:
+```bash
+git checkout main
+git pull origin main
+git checkout -b feat/your-feature-name
+```
+
+### 2. Update Ready To Ship (Merging to Main)
+When a feature is tested and ready to go live, use this exact 5-step process to ensure tags and remote repositories stay perfectly synced:
+```bash
+# 1. Move to the production branch
+git checkout main
+
+# 2. Fast-forward main to your feature branch state
+git merge --ff-only feat/your-feature-name
+
+# 3. Push the clean update to remote main
+git push origin main
+
+# 4. Give the clean push a version tag
+git tag vX.Y.Z-descriptive-name
+
+# 5. Push the version tag to the remote
+git push origin vX.Y.Z-descriptive-name
+```
+
+### 3. Syncing the Development Branch
+After successfully releasing a feature to `main`, keep `dev` up to date with the latest production state so parallel features don't drift:
+```bash
+# 1. Switch to the persistent development branch
+git checkout dev
+
+# 2. Merge the latest production code into dev
+git merge main
+
+# 3. Push the updated dev branch to remote
+git push origin dev
+```
 
 ---
 
