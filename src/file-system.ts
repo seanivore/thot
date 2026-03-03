@@ -86,7 +86,9 @@ export async function saveFileAs(content: string, suggestedName: string = 'thots
 }
 
 export function newWindow(): void {
-  window.open(window.location.href, '_blank');
+  const newUrl = new URL(window.location.href);
+  newUrl.searchParams.delete('id');
+  window.open(newUrl.href, '_blank');
 }
 
 export async function shareDocument(content: string): Promise<void> {

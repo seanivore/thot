@@ -1,7 +1,7 @@
 // Thot v2 - Editor State Persistence
 // Saves and restores cursor position and scroll position
 
-const STATE_KEY = 'thot:state'
+let STATE_KEY = 'thot:state'
 const DEBOUNCE_MS = 250
 
 export interface EditorStateData {
@@ -10,6 +10,13 @@ export interface EditorStateData {
 }
 
 let saveTimeout: number | null = null
+
+/**
+ * Configure the unique storage key for this window instance
+ */
+export function setStateId(id: string): void {
+  STATE_KEY = `thot:state:${id}`
+}
 
 /**
  * Save editor state with debounce

@@ -1,8 +1,8 @@
 // Thot v2 - Main Entry Point
 import './styles/main.css'
 import { createEditor, getContent, getCursorPos, getScrollTop, setCursorPos, setScrollTop } from './editor'
-import { saveContent, loadContent, forceSave, hasSavedContent } from './persistence'
-import { saveState, loadState, forceSaveState } from './state'
+import { saveContent, loadContent, forceSave, hasSavedContent, setPersistenceId } from './persistence'
+import { saveState, loadState, forceSaveState, setStateId } from './state'
 import { shareDocument } from './file-system'
 
 // Welcome content for first-time users
@@ -68,6 +68,38 @@ function init() {
     console.error('Editor element not found')
     return
   }
+
+  // --- Bootloader Orchestration ---
+  const urlParams = new URLSearchParams(window.location.search)
+  let windowId = urlParams.get('id')
+
+  if (!windowId) {
+    // Check for legacy data first before generating a new ID
+    const legacyContent = localStorage.getItem('thot:content')
+    const legacyState = localStorage.getItem('thot:state')
+
+    // Generate a random 6-character alphanumeric string 
+    windowId = Math.random().toString(36).substring(2, 8)
+
+    // Update URL without refreshing the page
+    const newUrl = new URL(window.location.href)
+    newUrl.searchParams.set('id', windowId)
+    window.history.replaceState({ path: newUrl.href }, '', newUrl.href)
+
+    // Migrate legacy data if it exists into this new partition
+    if (legacyContent !== null) {
+      localStorage.setItem(`thot:content:${windowId}`, legacyContent)
+      localStorage.removeItem('thot:content') // Delete old to prevent collisions
+    }
+    if (legacyState !== null) {
+      localStorage.setItem(`thot:state:${windowId}`, legacyState)
+      localStorage.removeItem('thot:state')
+    }
+  }
+
+  // Configure storage keys for all future saves in this window
+  setPersistenceId(windowId)
+  setStateId(windowId)
 
   // Load saved content, or show welcome for first-timers
   const savedContent = loadContent()

@@ -1,10 +1,17 @@
 // Thot v2 - Content Persistence
 // Saves content to localStorage with debouncing
 
-const CONTENT_KEY = 'thot:content'
+let CONTENT_KEY = 'thot:content'
 const DEBOUNCE_MS = 500
 
 let saveTimeout: number | null = null
+
+/**
+ * Configure the unique storage key for this window instance
+ */
+export function setPersistenceId(id: string): void {
+  CONTENT_KEY = `thot:content:${id}`
+}
 
 /**
  * Save content to localStorage with debounce
