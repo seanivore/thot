@@ -38,7 +38,7 @@ This track handles fundamental text editor expectations and file management.
 
 This track eliminates the insanely complex current system (styleTags + HighlightStyle + extra Views) and replaces it with a fully-owned, simplified pattern-matching engine priority list.
 
-#### 1. Scope Definitions ([src/scopes.ts](file:///Users/seanivore/Development/thot/src/scopes.ts))
+#### 1. Scope Definitions ([`src/scopes.ts`](/src/scopes.ts))
 - **Confirmed Spec**: We will create a single source of truth mapping Lezer node names directly to styling objects (e.g. `StrongEmphasis: { color: colors.bold, fontWeight: '800' }`).
 - **Plain Text Support**: We will include a `PLAIN_TEXT_SCOPES` array (`{ pattern: /regex/, style: ... }`) evaluated through standard Regex matching on visible ranges.
 
@@ -68,6 +68,6 @@ This track handles building a Dual-Mode visual formatting capability so users ca
 
 Because these are major architectural and UX changes, automation is limited. All tracks will be manually verified aggressively before getting merged into the master `v3-rainbow-moat`.
 
-- **Usability**: Confirm [.md](file:///Users/seanivore/Development/thot/docs/THOT_APP.md) files can be loaded/saved interchangeably on iOS Safari and Desktop Chrome; verify auto-bracket pairs wrap selections correctly.
+- **Usability**: Confirm [`THOT_APP.md`](/docs/THOT_APP.md) files can be loaded/saved interchangeably on iOS Safari and Desktop Chrome; verify auto-bracket pairs wrap selections correctly.
 - **Highlighting**: Verify nested scopes (`**bold *italic inside***`) render correctly; verify list markers get marker colors independently of list body colors.
 - **Formatting**: Verify applying Bold from the tooltip injects `**` under the hood; execute the notation visibility toggle and confirm `**` characters hide flawlessly and do not interfere with the cursor's ability to delete.
