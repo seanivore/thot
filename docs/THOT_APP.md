@@ -1,9 +1,9 @@
 # Thot — Project Reference
 `thots.august.style`
 
-**Last Updated**: 2026-03-02
-**Version**: v3.1.0
-**Status**: Active development on `dev` branch
+**Last Updated**: 2026-04-25
+**Version**: v3.1.2
+**Status**: Production deployed. Next planned work: v3.2.0 URLs & Anchors.
 
 ---
 
@@ -61,20 +61,38 @@
 
 ## Recent Changes
 
-### 2026-03-02 — v3.1.0: Usability & Autocorrect Engine
+### 2026-03-03 — v3.1.2: Single Persistent Main Draftpad
+
+* **Persistence model finalized**
+  - On first load with no `?id=` URL parameter, the bootloader sets `?id=main` via `history.replaceState()` and uses `localStorage` key `thot:content:main`
+  - Legacy data (old `thot:content` without partition) is silently migrated into `thot:content:main` on first boot, then the legacy key is deleted
+  - **CMD+N** opens an ephemeral temp window with `?id=temp-xyz123` (random 6-char). Temp windows do not collide with `main` and closing them doesn't affect the main pad
+  - Implementation in `src/main.ts` (bootloader) and `src/file-system.ts:newWindow()`
+
+* **Why this design**: v3.1.1's full multi-window URL partitioning approach broke on macOS Safari, which strips dynamic PWA launch parameters and forces the manifest's base `/` URL on every restart — the bootloader generated infinite new IDs instead of restoring previous windows. The single-`main` default solves this; the partition mechanism is preserved for ephemeral temp windows.
+
+### 2026-03-02 — v3.1.0/v3.1.1: Usability + Autocorrect Engine + Multi-Window Substrate
 
 * **Native usability enhancements**
   - Enabled browser spellcheck via `spellcheck: "true"`
   - Integrated `@codemirror/autocomplete` for `closeBrackets()` paired delimiters
-  - Added baseline File System abstraction for multi-window saving
+  - Added File System abstraction (`openFile`, `saveFileAs`, `shareDocument`)
   - Polished mobile spacing (bottom 30vh padding, line number fix, share button)
 
-* **Custom Autocorrect Engine**
-  - Overcame iOS/macOS Safari contenteditable limitations by building a robust `TransactionFilter` auto-correct engine
-  - Employs a local dictionary mapped with common typos and markdown symbols (`:moon:` -> `☽`)
-  - Tracks user corrections via a bespoke `StateField` to enable seamless `Backspace` undo without re-triggering
-  - Detects semantic context using CodeMirror's `syntaxTree` to safely abort autocorrect operations inside of `InlineCode`, `FencedCode`, and `URL`/`Link` nodes
-  - Applies dynamic sentence Auto-Capitalization
+* **Custom Autocorrect Engine** (verified live behaviors per `docs/archive/v3/v3_1_FEEDBACK_2.md`)
+  - Built on a `TransactionFilter` plus an async `EditorView.updateListener` that dispatches corrections as separate history events labeled `userEvent: "autocorrect"`, restoring native CMD+Z behavior
+  - Local dictionary maps common typos and markdown symbols (`:moon:` → `☽`)
+  - Tracks user corrections via a `StateField` so:
+    - Immediate Backspace on the trigger char reverts the correction *and* ignores the next attempt
+    - CMD+Z undoes the correction but keeps the trigger character
+    - Deleting the corrected word and retyping does not re-trigger
+    - Deleting an autocorrect-added character ignores subsequent triggers
+  - Suppressed inside `InlineCode`, `FencedCode`, `URL`, and `Link` nodes (detected via `syntaxTree` resolution)
+  - Auto-Capitalization on sentence starts
+
+* **Multi-window substrate** (v3.1.1, repurposed in v3.1.2)
+  - `setPersistenceId(id)` and `setStateId(id)` partition `localStorage` keys per window
+  - Originally for full multi-window isolation; now supports the `main` default + temp window pattern
 
 ### 2026-02-13 — v2.1.4: Context-Dependent Marker Fix
 
@@ -197,10 +215,15 @@
 * **Save flow**
 
   ```
+  Bootloader → resolves windowId from ?id= URL param (default 'main')
+            → setPersistenceId(windowId) configures key 'thot:content:<id>'
+            → setStateId(windowId) configures key 'thot:state:<id>'
+
   User types → onChange callback → saveContent() (500ms debounce) → localStorage
   User closes tab → beforeunload → forceSave() (immediate) → localStorage
   User switches tab → visibilitychange → forceSave() (immediate) → localStorage
   User presses CMD+S → keymap intercept → forceSave() (immediate) → localStorage
+  User presses CMD+N → file-system.newWindow() → opens ?id=temp-xyz (ephemeral)
   ```
 
 ---
@@ -335,13 +358,21 @@
   + Handles bullets (`- `), numbers (`1. `), blockquotes (`> `), and plain whitespace
 
 **`src/persistence.ts`** — Content storage
-  + `saveContent()` — debounced (500ms) write to `localStorage` key `thot:content`
+  + `setPersistenceId(id)` — configures the storage key as `thot:content:<id>`
+  + `saveContent()` — debounced (500ms) write to the configured key
   + `loadContent()` — synchronous read
   + `forceSave()` — immediate write (for beforeunload, CMD+S)
 
 **`src/state.ts`** — Editor state storage
-  + Saves/loads cursor position and scroll offset to `localStorage` key `thot:state`
+  + `setStateId(id)` — configures the storage key as `thot:state:<id>`
+  + Saves/loads cursor position and scroll offset to the configured key
   + Same debounce/force pattern as persistence
+
+**`src/file-system.ts`** — File operations + window spawning
+  + `openFile()` — File System Access API where supported, falls back to `<input type="file">` for Safari/iOS
+  + `saveFileAs()` — `showSaveFilePicker` with download fallback
+  + `newWindow()` — opens a new tab at `?id=temp-<random>` for ephemeral scratch
+  + `shareDocument()` — `navigator.share` for PWA share sheet
 
 ---
 
@@ -531,10 +562,14 @@ git push origin dev
 
 ### localStorage Keys
 
-| Key            | Contents                         |
-| -------------- | -------------------------------- |
-| `thot:content` | The markdown document text       |
-| `thot:state`   | JSON: `{ cursorPos, scrollTop }` |
+| Key                       | Contents                         |
+| ------------------------- | -------------------------------- |
+| `thot:content:main`       | Main draftpad markdown text      |
+| `thot:state:main`         | Main draftpad `{ cursorPos, scrollTop }` |
+| `thot:content:temp-<id>`  | Ephemeral temp-window text       |
+| `thot:state:temp-<id>`    | Ephemeral temp-window state      |
+
+Keys are partitioned by window ID. The default ID is `main` (set on first load if no `?id=` URL parameter). CMD+N spawns a window with `?id=temp-<random>` for ephemeral use.
 
 ### Dependencies
 
@@ -620,6 +655,12 @@ Font weights and styles are set in the `HighlightStyle.define()` array in `src/t
 - **Color Reference (single source of truth)**: `src/highlight-tags.ts`
 - **Archived Color Reference**: `docs/archive/v2/old-highlight-theme-references.ts`
 - **v1 Challenges**: `docs/archive/v1/OvercomeChallenges.md`
+
+---
+
+**Most recent state snapshot**: `docs/archive/v4/v3_1_2_CURRENT_STATE.md` — read this for the canonical "where we are right now" view, including what's spec-only vs. shipped, the tag/branch state, and open product questions.
+
+**Versioning convention**: `.agent/UPDATE_DEV_RULES.md` (rewrite ready to drop into `.agent/DEV_RULES.md`) — defines version semantics, filename rules, tag format, and file lifecycle.
 
 ---
 *This is the single source of truth for Thot development. Update it when making non-trivial changes.*
