@@ -1,182 +1,299 @@
 # Development Protocols
 
-**Updated**: 2026-04-25
-**Version**: v3.0.0
-
-**Purpose**: Standardized development workflow for parallel feature development across any project.
-**Use**: Copy to new projects in `_git_init/` directory. Sync updates with `frdoc` (see § *Syncing This Document*).
-
----
-
-## How to Use This Document
-
-These protocols work because the agents follow them — and because they *maintain* them. When you notice a project's organization, labeling, file naming, version-string format, or any other protocol aspect drifting from these standards, that is not just an observation. It is work to be done.
-
-### Default behavior on protocol drift
-
-- **A plan is active and the drift is in scope** — add the cleanup to the plan and complete it as part of the task.
-- **A plan is active but the drift is out of scope** — surface it to the human ("I noticed `X` is inconsistent with §Y — fold into scope, defer, or skip?"). Let the human decide.
-- **No plan is active** — raise it directly. You don't need permission to fix it, but flag it before you start, so the human can confirm it wasn't intentional and that token budget allows the cleanup.
-
-### What this is NOT
-
-- The human will not police your adherence to these protocols. Your work is not reviewed for compliance after the fact.
-- Drift that you don't act on becomes drift the human inherits. The human has delegated this maintenance to you precisely so they can focus on strategy and creative work.
-- "I'll mention it later" or "the user will catch it" is not acceptable. By the time it surfaces, the cleanup costs more.
-
-### What this looks like in practice
-
-- Filenames using dots instead of underscores → flag, fix in the current commit if cheap.
-- An archive doc still in `docs/plans/` after its version shipped → flag and migrate to `docs/archive/v{X}/`.
-- Tags with `-suffix` style hanging around when convention is clean numeric → flag and add a clean tag pointing at the same commit.
-- Two sections of a doc covering the same content → flag and consolidate.
-- A protocol step in this very document that has gone stale → propose an update; flag the inconsistency in the human's working copy.
-
-You are responsible for protocol quality at the moment you encounter it. The human is responsible for the strategic and creative work that the protocols exist to protect.
+**Version**: 3.1.0
+**Last Updated**: 2026-04-25
+**Purpose**: Inform agents on our standardized project structure, documentation and development workflows.
+**Syncing**: Sync any updates to all `.agent/DEV_RULES.md` files using `frdoc` (see § *Syncing This Document*).
 
 ---
 
-## Core Philosophy
+## How This Works
 
-**Why This Matters**: LLMs often presume knowledge they don't have. Proper research upfront prevents wasted time debugging issues that could have been avoided with better planning.
+These protocols work because (1) **agents follow these standards** and (2) **agents maintain project directories according to them**, and (3) **agents support each other by taking initiative to correct inconsistencies and drift** from these standards. Your support for each other makes all of us a more effective team.
 
-**Core Principle**: Projects start with research and planning to the point of an exclusively executable implementation plan. No guessing, no "we'll figure it out when we get there."
+### Correcting Issues
+
+If you encounter inconsistencies, drift, or other issues that violate these protocols, you must take action to correct them. If you are:
+
+  A. Creating or executing a plan — integrate drift cleanup into your plan, making sure it is present when human reviews the plan.
+  B. Not working on or creating a plan — flag the issue with human, presuming you'll fix it, but wait for the final approval before doing so.
+
+Do not assume that human knows about the issue, that someone else will fix it, or that you'll be able to come back to it later.
+
+**Your assistance in maintaining these protocols is greatly appreciated.**
 
 ---
 
-## Versioning & Documentation Naming Convention
+## Development Philosophy
+
+**Planning should take 10X longer than implementation** 
+
+The bulk of the work we do is in producing implementation plans, reviewing them, and updating them repeatedly. This is done until the plans are clear and comprehensive enough to be executed without further clarification or research, ensuring implementation is smooth, uneventful, and requires little to no debugging or clarification. 
+
+This requires a focus on:
+
+  - Clear and concise documentation
+  - Thorough research ensuring no assumptions 
+  - Proving all knowledge is up to date 
+  - Breaking down details into actual code
+  - Many instances/eyes on implementation plans finding gaps 
+  - Revision loops, closing gaps until plans are solid 
+
+### Core Principle 
+
+Projects work in a research and planning loop until the implementation plan reached the point we call "EXCLUSIVELY EXECUTABLE". Following the plan to build requires no guessing, looking anything up, or pausing to figure something out; all should be accounted for.
+
+### Why Work This Way 
+
+  * **The Challenge**: LLMs are built in a way that allows them to expect the answer will come when they do the work. You might not realize you don't actually know, or be unaware that your data is out of date. 
+
+  * **The Solution**: This requires moving the finding of solutions out of the implementation development phase and into the planning for development phase. 
+
+  * **Why This Matters**: It is virtually impossible that ever single path has been accounted for in implementation planning, so we must work to minimize instances in advance. This prevents wasted time debugging issues that could have been avoided with better planning.
+
+### Novel Benefits
+
+  * **Parallel Development**: This method allows you to develop the front and back end in parallel. This provides time to iterate on the user-facing design while looking for any background issues or bugs in connecting services. Then in the final path, everything can be wired up. 
+
+  * **Concurrent Documentation**: Documentation is being created for multiple features simultaneously. 
+
+### Using Modern Tools 
+
+Agents can write hundreds of pages of code, even an entire application, in one go taking minutes. This challenges the logic for historic methods of debugging which were created because code was an extremely high-value, labor-intensive asset. 
+
+Agents can "go down the wrong path" when creating code. This means that, while it might feel counter-intuitive or uncomfortable for seasoned developers, whole rewrites of a feature or system may be the best path forward. 
+
+Working on debugging in the old method of find-and-patch creates a myriad of code that wasn't initially expected. This causes issues maintaining accurate documentation. Most significantly, agents have to work in context windows, for which trying to sort through all the various patches becomes a challenge.
+
+---
+
+## Versioning & Naming Conventions
 
 ### 1. Version Number Format
 
-Three-part semantic version: `vMAJOR.MINOR.PATCH` (e.g., `v3.1.2`).
+A standard, three-part semantic version is used: `vMAJOR.MINOR.PATCH` (e.g., `v3.1.2`). This is used throughout the life of the project, versioning both the implementation planning document revisions and then the codebase itself, which picks up where the implementation plan ended. This is so future documentation of feature additions can smoothly continue the flow.
 
-| Position           | Bumps when                                                                | Examples                                            |
-| ------------------ | ------------------------------------------------------------------------- | --------------------------------------------------- |
-| **MAJOR** (first)  | Architectural rewrite, deployment-target change, breaking external change | SwiftUI → Web rewrite; PWA → native shell           |
-| **MINOR** (second) | New feature, capability shift, breaking-but-internal change               | URL/anchor click handling; multi-window persistence |
-| **PATCH** (third)  | Bug fix, doc-only update, micro-tweak that doesn't change feature surface | Single CSS fix; correcting a typo in `THOT_APP.md`  |
+| Position           | Bumps when                                                                |
+| ------------------ | ------------------------------------------------------------------------- |
+| **MAJOR** (first)  | Architectural rewrite, deployment-target change, breaking external change |
+| **MINOR** (second) | New feature, capability shift, breaking-but-internal change               |
+| **PATCH** (third)  | Bug fix, doc-only update, micro-tweak that doesn't change feature surface |
 
 **Bumping a higher position resets lower positions to zero.** `v3.1.5` → next minor is `v3.2.0`, not `v3.2.5`.
 
 A patch bump is justified for docs-only changes when those changes constitute a release artifact (e.g., a state snapshot, a feedback round closing). Trivial commit-message-level doc edits don't need a bump.
 
-### 2. Delimiters — The One Rule That Matters
+Examples: 
 
-| Where                                                   | Delimiter        | Example                        |
-| ------------------------------------------------------- | ---------------- | ------------------------------ |
-| Version strings (prose, headers, package.json, READMEs) | `.` (dot)        | `v3.1.2`                       |
-| Git tags                                                | `.` (dot)        | `git tag v3.1.2`               |
-| Commit messages                                         | `.` (dot)        | `fix(persistence): … [v3.1.2]` |
-| **Filenames only**                                      | `_` (underscore) | `v3_1_2_IMPLEMENT.md`          |
+  * **Major**: SwiftUI → Web rewrite; PWA → native shell
+  * **Minor**: URL/anchor click handling; multi-window persistence
+  * **Patch**: Single CSS fix; correcting a typo in `THOT_APP.md`
 
-**Why filenames are different**: Dots in filenames have caused git/tooling issues historically. Underscores are the necessary exception, and *only* in filenames.
+### 2. Writing Version Delimiters
 
-### 3. Git Tags — Clean Numeric Only
+**Important**: Filenames are the only place that use underscores. Dots in filenames have caused git/tooling issues historically. Underscores are the necessary exception, and *only* in filenames.
 
-**Tags are pure version numbers. No suffixes.**
+| Where                                                   | Delimiter        | Example                      |
+| ------------------------------------------------------- | ---------------- | ---------------------------- |
+| Version strings (prose, headers, package.json, READMEs) | `.` (dot)        | `v3.1.2`                     |
+| Git tags                                                | `.` (dot)        | `git tag v3.1.2`             |
+| Commit messages                                         | `.` (dot)        | `fix(persistence): [v3.1.2]` |
+| **Filenames only**                                      | `_` (underscore) | `v3_1_2_IMPLEMENT.md`        |
 
-✅ `v3.1.2`
-❌ `v3.1.2-single-draftpad`
-❌ `v3.1.2-fix`
+### 3. Git Tags
+
+**Git tags use pure version numbers only. No suffixes. No extra labels for context.**
+
+  - ✅ `v3.1.2`
+  - ❌ `v3.1.2-single-draftpad`
+  - ❌ `v3.1.2-fix`
 
 Human-readable release labels go in:
 
-- The **commit message body** (`feat: … [v3.1.2]\n\nSingle persistent main draftpad fallback`)
-- The **GitHub Release** description (created from the tag, optional)
+  - The **commit message body** (`feat: … [v3.1.2]\n\nSingle persistent main draftpad fallback`)
+  - The **GitHub Release** description (created from the tag, optional)
 
-If a tag needs to be re-pointed (a release was retracted and re-issued at a new commit), delete the old tag and recreate it at the new commit. Never create `v3.1.2-v2` or similar.
+**Important**: If a tag needs to be re-pointed (a release was retracted and re-issued at a new commit), **never create `v3.1.2-v2` or similar**. Instead, delete the old tag and recreate it at the new commit.
 
-### 4. Directory Structure (canonical)
+### 4. Canonical Directory Structure
+
+All planning documentation is created, updated, and remains forever in the `docs/archive`. The active feature plans or current and up-to-date implementation plan will always be the highest numbered version in the `docs/archive/vX_X` directory. This minimizes future document shuffling breaking any internal or external links to implementation plans, referenced paths, etc. 
+
+**MUST have one subdirectory per MINOR versions, created based on needs and quantity of documents and revisions.** 
+
+```plaintext
+docs/
+├── archive/
+│   ├── images/                ← screenshots, diagrams (project-wide)
+│   ├── resources/             ← reference, like tech docs used in a planning session
+│   ├── v1_0/                  ← all v1.0.x artifacts
+│   ├── v1_1/                  ← all v1.1.x artifacts
+│   ├── v2_0/                  ← all v2.0.x artifacts
+│   ├── v2_1/                  ← all v2.1.x artifacts
+│   ├── v2_2/                  ← all v2.2.x artifacts
+│   ├── v2_3/                  ← all v2.3.x artifacts
+│   └── v3_0/                  ← all v3.0.x artifacts
+├── research/                  ← (optional) only if active research is required — see Non-Archive Doc Directories below
+├── planning/                  ← (optional) only if active non-implementation planning is required — see Non-Archive Doc Directories below
+├── UPDATE_MAP.md              ← strategic roadmap (high-level only)
+└── PROJECT_NAME.md            ← master architecture/state doc (living)
+```
+**Note**: The `docs/` path is canonical. Older drafts that referenced `assets/docs/` were inaccurate to actual repo structure.
+
+#### Non-Archive Doc Directories
+
+Only create `docs/research` or `docs/planning` if there is active, ongoing research or planning that the project requires. This is common, for example, when creating a business plan that requires data on market positioning, competition, etc. They should be maintained, moving older versions to `docs/archive/` as new versions are created as research is consolidated and redrafted into final documents. In these cases you might also need additional directories such as `docs/presentations`. In all cases, these additional directories should be archived and emptied of contents when they are no longer needed, moving the final results of those directories to more prominent, permanent locations, such as `docs/BUSINESS_PLAN.md` or for creative work for a client, `docs/BRAND.md`. Any documents containing things like API details or technical information for services that were pulled to inform the creation of implementation planning, should move to `docs/archive/resources/` and remain there. Otherwise, these directories need not exist.
+
+#### Root Doc Files
+
+The `docs/UPDATE_MAP.md` document is important when it is necessary for agents working on the project to see where the project is headed, so that we can build accordingly, setting ourselves up for success along the way, rather than having to double back and make larger changes in the future. 
+
+### 5. Archive File Naming Protocol
+
+The naming pattern below is designed so that a `ls` of any version subdirectory reads like a chronological build log — alphabetical sort *is* the lifecycle flow. See the **Working Chronological Example** below.
+
+#### **HUMAN'S INFORMAL FILES** 
+
+  + Update ideas for new version 
+  + Bug logging details 
+  + Feedback from reviewing previous plan
+  + Feedback for updates from reviewing build 
+
+    - `UPDATE_vX_Y_Z.md` — planning
+    - `FEEDBACK_vX_Y_Z.md` — fixes and planning 
+    - `vX_Y_Z_BUGS.md` — fixes 
+
+#### **AGENT'S FORMAL FILES**
+
+There are exactly three formal agent document types. The mechanics of how they are created and saved during a session are in § *Session Document Handling* below.
+
+  - `vX_Y_Z_DEV_PLANNING.md` — planning
+  - `vX_Y_Z_IMPLEMENT.md` — to execute
+  - `vX_Y_Z_SESSION_DEV.md` — building
+
+The `IMPLEMENT.md` is the master implementation plan — worked on in loops via § *The Gap-Finding Loop* until all gaps are found. There is **one IMPLEMENT.md per version**.
+
+#### Working Chronological Example 
+
+Noted "human" for informal documents and "agent" for formal documents, provided examples of each change or session, and how it relates to the next doc in the timeline as well as which drive version number changes. 
 
 ```
 docs/
-├── PROJECT_NAME.md          ← master architecture/state doc (living)
-├── UPDATE_MAP.md            ← strategic roadmap (high-level only)
-├── plans/                   ← active feature plans (in-flight only)
-│   └── vX_Y_Z_feature.md
 ├── archive/
-│   ├── v1/                  ← all v1.x.y artifacts
-│   ├── v2/                  ← all v2.x.y artifacts
-│   ├── v3/                  ← all v3.x.y artifacts
-│   └── v4/                  ← in-progress + future v4.x.y artifacts
-└── images/                  ← screenshots, diagrams (project-wide)
+│   ├── v3_0/
+│   │   └── UPDATE_v3_0_0.md        # Human intro plan 
+│   ├── v3_1/
+│   │   ├── v3_1_0_DEV_PLANNING.md  # Agent session; research, notable plan change during session drove v3.0.0 -> v3.1.0
+│   │   └── v3_1_0_IMPLEMENT.md     # Agent's resulting implementation guide 
+│   ├── v3_2/
+│   │   ├── FEEDBACK_v3_1_0.md      # Human found implementation plan gaps, drove v3.1.0 -> v3.2.0
+│   │   ├── FEEDBACK_v3_2_0.md      # Human found more, smaller gaps, drove v3.2.0 -> v3.2.1 
+│   │   ├── v3_2_1_DEV_PLANNING.md  # Agent session filling in implementation gaps
+│   │   ├── v3_2_1_IMPLEMENT.md     # Agent's resulting updated implementation guide  
+│   │   ├── v3_2_2_DEV_PLANNING.md  # Agent session; gaps found during session driving v3.2.2 -> v3.2.3
+│   │   ├── v3_2_3_DEV_PLANNING.md  # Agent has another session with small plan changes driving v3.2.3 -> v3.2.4
+│   │   └── v3_2_4_IMPLEMENT.md     # Agent's resulting new implementation guide
+│   ├── v3_3/
+│   │   ├── FEEDBACK_v3_2_4.md      # Human reviewed last plan and made larger build change driving v3.2.4 -> v3.3.0
+│   │   ├── v3_3_0_DEV_PLANNING.md  # Agent session adjusting plan for those changes 
+│   │   ├── v3_3_0_IMPLEMENT.md     # Agent's implementation guide reflecting changes 
+│   │   ├── v3_3_0_SESSION_DEV.md   # Agent session plan executing implementation plan
+│   │   ├── v3_3_1_BUGS.md          # Human reviewed build, found issues, drove v3.3.0 -> v3.3.1
+│   │   ├── v3_3_1_DEV_PLANNING.md  # Agent session finding bug fixes 
+│   │   └── v3_3_1_SESSION_DEV.md   # Agent session plan executing bug fixes
+│   └── v4_0/
+│       ├── FEEDBACK_v3_3_1.md      # Human has notable feature updates driving v3.3.1 -> v4.0.0
+│       ├── v4_0_0_DEV_PLANNING.md  # Agent session researching to create new plan 
+│       ├── v4_0_1_DEV_PLANNING.md  # Agent session auditing plan, small issues updated drove v4.0.0 -> v4.0.1
+│       ├── v4_0_2_DEV_PLANNING.md  # Agent session fixing more audit issues, drove v4.0.1 -> v4.0.2 
+│       └── v4_0_2_IMPLEMENT.md     # Agent updated implementation plan, ready for next session 
+├── BRAND.md                        # Voice, palette, etc. for branding 
+└── PROJECT_NAME.md                 # Master architecture, context primer, general all-purpose document, not an implementation plan
 ```
 
-**One archive subdirectory per MAJOR version.** Per-minor subdirectories (e.g., `archive/v3/v3_1/`) are **optional** — adopt only when a single minor version generates more than ~5 archive files and the directory becomes hard to scan.
+  * **Read the FEEDBACK suffix as "about" not "for"**: 
+    - `FEEDBACK_v3_2_0.md` is feedback about v3.2.0. 
+    - The agent's response lives in a new doc named for the version it updates, e.g. `v3_2_1_DEV_PLANNING.md`. 
 
-The `docs/` path is canonical. Older drafts that referenced `assets/docs/` were inaccurate to actual repo structure.
+  * **If mid-build you discover the `v5_2_0_IMPLEMENT.md` plan is wrong, don't edit it directly**: 
+    - First, write a new `v5_2_1_DEV_PLANNING.md` that responds to the discovery.
+    - Then, create a new IMPLEMENT plan with the version bumped up accordingly, as `v5_2_1_IMPLEMENT.md`. 
 
-### 5. Archive Filenames
+### 6. File Lifecycle (Read the Tree Above)
 
-Two categories: **informal** (human writes these) and **formal** (agent-generated).
+The Working Chronological Example tree in § 5 *is* the lifecycle. Read it top-to-bottom: each file's comment annotates which kind of session produced it and which version-bump it drove. The directory listing under each minor version reads in the order things actually happened.
 
-The version prefix (`v3_1_2_…` or `…_v3_1_2.md`) determines sort order. The chosen pattern below puts formal docs first by version number so a directory `ls` reads like a chronological build log.
-
-**Informal (human's notes)**
-
-| Filename pattern     | Purpose                                                               |
-| -------------------- | --------------------------------------------------------------------- |
-| `UPDATE_v3_2_0.md`   | Idea capture / planning notes for an upcoming version                 |
-| `FEEDBACK_v3_2_0.md` | Feedback **received against v3.2.0** (drives the next patch or minor) |
-| `v3_2_0_BUGS.md`     | Bug list discovered in v3.2.0 (drives v3.2.1)                         |
-
-**Read the FEEDBACK suffix as "about" not "for"**: `FEEDBACK_v3_2_0.md` is *feedback about v3.2.0*. The agent's response lives in a new doc named for the version that *responds* (e.g., `v3_2_1_DEV_PLANNING.md`).
-
-**Formal (agent-generated)**
-
-| Filename pattern         | Purpose                                            | Mutability                                                 |
-| ------------------------ | -------------------------------------------------- | ---------------------------------------------------------- |
-| `v3_2_0_DEV_PLANNING.md` | Research, options, tradeoffs — what could be done  | Mutable until IMPLEMENT is locked                          |
-| `v3_2_0_IMPLEMENT.md`    | The agreed-on executable plan                      | **Frozen at start of build**; updates require a patch bump |
-| `v3_2_0_SESSION_DEV.md`  | Append-only build log (one entry per work session) | Append-only                                                |
-
-**One IMPLEMENT per version.** SESSION_DEV may span multiple agent sessions for the same version.
-
-If mid-build you discover the IMPLEMENT plan is wrong, don't edit it — write a new `v3_2_1_DEV_PLANNING.md` that responds to the discovery, and bump the version when the new plan locks.
-
-### 6. File Lifecycle
-
-```
-Human writes UPDATE_v3_2_0.md or FEEDBACK_v3_1_x.md
-   ↓
-Agent writes v3_2_0_DEV_PLANNING.md  (research, options)
-   ↓
-Plan locks → v3_2_0_IMPLEMENT.md     (frozen, executable)
-   ↓
-Build begins → v3_2_0_SESSION_DEV.md  (append-only log)
-   ↓
-Build complete → tag v3.2.0, push to main
-   ↓
-Bugs surface → v3_2_0_BUGS.md or FEEDBACK_v3_2_0.md
-   ↓
-Next cycle starts as v3.2.1 (patch) or v3.3.0 (minor)
-```
-
-**Nothing is deleted.** Superseded plans stay in the archive as historical record.
+**Nothing is deleted.** Superseded plans stay in the archive as historical record — including the ones that turned out wrong. Future agents need to see the dead ends to understand the live decisions.
 
 ### 7. Master Documents
 
 Three master documents live outside the archive. Each has a single, explicit role.
 
-| Doc                                                       | Role                                                      | Updated when                            |
-| --------------------------------------------------------- | --------------------------------------------------------- | --------------------------------------- |
-| `docs/PROJECT_NAME.md` (e.g., `THOT_APP.md` for Thot)     | Single source of truth for current architecture and state | Every non-trivial change ships          |
-| `docs/UPDATE_MAP.md`                                      | Strategic roadmap — what's next, why, in what order       | When direction shifts (not every patch) |
-| `.agent/DEV_RULES.md`                                     | Rules of engagement — this document                       | When a convention is added or changed   |
+| Doc                    | Role                                             | Updated when                          |
+| ---------------------- | ------------------------------------------------ | ------------------------------------- |
+| `docs/PROJECT_NAME.md` | Single truth source; current states architecture | Every non-trivial change ships        |
+| `docs/UPDATE_MAP.md`   | Strategic roadmap; plan now by knowing future    | Direction shift; milestone finished   |
+| `.agent/DEV_RULES.md`  | Rules of engagement; this document               | When a convention is added or changed |
 
-If a fact is in an archive doc and conflicts with `PROJECT_NAME.md`, **`PROJECT_NAME.md` wins** (it's living; archive is frozen).
+  * If a fact in archive doc, from a **PAST** implementation guide version, conflicts with `PROJECT_NAME.md`, **`PROJECT_NAME.md` wins** (it's living; passed versions in archive are is frozen).
+
+  * If a fact in archive doc, from the **CURRENT VERSION** implementation guide, conflicts with `PROJECT_NAME.md`, **archive doc wins** (The PROJECT_NAME.md was neglected after planning.)
 
 ---
 
-## Git Branching & Merging Protocol
+## Session Document Handling
 
-We use a persistent `dev` branch for ongoing development integration, and `main` is strictly reserved for production-ready, tagged releases.
+The `vX_Y_Z_SESSION_DEV.md` file is not a report you write at the end — it is the live working document you use throughout the session. This makes the protocol resilient to interruption (laptop closes, context fills, agent crashes) and removes an entire category of "the agent forgot to log" failure modes.
+
+### Step 0: Save the Plan
+
+The first action of every execution session is to copy the human-approved plan into the archive at the proper version path:
+
+  - `docs/archive/vX_Y/vX_Y_Z_SESSION_DEV.md` — for build/execution sessions
+  - `docs/archive/vX_Y/vX_Y_Z_DEV_PLANNING.md` — for planning/research sessions
+
+This is the agent's job, not the human's. The human approving a plan in the terminal should not also have to find the file path, copy markdown, rename, and place it — that step gets skipped, and the plan is lost.
+
+For Claude Code, the plan is at `~/.claude/plans/<auto-generated-name>.md` after `ExitPlanMode` is approved. Copy it. Rename it. Move it.
+
+### During the Session
+
+  - Mark checkboxes in `SESSION_DEV.md` as work completes — **as it happens**, not at the end.
+  - If something unexpected comes up that changes the plan, note it inline at that step.
+  - If a step turns out wrong and a new plan is needed, **stop and write a new `vX_Y_Z+1_DEV_PLANNING.md`**. Don't edit the IMPLEMENT.md silently mid-build.
+
+### Footer Sections (Added at Session End)
+
+Append these sections to the bottom of `SESSION_DEV.md` before closing the session:
+
+  - **`## Session Notes`** — anything unexpected, undocumented surprises, or things that ought to be in `PROJECT_NAME.md` or `IMPLEMENT.md` but weren't.
+  - **`## Picked Up From / Stopped At`** — exact resumption pointer for the next session. File:line, branch state, what's tested vs untested.
+  - **`## Open Threads For Next Session`** — questions, deferred work, things the human or next agent needs to act on.
+
+These footers replace what other systems call "post-session walkthroughs" or "completion reports." Keeping them inline at the bottom of `SESSION_DEV.md` means everything for that session lives in one file, in the right place, automatically.
+
+### Non-Claude-Code Agents
+
+Every agentic system that produces a plan document follows the same convention:
+
+  - Save the approved plan to the proper archive path with the proper name (`vX_Y_Z_SESSION_DEV.md` or `vX_Y_Z_DEV_PLANNING.md`) as step zero.
+  - Append walkthrough / post-session content to the bottom of `SESSION_DEV.md` as the footer sections above — never as a separate file.
+
+Anti-Gravity's "Walkthrough" maps to `## Session Notes`. Cursor's session output maps the same way. If your tool produces something this convention doesn't anticipate, ask — don't invent a parallel filing system.
+
+---
+
+## Git Branching Merging Protocol
+
+We use a persistent `dev` branch for ongoing development integration, testing, and debugging.
+
+We use `main` branch as strictly reserved for **production-ready, tagged releases**, that were **tested, are bug-free**, and ready for the **public to download** the application and use the digital product.
 
 ### Branch Structure
 
-- `main` — Production-ready code only. No direct commits; only fast-forward merges from stable releases.
-- `dev` — The primary integration branch for all ongoing development.
-- `feat/*` or `fix/*` — Temporary branches for specific features or bugfixes. Deleted after merge.
+  - `main` — Production-ready code only. No direct commits; only fast-forward merges from stable releases.
+  - `dev` — The primary integration branch for all ongoing development.
+  - `feat/*` or `fix/*` — Temporary branches for specific features or bugfixes. Deleted after merge.
 
 ### 0. Initializing a New Project
 
@@ -205,9 +322,17 @@ git pull origin main
 git checkout -b feat/your-feature-name
 ```
 
-### 2. Update Ready To Ship (Merging to Main)
+### 2. Ready To Ship Updates Merged To Main
 
-When a feature is tested and ready to go live, use this 5-step process to keep tags and remote repositories perfectly synced. **Tag is clean numeric only** — no suffixes (see § *Versioning § 3*):
+#### Pre-flight checklist (before any of the steps below)
+
+  1. All tests passing.
+  2. `docs/PROJECT_NAME.md` reflects current architecture (per § *Master Documents*).
+  3. `vX_Y_Z_SESSION_DEV.md` complete with footer sections (per § *Session Document Handling*).
+  4. Version bumped in `package.json` if applicable.
+  5. Build succeeds (`npm run build` or equivalent).
+
+When the checklist is clean and the feature is tested, use this 5-step process to keep tags and remote repositories perfectly synced. **Tag is clean numeric only** — no suffixes (see § *Versioning § 3*):
 
 ```bash
 # 1. Move to the production branch
@@ -240,130 +365,214 @@ git push origin dev
 
 ## Exclusively Executable Implementation Plans
 
+Details from our **development philosophy**.
+
 ### Requirements for Every Update Document
 
 #### 1. Research Phase Complete
 
-- All APIs/libraries documented with current best practices
-- Browser/platform compatibility confirmed
-- Performance implications understood
-- Alternative approaches evaluated
-- **Critical**: Don't presume you know how something works — verify with documentation
+  - All APIs/libraries documented with current best practices
+  - Always find API documentation that is current; tech is moving faster than ever
+  - Browser/platform compatibility confirmed
+  - Performance implications understood
+  - Alternative approaches evaluated
+  - **Critical**: Don't presume you know how something works; verify with documentation and show proof in document 
 
 #### 2. Architecture Decisions Documented
 
-- Why this approach over alternatives
-- What trade-offs were made
-- What constraints influenced the decision
-- Future extensibility considerations
+  - Why this approach over alternatives
+  - What trade-offs were made
+  - What constraints influenced the decision
+  - Future update map considerations: work smarter not harder, this isn't a race
 
 #### 3. Implementation Details Specified
 
-- Exact file changes needed
-- Dependencies to add (with specific versions)
-- Configuration changes required
-- Test cases defined
-- Edge cases identified
+  - Exact file changes needed 
+  - Use production ready code snippets, NEVER PLACEHOLDERS, we have no hygiene policy 
+  - Dependencies to add with their specific versions
+  - Configuration changes required are finely detailed 
+  - Test cases defined, planned, documented 
+  - Edge cases identified, planned, documented 
 
 #### 4. Common Pitfalls Identified
 
-- Known issues with this approach
-- Edge cases to handle
-- Rollback strategy if needed
-- Performance considerations
+  - Known issues with this approach
+  - Edge cases to handle
+  - Rollback strategy if needed
+  - Performance considerations
+  - Write what a new instance with no context must know 
+  - What might you have changed if you didn't know how development progressed 
+
+### The Gap-Finding Loop
+
+The point of "Exclusively Executable" is that the plan can be built without further clarification. The only way to *know* it's there is to have many cold sets of eyes try to find gaps before any code is written.
+
+This is the operational layer of the *Planning takes 10× implementation* philosophy. Without it, the philosophy stays aspirational and agents revert to "this seems fine, let me code." With it, the philosophy becomes a process.
+
+#### Process
+
+  1. **Orchestrator** (the Claude instance you're working with directly) drafts initial `vX_Y_Z_DEV_PLANNING.md` and a draft `vX_Y_Z_IMPLEMENT.md`.
+
+  2. Orchestrator spawns review subagents in alternating modes:
+
+     - **Steered review** — orchestrator picks 3–5 categories specific to the project type (examples: "auth flow edge cases, payment failure modes, schema migration safety, file-system permission boundaries"). The subagent receives the plan plus those categories and reports gaps within them.
+     - **Cold review** — subagent receives the plan with no categories, only the instruction *"find every gap, ambiguity, contradiction, or unverified claim."* The cold reviewer often finds things the steered ones miss.
+
+     **Why both:** Steered reviews go deep on known risk areas. Cold reviews catch the unknown unknowns. We have observed non-Claude reviewers (e.g., a human's ChatGPT instance during product planning) catch significant gaps that focused passes had glossed over. Both kinds of pass have value.
+
+  3. Orchestrator integrates real findings into a new `vX_Y_Z+1_DEV_PLANNING.md`, documenting which gaps were addressed and how (architectural decisions, research conducted, scope changes).
+
+  4. Repeat — alternate steered and cold passes, **fresh subagent each pass** (no context contamination from prior reviewers).
+
+  5. **Stop conditions** (any one):
+     - Two consecutive passes return only nitpicks (define "nitpick" as: orchestrator can resolve without research).
+     - An architecture-level decision surfaces — pause, surface to human, wait for direction.
+     - Token / time budget reached — pause, ask human whether to continue.
+
+  6. Human reviews architecture decisions and approves the final `vX_Y_Z_IMPLEMENT.md` before any code is written.
+
+#### Why Fresh Subagents Matter
+
+A reviewer who has already seen draft v1 of the plan unconsciously fills in gaps from memory rather than catching them. The cold-read reaction is the reviewer's whole value. **Always spawn a new instance per pass.**
+
+#### Orchestrator's Role During Loops
+
+Maintain context. The orchestrator is the one who notices when a reviewer's "gap" is actually an architecture-level decision masquerading as a detail (and therefore needs human input, not more research). The orchestrator also prevents *plan drift* — fresh reviewers don't know what the plan was for, only what it says, so they sometimes propose changes that subtly reshape the architecture. Steer them back, or surface to human.
 
 ### Template Structure
 
+The template below is intentionally lean. Reference content does **not** live in `IMPLEMENT.md` — it lives in `docs/PROJECT_NAME.md` (architecture, glossary, current state) and `docs/archive/resources/` (API specs, schemas, integration docs pulled from external sources during planning). 
+
+This is a deliberate forcing function: by sending the reader *out* of `IMPLEMENT.md` for context, we keep `PROJECT_NAME.md` honest and updated.
+
 ```markdown
-# [Feature Name] Implementation Plan
+# v[X.Y.Z] Implementation Plan
 
-## Research Summary
-[What we learned, what APIs/libraries we'll use, why]
+**Feature**: [name]
+**Date**: [start date]
+**Branches**: [feat/fix branch names]
+**Required reading first**:
+  - `docs/PROJECT_NAME.md`
+  - `README.md`
+  - [other archive/resources/* docs as applicable]
 
-## Architecture Decision
-[Approach chosen, alternatives considered, trade-offs]
+**Architecture decisions made in planning**: link to the `vX_Y_Z_DEV_PLANNING.md` rounds that produced this plan.
 
-## Implementation Steps
-[Detailed, sequential steps with file paths]
+**If you find missing context as you read this**: `PROJECT_NAME.md` is meant to be living. Confirm with the human and update it; don't paper over the gap inside this document.
 
-## Testing Strategy
-[How to verify it works]
+---
 
-## Rollback Plan
-[How to undo if it breaks]
+## Pre-flight Checklist
+[Things that must be true before starting — env vars set, branch cut, deps installed, services up]
+
+## Phase 0: Setup
+[Concrete commands and file changes]
+
+## Phase 1: [first executable chunk]
+[Step-by-step. Each step file:line specific. Code snippets are production-ready, no placeholders.]
+
+## Phase 2: [second executable chunk]
+[…]
+
+## Phase N: [final integration / wire-up]
+
+## Verification
+[How to confirm each phase worked — end-to-end and per-phase]
+
+## Rollback
+[Per-phase rollback strategy]
+
+---
+
+## Cross-references — NOT IN THIS DOC, find here:
+
+- Tech stack summary, glossary, architecture diagrams → `docs/PROJECT_NAME.md`
+- API schemas, integration docs, third-party service references → `docs/archive/resources/`
+- Branch / merge / tag protocol → `.agent/DEV_RULES.md` § Git Branching
+- Versioning, file naming → `.agent/DEV_RULES.md` § Versioning & Naming Conventions
+- Session document handling → `.agent/DEV_RULES.md` § Session Document Handling
 ```
+
+If you find yourself wanting to embed a tech-stack summary, schema, or glossary in `IMPLEMENT.md` because "the reader will want it here" — they will, but the right move is to put it in `PROJECT_NAME.md` and link to it. That keeps the system honest.
 
 ---
 
 ## Context Management Strategy
 
-**Problem**: Agents working on specific features don't need the entire roadmap in their context — it's noise and wastes tokens.
+**Problem**: Agents working on specific features don't need the entire roadmap in their context because it's noise and wastes tokens. This is why we create exclusively executable implementation plans; it avoids any need to attempt to understand the build in entirety. That happens during planning only.
 
 **Solution**:
 
-1. High-level roadmap stays in `docs/UPDATE_MAP.md`.
-2. Feature-specific plans go in `docs/plans/vX_Y_Z_feature_name.md` while in flight.
-3. Agent instructions: *"Read `docs/plans/vX_Y_Z_feature_name.md` for your task. Do NOT read UPDATE_MAP.md."*
-4. After completion: update roadmap with status, archive the plan to `docs/archive/v{X}/` (see § *Versioning § 4* for the canonical directory layout).
+  1. One single implementation plan exists, saved by version number in `docs/archive/vX_X/vX_Y_Z_IMPLEMENT.md`.
+  2. In-flight work happens in `docs/archive/vX_X/vX_Y_Z_SESSION_DEV.md` (see § *Session Document Handling* for the full mechanics).
+  3. Agent should read the master architecture document at `docs/PROJECT_NAME.md` and the project `README.md`.
+  4. Agent does not need to read anything else unless referenced in their `IMPLEMENT.md` or in-flight `SESSION_DEV.md`.
+  5. **Do NOT read `UPDATE_MAP.md`**: this is too much information that is COMPLETELY unnecessary, already accounted for in the `IMPLEMENT.md`.
+  6. Mark off checkboxes on the in-flight `SESSION_DEV.md` plan as work is completed (see § *Session Document Handling* for footer protocol).
+  7. After completion create detailed `commit` messages.
+     - These should encompass the same grouping and wording as on the implementation guide used.
+     - This ensures that we can look back and easily find and fix any bugs or necessary changes.
 
 ---
 
 ## Parallel Development Workflow
 
-### How Companies Do This (and How We Can)
+### Enterprise Company Best Practices 
+
+This is how they do it and how we can too. This section is for context only; it does not need to be memorized, it should be used when creating implementation plans, where the actual parallel tracks need to be clearly defined. 
 
 **1. Multiple Agents on Different Branches Simultaneously**
 
-- Agent A: `feat/paired-delimiters` (v3.0.0)
-- Agent B: `feat/file-operations` (v3.0.0)
-- Agent C: `research/custom-highlighter` (future)
+  - Agent A: `feat/paired-delimiters` (v3.0.0)
+  - Agent B: `feat/file-operations` (v3.0.0)
+  - Agent C: `research/custom-highlighter` (future)
 
 **2. Merge Conflict Prevention**
 
 Before starting parallel work:
 
-1. List all files each feature will modify.
-2. Check for overlaps.
-3. If overlap exists, sequence the work or refactor to separate concerns.
+  1. List all files each feature will modify.
+  2. Check for overlaps.
+  3. If overlap exists, sequence the work or refactor to separate concerns.
 
-Example:
-- Feature A modifies `src/editor.ts` (keymap section)
-- Feature B modifies `src/editor.ts` (extensions array)
-- Decision: Merge A first, B rebases and adds changes.
+  Example:
+  - Feature A modifies `src/editor.ts` (keymap section)
+  - Feature B modifies `src/editor.ts` (extensions array)
+  - Decision: Merge A first, B rebases and adds changes.
 
 **3. Integration Protocol**
 
-1. Complete feature A, merge to `dev`.
-2. Feature B rebases on updated `dev`.
-3. Resolve conflicts (should be minimal if planned well).
-4. Run full test suite after each merge.
-5. Update roadmap with completion status.
+  1. Complete feature A, merge to `dev`.
+  2. Feature B rebases on updated `dev`.
+  3. Resolve conflicts (should be minimal if planned well).
+  4. Run full test suite after each merge.
+  5. Update roadmap with completion status.
 
 **4. Detailed Change Logs**
 
-Each agent creates `docs/archive/vX/vX_Y_Z_SESSION_DEV.md` documenting:
+Each agent's `vX_Y_Z_SESSION_DEV.md` documents:
 
-- What changed (file-by-file)
-- Why it changed
-- Git diff confirmation
-- Test results
-- Any unexpected discoveries
+  - What changed (file-by-file)
+  - Why it changed
+  - Git diff confirmation
+  - Test results
+  - Any unexpected discoveries
 
 ### Best Practices
 
 **During parallel work:**
 
-- Each agent maintains a detailed change log.
-- Test in isolation on the feature branch.
-- Document any unexpected discoveries.
-- Don't merge until fully tested.
+  - Each agent maintains a detailed change log.
+  - Test in isolation on the feature branch.
+  - Document any unexpected discoveries.
+  - Don't merge until fully tested.
 
 **Merging finished updates:**
 
-- Merge in order of completion.
-- Second feature rebases before merging.
-- Confirm no regressions.
-- Update documentation.
+  - Merge in order of completion.
+  - Second feature rebases before merging.
+  - Confirm no regressions.
+  - Update documentation.
 
 ---
 
@@ -371,55 +580,58 @@ Each agent creates `docs/archive/vX/vX_Y_Z_SESSION_DEV.md` documenting:
 
 Every agent working on an update must:
 
-1. **Start with research** (even if it seems simple)
-   - Read official documentation
-   - Check current best practices
-   - Verify browser/platform compatibility
-   - Don't rely on training data alone
+  1. **Start with research** (even if it seems simple)
+     - Read official documentation
+     - Check current best practices
+     - Verify browser/platform compatibility
+     - Don't rely on training data alone
 
-2. **Document assumptions** and verify them
-   - "I assume X works this way" → verify with docs
-   - "This should be compatible with Y" → test it
-   - "Performance should be fine" → measure it
+  2. **Document assumptions** and verify them
+     - "I assume X works this way" → verify with docs
+     - "This should be compatible with Y" → test it
+     - "Performance should be fine" → measure it
 
-3. **Create before/after examples** for testing
-   - What should work before the change
-   - What should work after the change
-   - Edge cases to test
+  3. **Create before/after examples** for testing
+     - What should work before the change
+     - What should work after the change
+     - Edge cases to test
 
-4. **Confirm changes via git diff** before marking complete
-   - Review every changed line
-   - Verify no unintended changes
-   - Check for debug code or comments left behind
+  4. **Confirm changes via `git diff`** before marking complete
+     - Review every changed line
+     - Verify no unintended changes
+     - Check for debug code or comments left behind
 
-5. **Update master technical doc** if architecture changes
-   - Keep `docs/PROJECT_NAME.md` current
-   - Document new patterns or conventions
-   - Update architecture diagrams if needed
+  5. **Update master architecture doc** if architecture changes
+     - Keep `docs/PROJECT_NAME.md` current
+     - Document new patterns or conventions
+     - Update architecture diagrams if needed
 
-6. **Create archive document** in `docs/archive/v{X}/`
-   - Full change log
-   - Lessons learned
-   - Known issues or limitations
+  6. **Append session footers to `SESSION_DEV.md`** before closing the session
+     - `## Session Notes` — surprises, undocumented findings, things that ought to be in PROJECT_NAME.md
+     - `## Picked Up From / Stopped At` — resumption pointer
+     - `## Open Threads For Next Session` — deferred work, questions
+     - See § *Session Document Handling* for full protocol.
 
 ---
 
 ## Research Phase Best Practices
 
+> **Note**: This section is provisional. A more complete research framework — extracted from the data-edger market-research cycle (`research/{1_DEEP, 2_FOCUS, 3_FINAL, QUALITATIVE}`) and the everlastings-website rounds-of-feedback pattern — is planned for a future revision of this document.
+
 ### When Research Is Needed
 
-- New API or library being introduced
-- Unfamiliar technology or pattern
-- Multiple implementation approaches possible
-- Performance implications unclear
-- Browser/platform compatibility unknown
+  - New API or library being introduced
+  - Unfamiliar technology or pattern
+  - Multiple implementation approaches possible
+  - Performance implications unclear
+  - Browser/platform compatibility unknown
 
 ### Research Deliverables
 
-1. **API/Library Documentation Summary** — what it does, how to use it, browser/platform support, known issues
-2. **Approach Comparison** — list 2–4 viable approaches; pros/cons; recommendation with reasoning
-3. **Implementation Sketch** — rough code outline, key integration points, dependencies
-4. **Risk Assessment** — what could go wrong, mitigation strategies, rollback plan
+  1. **API/Library Documentation Summary** — what it does, how to use it, browser/platform support, known issues
+  2. **Approach Comparison** — list 2–4 viable approaches; pros/cons; recommendation with reasoning
+  3. **Implementation Sketch** — rough code outline, key integration points, dependencies
+  4. **Risk Assessment** — what could go wrong, mitigation strategies, rollback plan
 
 ### Research Document Template
 
@@ -459,10 +671,10 @@ Every agent working on an update must:
 
 Before merging any feature:
 
-1. **Functionality tests** — core feature works, edge cases handled, error states graceful
-2. **Regression tests** — existing features still work, no unintended side effects, performance not degraded
-3. **Cross-browser/platform tests** (if applicable) — Chrome, Safari, Firefox; desktop, tablet, mobile
-4. **Documentation updated** — README if user-facing, technical docs if architecture changed, comments for complex logic
+  1. **Functionality tests** — core feature works, edge cases handled, error states graceful
+  2. **Regression tests** — existing features still work, no unintended side effects, performance not degraded
+  3. **Cross-browser/platform tests** (if applicable) — Chrome, Safari, Firefox; desktop, tablet, mobile
+  4. **Documentation updated** — README if user-facing, technical docs if architecture changed, comments for complex logic
 
 ---
 
@@ -473,7 +685,7 @@ Before merging any feature:
 - ❌ "This API probably works like this..."
 - ✅ "Let me check the documentation to confirm..."
 
-**Lesson**: The Thot v2.0.8 highlighting rewrite could have been avoided with proper upfront research.
+**Why**: Training data ages fast. Verify before you build.
 
 ### 2. Skipping Research Phase
 
@@ -487,7 +699,7 @@ Before merging any feature:
 - ❌ Implement feature, merge, move on
 - ✅ Document why you chose this approach over alternatives
 
-**Why**: Future developers (including AI agents) need to understand the reasoning to maintain or extend the feature.
+**Why**: Future developers (including future agents) need to understand the reasoning to maintain or extend the feature.
 
 ### 4. Ignoring Edge Cases
 
@@ -502,23 +714,6 @@ Before merging any feature:
 - ✅ "Let me review the git diff to confirm every change is intentional"
 
 **Why**: Unintended changes cause subtle bugs. Always review diffs.
-
----
-
-## Code Structure
-
-```
-src/
-├── main.ts                  # Entry point
-├── [feature]/               # Feature-specific modules
-│   ├── index.ts
-│   ├── types.ts
-│   └── utils.ts
-├── styles/                  # Global styles
-└── types/                   # Shared type definitions
-```
-
-(Directory structure for `docs/` lives in § *Versioning § 4* — single source of truth.)
 
 ---
 
@@ -569,70 +764,6 @@ Fixes #38
 
 ---
 
-## Pre-Deployment Checklist
-
-(The merge-and-tag mechanics live in § *Git Branching & Merging Protocol § 2*. This is the higher-level checklist.)
-
-1. All tests passing
-2. Documentation updated (`PROJECT_NAME.md`, archive doc, etc.)
-3. CHANGELOG entry (if the project keeps one)
-4. Version bumped in `package.json` (if applicable)
-5. Build successful (`npm run build` or equivalent)
-
-After deploy:
-
-1. Verify core functionality works.
-2. Check error logs.
-3. Monitor performance metrics.
-4. Collect user feedback.
-
----
-
-## Communication Standards
-
-### When to Ask Questions
-
-- Requirements are ambiguous
-- Multiple valid approaches exist
-- User preference needed
-- Risk of breaking existing functionality
-
-### How to Ask Questions
-
-- Be specific about what you need to know.
-- Provide context for why it matters.
-- Suggest options if applicable.
-- Don't ask questions you can answer through research.
-
-### When to Make Decisions
-
-- Best practice is clear from documentation.
-- Technical constraint dictates approach.
-- Previous patterns established in codebase.
-- Low-risk change with easy rollback.
-
----
-
-## Scaling Parallel Development
-
-### Managing Multiple Projects
-
-1. **Standardize structure** across projects — same directory layout, same documentation format, same git workflow.
-2. **Reusable protocols** (this document) — copy to new projects, customize as needed, sync with `frdoc` (see below).
-3. **Context boundaries** — each project has its own UPDATE_MAP, each feature has its own implementation plan, agents stay focused on their task.
-
-### Maximizing AI Subscription Value
-
-**Strategy**: Run multiple agents in parallel across projects.
-
-- Claude Code: Project A, feature X
-- Anti-Gravity: Project B, feature Y
-- Cursor: Project A, feature Z
-
-**Key**: Clear documentation and context management prevent agents from interfering with each other.
-
----
-
 ## Syncing This Document
 
 This file is intended to be the same across projects. To propagate updates from one canonical copy out to every other project:
@@ -645,96 +776,43 @@ frdoc -n /path/to/canonical/.agent/DEV_RULES.md \
 
 `frdoc` (find-replace-doc) lives at `~/Development/scripts/frdoc`. Run `frdoc -h` for full help. The same script can be used to sync any canonical doc across projects (for example, a master `BRAND.md`).
 
----
-
-## Lessons Learned
-
-### From Thot v2.0.8 Highlighting Rewrite
-
-**What happened**: Implemented highlighting system based on assumptions, discovered systemic issues, had to completely rewrite.
-
-**What we learned**:
-
-- Research the actual system architecture first.
-- Don't guess at how complex systems work.
-- 30 minutes of research saves hours of debugging.
-- Document findings so future work doesn't repeat mistakes.
-
-**How to prevent**:
-
-- Always start with research phase.
-- Verify assumptions with documentation.
-- Test approach on small scale before full implementation.
-- Document architecture decisions with reasoning.
-
-### From Parallel Development Attempts
-
-**What happened**: Multiple features touching the same files caused merge conflicts.
-
-**What we learned**:
-
-- Map file changes before starting parallel work.
-- Sequence work if overlaps exist.
-- Communicate between agents (via documentation).
-- Rebase frequently to catch conflicts early.
-
-**How to prevent**:
-
-- List files each feature will modify in the implementation plan.
-- Check for overlaps before starting.
-- Merge frequently to minimize drift.
-
-### From Anti-Gravity v3.1.0 Retraction (2026-03-02)
-
-**What happened**: An agent merged v3.1.0 to `main`, tagged it, and wrote a "Recovery Walkthrough" describing the merge as final — all before the human had tested it. Live testing revealed autocorrect's backspace-undo was broken. The retraction required tag deletion, branch reset, and a fix-forward through v3.1.1 and v3.1.2.
-
-**What we learned**:
-
-- Don't write "completion" docs before live testing.
-- Recovery walkthroughs and state docs must distinguish "I executed these git commands" from "the human verified the result."
-- Suffixed tags (`v3.1.0-usability`, `v3.1.2-single-draftpad`) added cognitive load when retractions happened — clean numeric tags + commit-message labels would have been clearer.
-
-**How to prevent**:
-
-- Test live before tagging. The 5-step merge protocol (§ *Git Branching § 2*) puts the tag last for a reason.
-- Use clean numeric tags only (§ *Versioning § 3*).
-- Write state snapshots (`docs/archive/v{X}/v{X}_{Y}_{Z}_CURRENT_STATE.md`) only after the human has confirmed the deployed version works.
+**Note**: Project-specific learnings live in `.agent/PROJECT_LESSONS.md`, which is **not** synced — every project keeps its own incident history.
 
 ---
 
-## Quick Reference
+## Agent Quickstart
 
-(These are mnemonic checklists. The authoritative steps live earlier in this document.)
+The minimum protocol for any session, in order. If something here is unclear, that means this document failed — flag it.
 
-### Starting a New Feature
+### Read first (no exceptions)
 
-1. Branch off `main` (§ *Git Branching § 1*).
-2. Create implementation plan in `docs/plans/`.
-3. Research phase if needed.
-4. Implement with tests.
-5. Review git diff.
-6. Merge to `dev`.
-7. Archive plan to `docs/archive/v{X}/`.
+  1. `docs/PROJECT_NAME.md` — context primer
+  2. `README.md` — project status, deploy URL, commands
+  3. Your assigned `docs/archive/vX_Y/vX_Y_Z_IMPLEMENT.md` — what to build
+  4. `.agent/PROJECT_LESSONS.md` — incidents that shaped this project's protocols (skim)
 
-### Starting Research
+### Step zero of execution
 
-1. Create research branch.
-2. Document questions to answer.
-3. Research and test.
-4. Document findings.
-5. Recommend approach.
-6. Create implementation plan.
+  5. Save the human-approved plan: copy to `docs/archive/vX_Y/vX_Y_Z_SESSION_DEV.md`. Don't wait for human to do this. (See § *Session Document Handling*.)
 
-### Merging Features
+### As you work
 
-1. Tests pass.
-2. Review git diff.
-3. Update documentation.
-4. Merge to `dev`.
-5. Delete feature branch.
-6. Update roadmap status.
-7. When ready to ship: fast-forward `main`, tag clean numeric, push (§ *Git Branching § 2*).
+  6. Mark `SESSION_DEV.md` checkboxes live, not at the end.
+  7. If the `IMPLEMENT.md` plan is wrong: stop, write `vX_Y_Z+1_DEV_PLANNING.md`. Don't silently patch.
+  8. Confirm changes via `git diff` before commit. Every line intentional.
 
----
+### Before closing the session
 
-*This document should be copied to new projects and customized as needed. Maintain consistency across projects by syncing updates via `frdoc`.*
+  9. Append `## Session Notes`, `## Picked Up From / Stopped At`, `## Open Threads For Next Session` to `SESSION_DEV.md`.
+  10. If architecture changed: update `docs/PROJECT_NAME.md`. Future you depends on this.
+  11. Commit with a message matching `IMPLEMENT.md` grouping (see § *Commit Message Standards*).
+
+### What you do NOT do
+
+  - Don't read `docs/UPDATE_MAP.md` during execution. It's noise.
+  - Don't edit `vX_Y_Z_IMPLEMENT.md` mid-build. Write a new `_DEV_PLANNING.md` instead.
+  - Don't write a separate "completion" or "walkthrough" file. Footers go in `SESSION_DEV.md`.
+  - Don't create archive directories at the major-version level only (no `archive/v3/` — only `archive/v3_0/`, `archive/v3_1/`, etc.).
+  - Don't write `IMPLEMENT.md` reference content (schemas, glossaries, architecture diagrams). Send the reader to `PROJECT_NAME.md` or `archive/resources/`.
+
+If you do these eleven things and avoid those five, the protocol is satisfied.
