@@ -1,7 +1,7 @@
 # Thot Update Adjustments
 
 **Created**: 2026-03-05
-**Version**: v3.1.2
+**Version**: v3.1.2 -> v3.3.0 -> v4.0.0
 **Updates**: Autocorrect, System File Operations, Persistence Fixes
 **Status**: Drafting before planning for implementing 
 
