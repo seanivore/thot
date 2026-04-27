@@ -34,7 +34,7 @@ docs/
     ├── 1_DEEP/        ← exploratory, divergent, source-collection
     ├── 2_FOCUS/       ← convergent, gap-filling, draft consolidation
     ├── 3_FINAL/       ← polished deliverables for outside audiences
-    └── QUALITATIVE/   ← (optional) parallel track for human-validation work
+    └── QUALITATIVE/   ← human-validation work like focus groups
 ```
 
 ---
