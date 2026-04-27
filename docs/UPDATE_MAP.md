@@ -119,7 +119,7 @@ The highlighting system rewrite could have been avoided with proper upfront rese
 - Create/update `public/manifest.json` for PWA
 - Remove duplicate icons from `src/assets/icons/`
 
-**Reference**: `docs/archive/v2/v2_0_0_ICONS.md`
+**Reference**: `docs/archive/resources/ICONS.md`
 
 #### 3. iPad/Mobile Viewport Issues
 
