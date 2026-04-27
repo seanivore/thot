@@ -549,48 +549,48 @@ Document all 8 reported bugs, their root causes, and fixes. Per user request in 
 
 ### All Markdown Elements: Marker ↔ Content Pairs
 
-| #  | Element       | Marker Node     | Marker Tag        | Content Node      | Content Tag        | Marker  | Content |
-|----| ------------- | --------------- | ----------------- | ----------------- | ------------------ | ------- | ------- |
-| 1  | Heading       | HeaderMark      | tags.heading      | ATXHeading/...    | tags.heading       | #FF9D00 | #FF9D00 |
-| 2  | Bold          | EmphasisMark    | tags.strong       | StrongEmphasis/...| tags.strong        | #FFD866 | #FFD866 |
-| 3  | Italic        | EmphasisMark    | tags.emphasis     | Emphasis/...      | tags.emphasis      | #BF437F | #BF437F |
-| 4  | Strikethrough | Strikethr...    | tags.striketh...  | Strikethrough/... | tags.strikethrough | #6272A4 | #6272A4 |
-| 5  | Inline code   | CodeMark        | tags.monospace    | InlineCode/...    | tags.monospace     | #F34D3E | #F34D3E |
-| 6  | Fenced code   | CodeMark        | processingInstr...| CodeText          | lang-specific      | #6767fc | #8989e3 |
-| 7  | Blockquote    | QuoteMark       | tags.quote        | Blockquote/...    | tags.quote         | #E6DB74 | #E6DB74 |
-| 8  | Bullet list   | ListMark        | bulletMarkTag     | BulletList/...    | bulletContentTag   | #dfc532 | #8aeefb |
-| 9  | Ordered list  | ListMark        | orderedMarkTag    | OrderedList/...   | orderedContentTag  | #ff6b6b | #f8a5c2 |
-| 10 | Table         | TableDelimiter  | tableTag          | TableCell/Header  | tableTag           | #e2ff79 | #e2ff79 |
-| 11 | Link          | LinkMark        | tags.link         | Link/...          | tags.link          | #AB9DF2 | #AB9DF2 |
-| 12 | Superscript   | SuperscriptMark | special(content)  | Superscript       | special(content)   | #8BE9FD | #8BE9FD |
-| 13 | Subscript     | SubscriptMark   | special(content)  | Subscript         | special(content)   | #8BE9FD | #8BE9FD |
+| #   | Element       | Marker Node     | Marker Tag         | Content Node       | Content Tag        | Marker  | Content |
+| --- | ------------- | --------------- | ------------------ | ------------------ | ------------------ | ------- | ------- |
+| 1   | Heading       | HeaderMark      | tags.heading       | ATXHeading/...     | tags.heading       | #FF9D00 | #FF9D00 |
+| 2   | Bold          | EmphasisMark    | tags.strong        | StrongEmphasis/... | tags.strong        | #FFD866 | #FFD866 |
+| 3   | Italic        | EmphasisMark    | tags.emphasis      | Emphasis/...       | tags.emphasis      | #BF437F | #BF437F |
+| 4   | Strikethrough | Strikethr...    | tags.striketh...   | Strikethrough/...  | tags.strikethrough | #6272A4 | #6272A4 |
+| 5   | Inline code   | CodeMark        | tags.monospace     | InlineCode/...     | tags.monospace     | #F34D3E | #F34D3E |
+| 6   | Fenced code   | CodeMark        | processingInstr... | CodeText           | lang-specific      | #6767fc | #8989e3 |
+| 7   | Blockquote    | QuoteMark       | tags.quote         | Blockquote/...     | tags.quote         | #E6DB74 | #E6DB74 |
+| 8   | Bullet list   | ListMark        | bulletMarkTag      | BulletList/...     | bulletContentTag   | #dfc532 | #8aeefb |
+| 9   | Ordered list  | ListMark        | orderedMarkTag     | OrderedList/...    | orderedContentTag  | #ff6b6b | #f8a5c2 |
+| 10  | Table         | TableDelimiter  | tableTag           | TableCell/Header   | tableTag           | #e2ff79 | #e2ff79 |
+| 11  | Link          | LinkMark        | tags.link          | Link/...           | tags.link          | #AB9DF2 | #AB9DF2 |
+| 12  | Superscript   | SuperscriptMark | special(content)   | Superscript        | special(content)   | #8BE9FD | #8BE9FD |
+| 13  | Subscript     | SubscriptMark   | special(content)   | Subscript          | special(content)   | #8BE9FD | #8BE9FD |
 
 ### Standalone Elements (no marker/content split)
 
-| #  | Element         | Node           | Tag                        | Color   | Font        |
-|----| --------------- | -------------- | -------------------------- | ------- | ----------- |
-| 14 | Horizontal rule | HorizontalRule | tags.contentSeparator      | #93f9c6 | Regular     |
-| 15 | Checkbox        | TaskMarker     | tags.atom                  | #8BE9FD | Bold(700)   |
-| 16 | Code language   | CodeInfo       | tags.labelName             | #F1FA8C | Regular     |
-| 17 | Link URL        | URL            | tags.url                   | #8BE9FD | Italic      |
-| 18 | Link title      | LinkTitle      | tags.string                | #AB9DF2 | Regular     |
-| 19 | Image alt text  | Image/...      | tags.link (inherit)        | #AB9DF2 | Regular     |
-| 20 | Image URL       | Image/URL      | tags.url                   | #8BE9FD | Italic      |
-| 21 | Autolink        | Autolink       | tags.url                   | #8BE9FD | Regular     |
-| 22 | HTML entity     | Entity         | tags.character             | #FF79C6 | Regular     |
-| 23 | HTML tags       | HTMLTag        | tags.angleBracket/tagName  | #FF79C6 | Regular     |
-| 24 | HTML attribute  | HTMLTag attr   | tags.attributeName         | #FFD866 | Regular     |
-| 25 | HTML attr value | HTMLTag val    | tags.attributeValue        | #F34D3E | Regular     |
-| 26 | HTML comment    | Comment        | tags.comment               | #6272A4 | ThinItalic  |
-| 27 | HTML block      | HTMLBlock      | (passthrough)              | —       | Regular     |
-| 28 | Escape chars    | Escape         | tags.escape                | #FF79C6 | Regular     |
-| 29 | Hard break      | HardBreak      | tags.processingInstruction | #6272A4 | Regular     |
-| 30 | Emoji           | Emoji          | tags.character             | #FFB86C | Regular     |
-| 31 | Front matter    | —              | tags.documentMeta          | #BD93F9 | Regular     |
-| 32 | Diff added      | —              | tags.inserted              | #50FA7B | Regular     |
-| 33 | Diff deleted    | —              | tags.deleted               | #FF5555 | Regular     |
-| 34 | Diff changed    | —              | tags.changed               | #FFB86C | Regular     |
-| 35 | Foreground      | —              | tags.content               | #e6e6e6 | Medium(500) |
+| #   | Element         | Node           | Tag                        | Color   | Font        |
+| --- | --------------- | -------------- | -------------------------- | ------- | ----------- |
+| 14  | Horizontal rule | HorizontalRule | tags.contentSeparator      | #93f9c6 | Regular     |
+| 15  | Checkbox        | TaskMarker     | tags.atom                  | #8BE9FD | Bold(700)   |
+| 16  | Code language   | CodeInfo       | tags.labelName             | #F1FA8C | Regular     |
+| 17  | Link URL        | URL            | tags.url                   | #8BE9FD | Italic      |
+| 18  | Link title      | LinkTitle      | tags.string                | #AB9DF2 | Regular     |
+| 19  | Image alt text  | Image/...      | tags.link (inherit)        | #AB9DF2 | Regular     |
+| 20  | Image URL       | Image/URL      | tags.url                   | #8BE9FD | Italic      |
+| 21  | Autolink        | Autolink       | tags.url                   | #8BE9FD | Regular     |
+| 22  | HTML entity     | Entity         | tags.character             | #FF79C6 | Regular     |
+| 23  | HTML tags       | HTMLTag        | tags.angleBracket/tagName  | #FF79C6 | Regular     |
+| 24  | HTML attribute  | HTMLTag attr   | tags.attributeName         | #FFD866 | Regular     |
+| 25  | HTML attr value | HTMLTag val    | tags.attributeValue        | #F34D3E | Regular     |
+| 26  | HTML comment    | Comment        | tags.comment               | #6272A4 | ThinItalic  |
+| 27  | HTML block      | HTMLBlock      | (passthrough)              | —       | Regular     |
+| 28  | Escape chars    | Escape         | tags.escape                | #FF79C6 | Regular     |
+| 29  | Hard break      | HardBreak      | tags.processingInstruction | #6272A4 | Regular     |
+| 30  | Emoji           | Emoji          | tags.character             | #FFB86C | Regular     |
+| 31  | Front matter    | —              | tags.documentMeta          | #BD93F9 | Regular     |
+| 32  | Diff added      | —              | tags.inserted              | #50FA7B | Regular     |
+| 33  | Diff deleted    | —              | tags.deleted               | #FF5555 | Regular     |
+| 34  | Diff changed    | —              | tags.changed               | #FFB86C | Regular     |
+| 35  | Foreground      | —              | tags.content               | #e6e6e6 | Medium(500) |
 
 ### Complete Lezer Markdown Node Type Inventory (58 nodes)
 
@@ -738,7 +738,7 @@ In CSS cascade terms: **HIGH priority items are defined LAST** in the HighlightS
 ## Bug-to-Fix Mapping
 
 | Bug | Issue                                        | Fix                                                                          |
-|-----| -------------------------------------------- | ---------------------------------------------------------------------------- |
+| --- | -------------------------------------------- | ---------------------------------------------------------------------------- |
 | 1   | Bold markers (**) purple                     | `'StrongEmphasis/EmphasisMark': tags.strong` (depth=1 beats depth=0)         |
 | 2   | Italic markers (*) purple                    | `'Emphasis/EmphasisMark': tags.emphasis` (depth=1)                           |
 | 3   | Bullet markers wrong color, content no color | `bulletMarkTag` custom tag + `'BulletList/...': bulletContentTag` inherit    |

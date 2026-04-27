@@ -49,7 +49,7 @@ Browser/PWA
 
 ### Why Web?
 
-Thot v1 was a native macOS app using SwiftUI + NSTextView. We discovered that this architecture has fundamental performance limitations for text editors (see `docs/archive/v1/OvercomeChallenges.md`).
+Thot v1 was a native macOS app using SwiftUI + NSTextView. We discovered that this architecture has fundamental performance limitations for text editors (see `docs/archive/v2_0/v1_0_0_FEEDBACK.md`).
 
 VS Code, Cursor, and modern editors use web technologies because:
 - CodeMirror/Monaco handle incremental parsing efficiently
@@ -66,9 +66,9 @@ To export your content, simply copy/paste or use the export feature (coming soon
 
 ## Philosophy
 
-Thot is intentionally minimal. It's a **desk pad**, not a note-taking system. Think of it as the digital equivalent of a legal pad that never leaves your desk.
+Thot is intentionally minimal. Currently just a **desk pad**, not a note-taking system. Think of it as the digital equivalent of a legal pad that never leaves your desk.
 
-See [docs/THOT_APP.md](docs/THOT_APP.md) for complete project documentation, or [docs/archive/v3/v3_1_0_USABILITY.md](docs/archive/v3/v3_1_0_USABILITY.md) for the latest v3.1.0 usability and autocorrect build log.
+See [docs/THOT_APP.md](docs/THOT_APP.md) for complete project documentation. 
 
 ## License
 

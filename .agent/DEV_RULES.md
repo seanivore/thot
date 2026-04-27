@@ -160,8 +160,8 @@ The naming pattern below is designed so that a `ls` of any version subdirectory 
   + Feedback for updates from reviewing build 
 
     - `UPDATE_vX_Y_Z.md` — planning
-    - `FEEDBACK_vX_Y_Z.md` — fixes and planning 
-    - `vX_Y_Z_BUGS.md` — fixes 
+    - `vX_Y_Z_FEEDBACK.md` — review identified fixes and planning
+    - `vX_Y_Z_BUGS.md` — review identified fixes 
 
 #### **AGENT'S FORMAL FILES**
 
@@ -186,15 +186,15 @@ docs/
 │   │   ├── v3_1_0_DEV_PLANNING.md  # Agent session; research, notable plan change during session drove v3.0.0 -> v3.1.0
 │   │   └── v3_1_0_IMPLEMENT.md     # Agent's resulting implementation guide 
 │   ├── v3_2/
-│   │   ├── FEEDBACK_v3_1_0.md      # Human found implementation plan gaps, drove v3.1.0 -> v3.2.0
-│   │   ├── FEEDBACK_v3_2_0.md      # Human found more, smaller gaps, drove v3.2.0 -> v3.2.1 
+│   │   ├── v3_1_0_FEEDBACK.md      # Human found implementation plan gaps, drove v3.1.0 -> v3.2.0
+│   │   ├── v3_2_0_FEEDBACK.md      # Human found more, smaller gaps, drove v3.2.0 -> v3.2.1 
 │   │   ├── v3_2_1_DEV_PLANNING.md  # Agent session filling in implementation gaps
 │   │   ├── v3_2_1_IMPLEMENT.md     # Agent's resulting updated implementation guide  
 │   │   ├── v3_2_2_DEV_PLANNING.md  # Agent session; gaps found during session driving v3.2.2 -> v3.2.3
 │   │   ├── v3_2_3_DEV_PLANNING.md  # Agent has another session with small plan changes driving v3.2.3 -> v3.2.4
 │   │   └── v3_2_4_IMPLEMENT.md     # Agent's resulting new implementation guide
 │   ├── v3_3/
-│   │   ├── FEEDBACK_v3_2_4.md      # Human reviewed last plan and made larger build change driving v3.2.4 -> v3.3.0
+│   │   ├── v3_2_4_FEEDBACK.md      # Human reviewed last plan and made larger build change driving v3.2.4 -> v3.3.0
 │   │   ├── v3_3_0_DEV_PLANNING.md  # Agent session adjusting plan for those changes 
 │   │   ├── v3_3_0_IMPLEMENT.md     # Agent's implementation guide reflecting changes 
 │   │   ├── v3_3_0_SESSION_DEV.md   # Agent session plan executing implementation plan
@@ -202,7 +202,7 @@ docs/
 │   │   ├── v3_3_1_DEV_PLANNING.md  # Agent session finding bug fixes 
 │   │   └── v3_3_1_SESSION_DEV.md   # Agent session plan executing bug fixes
 │   └── v4_0/
-│       ├── FEEDBACK_v3_3_1.md      # Human has notable feature updates driving v3.3.1 -> v4.0.0
+│       ├── v3_3_1_FEEDBACK.md      # Human has notable feature updates driving v3.3.1 -> v4.0.0
 │       ├── v4_0_0_DEV_PLANNING.md  # Agent session researching to create new plan 
 │       ├── v4_0_1_DEV_PLANNING.md  # Agent session auditing plan, small issues updated drove v4.0.0 -> v4.0.1
 │       ├── v4_0_2_DEV_PLANNING.md  # Agent session fixing more audit issues, drove v4.0.1 -> v4.0.2 
@@ -212,12 +212,13 @@ docs/
 ```
 
   * **Read the FEEDBACK suffix as "about" not "for"**: 
-    - `FEEDBACK_v3_2_0.md` is feedback about v3.2.0. 
-    - The agent's response lives in a new doc named for the version it updates, e.g. `v3_2_1_DEV_PLANNING.md`. 
+    - `v3_2_0_FEEDBACK.md` is feedback about v3.2.0. 
+    - The agent's response lives in a new doc named for the version it updates, e.g. `v3_2_1_DEV_PLANNING.md` or `v3_3/v3_3_0_DEV_PLANNING.md`. 
 
   * **If mid-build you discover the `v5_2_0_IMPLEMENT.md` plan is wrong, don't edit it directly**: 
-    - First, write a new `v5_2_1_DEV_PLANNING.md` that responds to the discovery.
-    - Then, create a new IMPLEMENT plan with the version bumped up accordingly, as `v5_2_1_IMPLEMENT.md`. 
+    - Always create an updated copy of a new IMPLEMENT plan with the version bumped up accordingly, as `v5_2_1_IMPLEMENT.md`.
+    - Always make any necessary updates to the `PROJECT_NAME`.md and project's `README`.md
+    - Depending on the scope of the necessary updates needed, use plan mode to create a to do list to update these documents, and then save it as a new `v5_2_1_DEV_PLANNING.md` file. 
 
 ### 6. File Lifecycle (Read the Tree Above)
 

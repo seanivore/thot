@@ -55,7 +55,7 @@ inside a code block
   3. When writing a URL: www.cantchangeit.com
   4. When placing a word in linking markdown of a URL, path, or page anchor 
 
-[in the URL of hyperlink markdown](www.urlofhyperlinkmarkdown.com) 
+[in the URL of hyperlink markdown](../v3_0/www.urlofhyperlinkmarkdown.com) 
 [In PAGE_PATH.md](/docs/PAGE_PATH.md) 
 [In Markdown Page Anchor](#in-hyperlink-markdown-anchor)
 

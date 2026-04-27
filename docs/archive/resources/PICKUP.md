@@ -26,7 +26,7 @@ Then I'd like us to follow the protocol defined in the `THOT_APP.md` and add an 
 
 We can immediately create a mini-update plan for the next 'usability' build because we desperately need our URLs, paths, and page anchors working. At the very least, our URLs. We can then also add little odds and ends that we left out of the v3.1.0 update that were more formatting and highlighter related. 
 
-[in the URL of hyperlink markdown](www.urlofhyperlinkmarkdown.com) 
+[in the URL of hyperlink markdown](../v3_0/www.urlofhyperlinkmarkdown.com) 
 [In PAGE_PATH.md](/docs/PAGE_PATH.md) 
 [In Markdown Page Anchor](#in-hyperlink-markdown-anchor)
 

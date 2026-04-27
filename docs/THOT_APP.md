@@ -10,7 +10,7 @@
 ## Executive Summary
 
   + **Purpose**: This document provides everything a new AI instance needs to understand and work on this project effectively; it also serves as comprehensive technical documentation
-  + **Use**: Read this first before making any changes
+  + **Use**: Read this first before making any changes, always update this after making changes
 
 ---
 
@@ -30,7 +30,7 @@
 
 ## Project Overview
 
-### What This Is
+### Current State
 
 * **A markdown scratchpad with IDE-like syntax highlighting, designed as a persistent, always-on writing tool**
 
@@ -50,7 +50,7 @@
 
 ### Message & Purpose
 
-* **Problem**: Existing markdown editors are either too simple (no highlighting) or too complex (full IDEs with irrelevant features)
+* **Problem**: Existing markdown editors are either simple (no highlighting), expensive, or complex like a full IDEs with irrelevant features 
 * **Solution**: A single-purpose scratchpad that opens instantly, highlights beautifully, and never loses your work
 
   + Open the app, start typing, see instant highlighting
@@ -562,12 +562,12 @@ git push origin dev
 
 ### localStorage Keys
 
-| Key                       | Contents                         |
-| ------------------------- | -------------------------------- |
-| `thot:content:main`       | Main draftpad markdown text      |
-| `thot:state:main`         | Main draftpad `{ cursorPos, scrollTop }` |
-| `thot:content:temp-<id>`  | Ephemeral temp-window text       |
-| `thot:state:temp-<id>`    | Ephemeral temp-window state      |
+| Key                      | Contents                                 |
+| ------------------------ | ---------------------------------------- |
+| `thot:content:main`      | Main draftpad markdown text              |
+| `thot:state:main`        | Main draftpad `{ cursorPos, scrollTop }` |
+| `thot:content:temp-<id>` | Ephemeral temp-window text               |
+| `thot:state:temp-<id>`   | Ephemeral temp-window state              |
 
 Keys are partitioned by window ID. The default ID is `main` (set on first load if no `?id=` URL parameter). CMD+N spawns a window with `?id=temp-<random>` for ephemeral use.
 

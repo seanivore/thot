@@ -1,4 +1,4 @@
-# Implementation Spec for Thot v1.0.0_deskpad 
+# Planning for Thot v1.0.0_deskpad 
 
 ---
 

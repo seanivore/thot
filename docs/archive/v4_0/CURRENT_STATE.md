@@ -72,12 +72,12 @@ This is the natural next-session implementation target.
 
 ## Tag → Commit Map (Suffix Cleanup Needed)
 
-| Existing legacy tag | Commit | Plan |
-|---|---|---|
-| `v3.1.0-usability` | `6181ea8` | Add clean tag `v3.1.0` pointing at same commit |
-| `v3.1.1-multi-window` | `fb425e9` | Add clean tag `v3.1.1` pointing at same commit |
+| Existing legacy tag      | Commit    | Plan                                           |
+| ------------------------ | --------- | ---------------------------------------------- |
+| `v3.1.0-usability`       | `6181ea8` | Add clean tag `v3.1.0` pointing at same commit |
+| `v3.1.1-multi-window`    | `fb425e9` | Add clean tag `v3.1.1` pointing at same commit |
 | `v3.1.2-single-draftpad` | `dd7407e` | Add clean tag `v3.1.2` pointing at same commit |
-| `v2.1.4` | `ca9eeb9` | Already clean. No change. |
+| `v2.1.4`                 | `ca9eeb9` | Already clean. No change.                      |
 
 **Going forward**: clean numeric tags only (`vX.Y.Z`), no suffixes. See `.agent/UPDATE_DEV_RULES.md` § 3.
 
@@ -111,18 +111,18 @@ The v3.1.1 multi-window machinery is **still in the code** as the substrate for 
 
 ### Branches at session start (2026-04-25)
 
-| Branch | Local | Origin | Notes |
-|---|---|---|---|
-| `main` | ✅ | ✅ | Production. Vercel deploys from this. |
-| `dev` | ✅ | ✅ | Stale; will be recreated from `main` in branch cleanup. |
-| `feat/v3-urls-anchors` | ✅ | ✅ | Current. Docs only. To be merged to `main` then deleted. |
-| `feat/v3-multi-window` | ✅ | ✅ | Merged into `main`. Safe to delete. |
-| `feat/v3-usability` | ✅ | ✅ | Merged into `main`. Safe to delete. |
-| `fix/v3-pwa-state-restore` | ✅ | — | Local-only, merged. Safe to delete. |
-| `feat/v3-formatting` | ✅ | — | Local-only experimental. Audit before delete. |
-| `feat/v3-highlighting` | ✅ | — | Local-only experimental. Audit before delete. |
-| `v2-first-thots` | ✅ | ✅ | **Repo's GitHub default base** (stale setting; deploy is from `main`). Keep as historical reference, but change GitHub default branch to `main`. |
-| `v1-deskpad`, `v1_deskpad_alt` | — | ✅ | Historical. Leave alone. |
+| Branch                         | Local | Origin | Notes                                                    |
+| ------------------------------ | ----- | ------ | -------------------------------------------------------- |
+| `main`                         | ✓     | ✓      | Production. Vercel deploys from this.                    |
+| `dev`                          | ✓     | ✓      | Stale; will be recreated from `main` in branch cleanup.  |
+| `feat/v3-urls-anchors`         | ✓     | ✓      | Current. Docs only. To be merged to `main` then deleted. |
+| `feat/v3-multi-window`         | ✓     | ✓      | Merged into `main`. Safe to delete.                      |
+| `feat/v3-usability`            | ✓     | ✓      | Merged into `main`. Safe to delete.                      |
+| `fix/v3-pwa-state-restore`     | ✓     | —      | Local-only, merged. Safe to delete.                      |
+| `feat/v3-formatting`           | ****✓ | —      | Local-only experimental. Audit before delete.            |
+| `feat/v3-highlighting`         | ✓     | —      | Local-only experimental. Audit before delete.            |
+| `v2-first-thots`               | ✓     | ✓      | Old repo default which is now `main`, also for deploys   |
+| `v1-deskpad`, `v1_deskpad_alt` | —     | ✓      | Historical. Leave alone.                                 |
 
 ### Repository default branch issue (manual fix on GitHub)
 - GitHub repo Settings → Branches lists `v2-first-thots` as default. This is why PRs default to that base. Change to `main`.

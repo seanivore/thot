@@ -65,16 +65,16 @@ The default markdown parser tags ALL markers as `tags.processingInstruction` at 
 
 ## Additional Proactive Fixes
 
-| Element                | Issue                                    | Fix                                                                       |
-| ---------------------- | ---------------------------------------- | ------------------------------------------------------------------------- |
-| StrikethroughMark      | `~~` show processingInstruction purple   | `StrikethroughMark: tags.strikethrough`                                   |
-| LinkMark               | `[]()` show processingInstruction purple | `LinkMark: tags.link`                                                     |
-| SuperscriptMark        | `^` markers uncolored                    | `SuperscriptMark: tags.special(tags.content)`                             |
-| SubscriptMark          | `~` markers uncolored                    | `SubscriptMark: tags.special(tags.content)`                               |
-| HorizontalRule         | Inconsistent styling                     | `HorizontalRule: tags.contentSeparator` override                          |
-| Fenced code delimiter  | was #8989e3 content color, not #6767fc   | `tags.processingInstruction` maps `colors.fencedCodeDelimiter` (#6767fc)  |
-| ViewPlugin decorations | Entire `markdown-decorations.ts` removed | Styling handled by styleTags + HighlightStyle — no race conditions        |
-| theme-reference.ts     | Duplicate color source                   | Moved `docs/archive/v2/`. `highlight-tags.ts` is single source of truth   |
+| Element                | Issue                                    | Fix                                                                      |
+| ---------------------- | ---------------------------------------- | ------------------------------------------------------------------------ |
+| StrikethroughMark      | `~~` show processingInstruction purple   | `StrikethroughMark: tags.strikethrough`                                  |
+| LinkMark               | `[]()` show processingInstruction purple | `LinkMark: tags.link`                                                    |
+| SuperscriptMark        | `^` markers uncolored                    | `SuperscriptMark: tags.special(tags.content)`                            |
+| SubscriptMark          | `~` markers uncolored                    | `SubscriptMark: tags.special(tags.content)`                              |
+| HorizontalRule         | Inconsistent styling                     | `HorizontalRule: tags.contentSeparator` override                         |
+| Fenced code delimiter  | was #8989e3 content color, not #6767fc   | `tags.processingInstruction` maps `colors.fencedCodeDelimiter` (#6767fc) |
+| ViewPlugin decorations | Entire `markdown-decorations.ts` removed | Styling handled by styleTags + HighlightStyle — no race conditions       |
+| theme-reference.ts     | Duplicate color source                   | Moved `docs/archive/v2/`. `highlight-tags.ts` is single source of truth  |
 
 ---
 

@@ -541,13 +541,13 @@ This is the process I follow that works and reflects the updates and tags on Git
   - "v1" update is tested and ready to go live
   - v1 branch is named `v1-project-name`
 
-| Step                                  | Command                                       |
-|---------------------------------------|-----------------------------------------------|
-| 1. From shippable update branch       | `git checkout main`                           |   
-| 2. Fast-forward `main` to `v1` state  | `git merge --ff-only v1-project-name`         |
-| 3. Push that clean update to `main`   | `git push origin main v1-project-name`        |
-| 4. Give clean push a version tag      | `git tag v1.0.0-project-version-name`         |
-| 5. Push version tag to clean update   | `git push origin v1.0.0-project-version-name` |
+| Step                                 | Command                                       |
+| ------------------------------------ | --------------------------------------------- |
+| 1. From shippable update branch      | `git checkout main`                           |
+| 2. Fast-forward `main` to `v1` state | `git merge --ff-only v1-project-name`         |
+| 3. Push that clean update to `main`  | `git push origin main v1-project-name`        |
+| 4. Give clean push a version tag     | `git tag v1.0.0-project-version-name`         |
+| 5. Push version tag to clean update  | `git push origin v1.0.0-project-version-name` |
 
 
 *User accepted the command `kill -9 $(pgrep -f search_utf16.py) 2>/dev/null`*
