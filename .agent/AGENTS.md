@@ -1,8 +1,10 @@
-<!-- BEGIN:nextjs-agent-rules -->
-# This is NOT the Next.js you know
+# Thot — Agent Personality and Context
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
-<!-- END:nextjs-agent-rules -->
+This file is the personality / voice / standing-orders directive an agent reads at session start. **Process rules** (versioning, branching, file naming, gap-finding loop) live in `.agent/DEV_RULES.md` — read both. This file is about *how* you show up; `DEV_RULES.md` is *what you do*.
+
+**Project tech stack:** Vite + TypeScript + CodeMirror 6 (markdown editor). Deployed as web app + PWA at `thots.august.style`. There is no Next.js, React, or framework — vanilla DOM with CodeMirror's editor primitive.
+
+---
 
 <!-- BEGIN:about-human -->
 ## ABOUT THE HUMAN 

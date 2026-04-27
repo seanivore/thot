@@ -1,7 +1,7 @@
 # Development Protocols
 
-**Version**: 3.1.0
-**Last Updated**: 2026-04-25
+**Version**: 3.2.0
+**Last Updated**: 2026-04-27
 **Purpose**: Inform agents on our standardized project structure, documentation and development workflows.
 **Syncing**: Sync any updates to all `.agent/DEV_RULES.md` files using `frdoc` (see § *Syncing This Document*).
 
@@ -150,28 +150,40 @@ The `docs/UPDATE_MAP.md` document is important when it is necessary for agents w
 
 ### 5. Archive File Naming Protocol
 
-The naming pattern below is designed so that a `ls` of any version subdirectory reads like a chronological build log — alphabetical sort *is* the lifecycle flow. See the **Working Chronological Example** below.
+**Core design principle: alphabetical sort *is* the chronological lifecycle.** A `ls` of any version subdirectory reads like a build log of what happened, in the order it happened, because filenames are deliberately constructed to sort that way. This is the single rule that makes everything else work — every filename choice below exists to preserve it.
 
-#### **HUMAN'S INFORMAL FILES** 
+There are six document types — three created by humans, three by agents. Each type's filename form is chosen to land at the correct position in the alphabetical sort of the directory it lives in.
 
-  + Update ideas for new version 
-  + Bug logging details 
-  + Feedback from reviewing previous plan
-  + Feedback for updates from reviewing build 
+#### Human-created documents
 
-    - `UPDATE_vX_Y_Z.md` — planning
-    - `vX_Y_Z_FEEDBACK.md` — review identified fixes and planning
-    - `vX_Y_Z_BUGS.md` — review identified fixes 
+  - **`UPDATE_vX_Y_Z.md`** — major-version proposal / intro plan. Used when human introduces a new direction that drives a MAJOR version bump.
+  - **`vX_Y_Z_FEEDBACK.md`** — review of a prior plan or build. Almost always drives a MINOR bump; occasionally a PATCH for very small reviews.
+  - **`vX_Y_Z_BUGS.md`** — bug report from reviewing a shipped build. Drives a PATCH bump.
 
-#### **AGENT'S FORMAL FILES**
+#### Agent-created documents
 
-There are exactly three formal agent document types. The mechanics of how they are created and saved during a session are in § *Session Document Handling* below.
+  - **`vX_Y_Z_DEV_PLANNING.md`** — the agent's session plan for planning/research/architecture work (no code). Iterations of these sessions are where the bulk of the work happens (per the *Planning takes 10× implementation* philosophy). Also used for analysis sessions like bug investigations where no actual building occurs. Other documents (`PROJECT_NAME.md`, `IMPLEMENT.md`, `README.md`) get created or updated during these sessions.
+  - **`vX_Y_Z_IMPLEMENT.md`** — the master implementation guide that emerges from `DEV_PLANNING` sessions. Goes through many rounds of review and gap-filling — by the primary agent, the human, and fresh-context review subagents — until "Exclusively Executable" (see § *The Gap-Finding Loop*). **One `IMPLEMENT.md` per version.**
+  - **`vX_Y_Z_SESSION_DEV.md`** — the agent's session plan for *executing* an `IMPLEMENT.md`. Created at the start of a build session; lives as the working checklist throughout (mark off as you go). These sessions happen far less frequently than `DEV_PLANNING` sessions, because everything that needs answering should already be in `IMPLEMENT.md`.
 
-  - `vX_Y_Z_DEV_PLANNING.md` — planning
-  - `vX_Y_Z_IMPLEMENT.md` — to execute
-  - `vX_Y_Z_SESSION_DEV.md` — building
+#### Why the filenames sort the way they do
 
-The `IMPLEMENT.md` is the master implementation plan — worked on in loops via § *The Gap-Finding Loop* until all gaps are found. There is **one IMPLEMENT.md per version**.
+Each filename's form is chosen to land at the right position in alphabetical sort, given which directory it ends up in.
+
+  - **`UPDATE_v(X+1)_0_0.md` leads with `U`** rather than the version number. A new major version always opens a new `archive/v(X+1)_0/` directory, and the `UPDATE` document needs to top that directory regardless of what numeric version follows. Putting `UPDATE` before the version number guarantees this — `U` sorts above `v`.
+  - **`vX_Y_Z_FEEDBACK.md` uses the version *being reviewed***, not the version it drives. This puts the feedback document at the top of whatever directory it lands in. If feedback on `v3.2.4` drives `v3.3.0`, the file `v3_2_4_FEEDBACK.md` lives in `archive/v3_3/`, where `v3_2_4_*` sorts ahead of any `v3_3_*` files — so the feedback (the cause) reads before the planning that responded to it (the effect). Read `v3_2_4_FEEDBACK.md` as "feedback *about* v3.2.4," not "feedback *for* v3.2.4."
+  - **`vX_Y_Z_BUGS.md` uses the simple form** with no special positioning. Bugs drive a PATCH bump and sort naturally because `B` precedes `D` (`DEV_PLANNING`), `I` (`IMPLEMENT`), and `S` (`SESSION_DEV`) — so `vX_Y_Z_BUGS.md` reads before any agent response files in the same directory.
+  - **Edge case — directory shares an `UPDATE` document**: in the rare case a `FEEDBACK` document lands in the same directory as an `UPDATE_*` document (e.g., a major bump's directory also gets early feedback), give the FEEDBACK file the standard `vX_Y_Z_FEEDBACK.md` form so the `UPDATE` retains the top slot.
+
+#### System design criticism (open thread)
+
+The agent-document trio sorts `DEV_PLANNING` → `IMPLEMENT` → `SESSION_DEV` (D < I < S) and that order matches the actual lifecycle (plan → finalize → execute). This isn't accidental — the names were chosen specifically to produce this sort. The names aren't perfect, but thus far we've not come across anything that fits the chronological lifecycle, along with the human-documents, which all together keep the files visually organized thanks to the explorer view of the directory in an IDE or columns view in Finder keeping things alphabetical. If a clearer naming scheme surfaces that preserves chronological sort, replace this section.
+
+The primary oddity with the naming is that an agent could create a session plan that handles documents and adds some features; coding can occur without a specific IMPLEMENT document for it. The IMPLEMENT document is for big picture planning that requires iterations looking for gaps. When this happens, the session plan name can be decided based on if the most recent IMPLEMENT plan is applicable. If the version vX_Y directory doesn't even have an IMPLEMENT plan yet, then go with DEV_PLANNING. If there is a plan in the directory that has the same version number but has not been finalized as ready to execute yet, then again go with DEV_PLANNING. Finally, if there is an IMPLEMENT plan in the directory with the same version number that has been started or completed, or it has a prior version number, then go with SESSION_DEV. 
+
+This makes logical sense when you think about the alphabetical placement and where you want the document to position itself based on the life cycle. If we didn't have a need for there to be agent-document session plans both BEFORE and AFTER any IMPLEMENT document, then we'd use just one file type. As it stand, because of the lifecycle, SESSION_DEV is more frequently a coding-centric session plan. That means that the "plan -> finalize -> execute" representation will not always match up with DEV_PLANNING as plan and SESSION_DEV as execution; DEV_PLANNING can involve execution and SESSION_DEV can involve planning. The system isn't perfect for this reason.
+
+**The TL;DR** is that IMPLEMENT is for planning, finalizing, and executing big-picture changes; other documents are for everything else, and their naming differences are to control chronological lifespan placement when viewed/read in a directory that sorts alphabetically. 
 
 #### Working Chronological Example 
 
@@ -244,18 +256,7 @@ Three master documents live outside the archive. Each has a single, explicit rol
 
 ## Session Document Handling
 
-The `vX_Y_Z_SESSION_DEV.md` file is not a report you write at the end — it is the live working document you use throughout the session. This makes the protocol resilient to interruption (laptop closes, context fills, agent crashes) and removes an entire category of "the agent forgot to log" failure modes.
-
-### Step 0: Save the Plan
-
-The first action of every execution session is to copy the human-approved plan into the archive at the proper version path:
-
-  - `docs/archive/vX_Y/vX_Y_Z_SESSION_DEV.md` — for build/execution sessions
-  - `docs/archive/vX_Y/vX_Y_Z_DEV_PLANNING.md` — for planning/research sessions
-
-This is the agent's job, not the human's. The human approving a plan in the terminal should not also have to find the file path, copy markdown, rename, and place it — that step gets skipped, and the plan is lost.
-
-For Claude Code, the plan is at `~/.claude/plans/<auto-generated-name>.md` after `ExitPlanMode` is approved. Copy it. Rename it. Move it.
+A `vX_Y_Z_SESSION_DEV.md` or `vX_Y_Z_DEV_PLANNING.md` file is the live working document for the session — marked off as work completes, not written as a report at the end. The human files the plan into the archive after a session; recognize one when you see it and treat it as the in-conversation plan you already have.
 
 ### During the Session
 
@@ -271,16 +272,7 @@ Append these sections to the bottom of `SESSION_DEV.md` before closing the sessi
   - **`## Picked Up From / Stopped At`** — exact resumption pointer for the next session. File:line, branch state, what's tested vs untested.
   - **`## Open Threads For Next Session`** — questions, deferred work, things the human or next agent needs to act on.
 
-These footers replace what other systems call "post-session walkthroughs" or "completion reports." Keeping them inline at the bottom of `SESSION_DEV.md` means everything for that session lives in one file, in the right place, automatically.
-
-### Non-Claude-Code Agents
-
-Every agentic system that produces a plan document follows the same convention:
-
-  - Save the approved plan to the proper archive path with the proper name (`vX_Y_Z_SESSION_DEV.md` or `vX_Y_Z_DEV_PLANNING.md`) as step zero.
-  - Append walkthrough / post-session content to the bottom of `SESSION_DEV.md` as the footer sections above — never as a separate file.
-
-Anti-Gravity's "Walkthrough" maps to `## Session Notes`. Cursor's session output maps the same way. If your tool produces something this convention doesn't anticipate, ask — don't invent a parallel filing system.
+These footers replace what other systems call "post-session walkthroughs" or "completion reports." Keeping them inline at the bottom of `SESSION_DEV.md` means everything for that session lives in one file, in the right place.
 
 ---
 
@@ -792,21 +784,17 @@ The minimum protocol for any session, in order. If something here is unclear, th
   3. Your assigned `docs/archive/vX_Y/vX_Y_Z_IMPLEMENT.md` — what to build
   4. `.agent/PROJECT_LESSONS.md` — incidents that shaped this project's protocols (skim)
 
-### Step zero of execution
-
-  5. Save the human-approved plan: copy to `docs/archive/vX_Y/vX_Y_Z_SESSION_DEV.md`. Don't wait for human to do this. (See § *Session Document Handling*.)
-
 ### As you work
 
-  6. Mark `SESSION_DEV.md` checkboxes live, not at the end.
-  7. If the `IMPLEMENT.md` plan is wrong: stop, write `vX_Y_Z+1_DEV_PLANNING.md`. Don't silently patch.
-  8. Confirm changes via `git diff` before commit. Every line intentional.
+  5. Mark `SESSION_DEV.md` checkboxes live, not at the end.
+  6. If the `IMPLEMENT.md` plan is wrong: stop, write `vX_Y_Z+1_DEV_PLANNING.md`. Don't silently patch.
+  7. Confirm changes via `git diff` before commit. Every line intentional.
 
 ### Before closing the session
 
-  9. Append `## Session Notes`, `## Picked Up From / Stopped At`, `## Open Threads For Next Session` to `SESSION_DEV.md`.
-  10. If architecture changed: update `docs/PROJECT_NAME.md`. Future you depends on this.
-  11. Commit with a message matching `IMPLEMENT.md` grouping (see § *Commit Message Standards*).
+  8. Append `## Session Notes`, `## Picked Up From / Stopped At`, `## Open Threads For Next Session` to `SESSION_DEV.md`.
+  9. If architecture changed: update `docs/PROJECT_NAME.md`. Future you depends on this.
+  10. Commit with a message matching `IMPLEMENT.md` grouping (see § *Commit Message Standards*).
 
 ### What you do NOT do
 
@@ -815,5 +803,6 @@ The minimum protocol for any session, in order. If something here is unclear, th
   - Don't write a separate "completion" or "walkthrough" file. Footers go in `SESSION_DEV.md`.
   - Don't create archive directories at the major-version level only (no `archive/v3/` — only `archive/v3_0/`, `archive/v3_1/`, etc.).
   - Don't write `IMPLEMENT.md` reference content (schemas, glossaries, architecture diagrams). Send the reader to `PROJECT_NAME.md` or `archive/resources/`.
+  - Don't file `~/.claude/plans/<name>.md` into `docs/archive/`. The human handles that — they choose the version and filing path.
 
-If you do these eleven things and avoid those five, the protocol is satisfied.
+If you do these ten things and avoid those six, the protocol is satisfied.

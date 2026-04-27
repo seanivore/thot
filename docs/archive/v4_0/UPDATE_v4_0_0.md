@@ -167,7 +167,7 @@ Right now every time I push my changes to this document for example, I get an em
 - Auto-save for any file
 - New document titled with date and military HH:MM
 - Settings option to change new note name
-- App always reopens to all open windows and tabs
+-  
 - Tab view on PWA with default setting option
 - Setting space to choose new doc template
 - New doc template has just date and time H1
