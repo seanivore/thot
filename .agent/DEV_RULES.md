@@ -164,7 +164,7 @@ We have five document types, with six filename variations.
 
 The filenames and formatting have been specifically constructed so that an alphabetical sort of all files in a version's directory reads like the chronological lifecycle of that version. A `ls` of any version subdirectory reads like a build log of what happened, in the order it happened.
 
-**Touching on each file type in a typical lifespan order might look like the following outline.**
+**Each file type in a typical lifespan order might look like the following outline.**
 
   1. Human provides **`UPDATE_vX_Y_Z.md`**, a sketch or detailed outline of a major version proposal that now needs detailed planning. 
   
