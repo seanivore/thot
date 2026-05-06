@@ -1,0 +1,9 @@
+In every IDE markdown editor I've used, the headings stack at the top of the page as you scroll down through them so then when you peek up, you don't need to scroll up at all to recall what section of the, typically massive, document you're in. I've taken a series of screenshots that depict this as I'm scrolling down a file to illustrate so we're definitely on the same page. The H1 stays at the top the entire time (unless there was another H1 that scrolled up), and the H2 stays just below the H1 until it is replaced with a smooth scroll by the next H2 in the document. The same happens for the H3 and all the other headings. No matter how deep in the hierarchy you are, just looking up shows you the entire flow of steps down and in. Please examine the images closely and confirm you understand the effect I'm describing and the degree of smooth, UX pleasing experience it creates by being convenient and animated perfectly. I'm hoping that might be something we can recreate as well. Not only is it something that the developer users would have come to expect if we're going to be able to entice them to move away from an IDE for markdown editing, but it is also one of those really great features that standard text writers with no markdown understanding have no idea this level of helpful convenience exists as such a norm. It seems like one of those must-haves for that reason, that would set us ahead of other markdown apps that half-assed their user experience. 
+
+  - `docs/archive/images/markdown-heading-stack-by-h-type-1.jpg`
+  - `docs/archive/images/markdown-heading-stack-by-h-type-2.jpg`
+  - `docs/archive/images/markdown-heading-stack-by-h-type-3.jpg`
+  - `docs/archive/images/markdown-heading-stack-by-h-type-4.jpg`
+  - `docs/archive/images/markdown-heading-stack-by-h-type-5.jpg`
+  - `docs/archive/images/markdown-heading-stack-by-h-type-6.jpg`
+  - `docs/archive/images/markdown-heading-stack-by-h-type-7.jpg`
