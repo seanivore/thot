@@ -3,7 +3,8 @@
 **Created**: 2026-04-27
 **Project**: Thot (`/Users/seanivore/Development/thot`)
 **Production**: v3.1.2 at thots.august.style
-**Origin**: Saved from `~/.claude/plans/hello-the-other-zippy-reef.md` per `.agent/DEV_RULES.md` § *Session Document Handling — Step 0: Save the Plan*. Document type: `DEV_PLANNING.md` (planning/research session, not a build/execution session).
+**Origin**: Saved from `~/.claude/plans/hello-the-other-zippy-reef.md` 
+**Document type**: `DEV_PLANNING.md` (planning/research session, not a build/execution session)
 
 ---
 

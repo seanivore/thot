@@ -1,4 +1,10 @@
-# V3.1.1 Multi-Window Persistence Safety
+# v3.1.1 Multi-Window Persistence Safety
+
+---
+
+**IMPORTANT**: This is a failed feature that we no longer want to pursue in implementing from this document.
+
+---
 
 **Branch**: `feat/v3-multi-window` (branching from `main`)
 
