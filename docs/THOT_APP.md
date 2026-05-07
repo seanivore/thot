@@ -70,12 +70,12 @@ This section is the high-level "where we're going." Implementation details for e
 
 ### Milestones
 
-| Version    | Theme                                  | Ship to     | Status                                   |
-| ---------- | -------------------------------------- | ----------- | ---------------------------------------- |
-| **v4.x**   | Round out the basics                   | Internal    | In flight (`feat/v4-basics`)             |
-| **v5.0**   | Proprietary highlight scope + dual-mode UI | Public soft launch | Research underway                  |
-| **v6.0**   | User preferences UI on the v5 scope system | Public      | Planned                                  |
-| **vNext**  | Native wrappers, collab, AI integration | Public + App Store | Strategy phase, not promised        |
+| Version   | Theme                                      | Ship to            | Status                       |
+| --------- | ------------------------------------------ | ------------------ | ---------------------------- |
+| **v4.x**  | Round out the basics                       | Internal           | In flight (`feat/v4-basics`) |
+| **v5.0**  | Proprietary highlight scope + dual-mode UI | Public soft launch | Research underway            |
+| **v6.0**  | User preferences UI on the v5 scope system | Public             | Planned                      |
+| **vNext** | Native wrappers, collab, AI integration    | Public + App Store | Strategy phase, not promised |
 
 ### v4.x — Round out the basics
 

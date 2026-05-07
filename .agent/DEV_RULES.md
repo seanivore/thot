@@ -3,7 +3,7 @@
 **Version**: v3.3.0
 **Last Updated**: 2026-05-06
 **Purpose**: Inform agents on our standardized project structure, documentation and development workflows.
-**Syncing**: Sync any updates to all `.agent/DEV_RULES.md` files using `frdoc` (see § *Syncing This Document*).
+**Syncing**: Sync any updates to all `.agent/DEV_RULES.md` files using `filemgmt` (see § *Syncing This Document*).
 
 ---
 
@@ -780,12 +780,10 @@ Fixes #38
 This file is intended to be the same across projects. To propagate updates from one canonical copy out to every other project:
 
 ```bash
-frdoc -n /path/to/canonical/.agent/DEV_RULES.md \
-      -s ~/Development \
-      -r .agent/DEV_RULES.md
+filemgmt -f ~/Development -r /path/to/canonical/.agent/DEV_RULES.md
 ```
 
-`frdoc` (find-replace-doc) lives at `~/Development/scripts/frdoc`. Run `frdoc -h` for full help. The same script can be used to sync any canonical doc across projects (for example, a master `BRAND.md`).
+`filemgmt` (Bulk Directory File Management) lives at `~/Development/scripts/filemgmt`. Run `filemgmt -h` for full help. The same script can be used to explicitly add files to all project `.agent` folders via the `-a` flag (e.g. `filemgmt -f ~/Development/*/.agent -a /path/to/canonical/.agent/RESEARCH_PROTOCOL.md`).
 
 **Note**: Project-specific learnings live in `.agent/PROJECT_LESSONS.md`, which is **not** synced — every project keeps its own incident history.
 

@@ -5,7 +5,7 @@
 **Branches**: `feat/v4-basics` (cut from `dev`)
 **Required reading first**:
   - `docs/THOT_APP.md` — architecture, state, roadmap
-  - `README.md`
+  - `README.md` — *needs update*
   - `docs/archive/v4_0/v4_0_0_CLARITY.md` § "Understand Current App State" items 6–10 (source for these fixes)
 
 **Architecture decisions made in planning**: see `v4_0_0_DEV_PLANNING.md` (this directory).
@@ -120,7 +120,7 @@ import { pastePlainText } from './paste-handler'
 ```
 Insert in extensions array (e.g., after `closeBrackets()` and before `EditorState.languageData.of(...)`).
 
-### 1.6 PWA title-bar dedup
+### 1.6 PWA title-bar deduplication
 Implementation depends on Phase 0.1 root cause. Two likely fixes:
 - If `document.title` is being set to `"${docName} - Thot"` somewhere: change to set just `docName`. The PWA shell will append the app name itself. (Apply where the assignment lives.)
 - If the `manifest.webmanifest` is the second source: leave manifest alone, ensure `document.title` is just `docName`.

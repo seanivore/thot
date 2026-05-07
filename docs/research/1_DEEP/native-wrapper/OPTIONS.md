@@ -52,20 +52,20 @@ Out of scope for serious consideration in 2026:
 
 What each option can plausibly deliver for Thot's want list.
 
-| Want                                  | Capacitor              | PWABuilder iOS             | Custom WKWebView                     | Tauri 2.0 Mobile        |
-| ------------------------------------- | ---------------------- | -------------------------- | ------------------------------------ | ----------------------- |
-| macOS shell (parity with PWA)         | Yes (Mac Catalyst)     | Limited (iPad-on-Mac path) | Yes (AppKit or Catalyst)             | Yes (native, mature)    |
-| iOS / iPadOS shell                    | Yes (mature)           | Yes (auto-generated)       | Yes                                  | Yes (newer)             |
-| Live Activities                       | Via custom plugin      | No (out of the box)        | Yes (direct ActivityKit)             | Custom plugin **[VERIFY]** |
-| Dynamic Island                        | Via custom plugin      | No                         | Yes (ActivityKit, same as Live Acts) | Custom plugin **[VERIFY]** |
-| App Intents / Shortcuts               | Via custom plugin      | No (community only)        | Yes                                  | Custom plugin **[VERIFY]** |
-| Lock-screen / Home widgets (WidgetKit)| Via custom plugin **[VERIFY]** | No            | Yes                                  | Custom plugin **[VERIFY]** |
-| Apple Pencil (annotation overlay)     | Hybrid: native overlay | No                         | Hybrid: native overlay               | Hybrid: native overlay  |
-| WatchOS app                           | **No** (companion only)| No                         | Companion native target              | **No**                  |
-| Siri / dictation in WatchOS           | n/a                    | n/a                        | Yes (native Watch app)               | n/a                     |
-| Live PWA reload (no rebuild required) | Yes (Live Updates / Capgo) | Yes (loads remote URL) | Yes (load remote URL)                | Yes (config option)     |
-| App Store review friction             | Low (well-trodden)     | Higher (apps that are "just a website" risk 4.2 rejection) | Lowest (acts like native app) | Newer; **[VERIFY]**  |
-| Maintenance burden (code volume)      | Low                    | Lowest                     | Highest                              | Medium                  |
+| Want                                   | Capacitor                      | PWABuilder iOS                                             | Custom WKWebView                     | Tauri 2.0 Mobile           |
+| -------------------------------------- | ------------------------------ | ---------------------------------------------------------- | ------------------------------------ | -------------------------- |
+| macOS shell (parity with PWA)          | Yes (Mac Catalyst)             | Limited (iPad-on-Mac path)                                 | Yes (AppKit or Catalyst)             | Yes (native, mature)       |
+| iOS / iPadOS shell                     | Yes (mature)                   | Yes (auto-generated)                                       | Yes                                  | Yes (newer)                |
+| Live Activities                        | Via custom plugin              | No (out of the box)                                        | Yes (direct ActivityKit)             | Custom plugin **[VERIFY]** |
+| Dynamic Island                         | Via custom plugin              | No                                                         | Yes (ActivityKit, same as Live Acts) | Custom plugin **[VERIFY]** |
+| App Intents / Shortcuts                | Via custom plugin              | No (community only)                                        | Yes                                  | Custom plugin **[VERIFY]** |
+| Lock-screen / Home widgets (WidgetKit) | Via custom plugin **[VERIFY]** | No                                                         | Yes                                  | Custom plugin **[VERIFY]** |
+| Apple Pencil (annotation overlay)      | Hybrid: native overlay         | No                                                         | Hybrid: native overlay               | Hybrid: native overlay     |
+| WatchOS app                            | **No** (companion only)        | No                                                         | Companion native target              | **No**                     |
+| Siri / dictation in WatchOS            | n/a                            | n/a                                                        | Yes (native Watch app)               | n/a                        |
+| Live PWA reload (no rebuild required)  | Yes (Live Updates / Capgo)     | Yes (loads remote URL)                                     | Yes (load remote URL)                | Yes (config option)        |
+| App Store review friction              | Low (well-trodden)             | Higher (apps that are "just a website" risk 4.2 rejection) | Lowest (acts like native app)        | Newer; **[VERIFY]**        |
+| Maintenance burden (code volume)       | Low                            | Lowest                                                     | Highest                              | Medium                     |
 
 **Key reading of the matrix:** No option ships Live Activities, Dynamic Island, App Intents, or WidgetKit "for free." Every wrapper requires a native-Swift plugin (or app extension target) to expose those frameworks to the web layer — because all four are *app extensions* that compile separately and run outside the WKWebView process. The wrapper choice doesn't determine *whether* you write Swift; it determines *how much* Swift glue you write and what shape the bridge takes.
 
@@ -145,13 +145,13 @@ This is "Capacitor for the web host, native Swift for the truly-native bits" —
 
 ## 5. Drop-in Workflow Comparison ("ship a PWA update → native picks it up")
 
-| Strategy                                  | "Ship an update" workflow                                          | Re-submit?              |
-| ----------------------------------------- | ------------------------------------------------------------------ | ----------------------- |
-| Capacitor, bundled dist                   | `npm run build && npx cap sync ios && Archive → upload`            | Yes, every time         |
-| Capacitor, remote URL (`server.url`)      | Push to Vercel; shell auto-loads on next launch                    | No (until native changes) |
-| Capacitor + Live Updates / Capgo          | Push web bundle via OTA service                                    | No                      |
-| PWABuilder, Custom WKWebView, Tauri (remote) | Push to Vercel                                                  | No                      |
-| Custom WKWebView (bundled offline)        | Rebuild + Archive + upload                                          | Yes                     |
+| Strategy                                     | "Ship an update" workflow                               | Re-submit?                |
+| -------------------------------------------- | ------------------------------------------------------- | ------------------------- |
+| Capacitor, bundled dist                      | `npm run build && npx cap sync ios && Archive → upload` | Yes, every time           |
+| Capacitor, remote URL (`server.url`)         | Push to Vercel; shell auto-loads on next launch         | No (until native changes) |
+| Capacitor + Live Updates / Capgo             | Push web bundle via OTA service                         | No                        |
+| PWABuilder, Custom WKWebView, Tauri (remote) | Push to Vercel                                          | No                        |
+| Custom WKWebView (bundled offline)           | Rebuild + Archive + upload                              | Yes                       |
 
 Apple's guideline 3.3.2 historically restricted dynamically-loaded *executable* code; the HTML/JS/CSS-in-WKWebView carve-out is well-established and many shipping Capacitor apps load remote content. **[VERIFY 2026 wording]**
 
