@@ -1,7 +1,7 @@
 ## SwiftUI Update 
 
 * **On our minds**: What kind of feature add would make a rational person pay a monthly subscription?
-* **Limitations**: Does Apple not using API then how do we send in data from an LLM or something (see WachOS note)
+* **Limitations**: Does Apple not using API then how do we send in data from an LLM or something (see WatchOS note)
 
 ### Native Application Value Adds 
 
@@ -10,7 +10,7 @@
   * **If you can't tell, I was kind of disappointed reading the benefits**
     + Most stuff that only a FULL-WALLED-GARDEN and TECH-NERD would love
       - The good thing is that that nerd would pay for the app
-      - Lots of aesthetic and animation tnings
+      - Lots of aesthetic and animation things
       - Connection between apps for those garden-ers
     + It was obvious too because if the feature was written in a way that made no sense, its a dumb Apple-Cult feature
     + So I think we can just assume we'll have to add all of that stuff
@@ -24,7 +24,7 @@
     + Background processing; e.g., syncing, location tracking in the background; 'location tracking' always gets my attention
 
   * **Advanced Haptics & UI**
-    + Custom haptic feedback (Taptic Engine)
+    + Custom haptic feedback (Haptic Engine)
     + System-level animations that create a "signature Apple feel"
 
   * **Platform-Specific UI Components**
@@ -38,8 +38,8 @@
   * **Spatial Computing (visionOS)**
     + This just needs to be on the radar
     + Creating native visionOS apps with 3D elements, volumetric windows, and RealityKit integration
-    + People could probaly "Go to the beach to write" "Sit under a tree and draw"
-    + I've been facinated with the idea of development in visionOS
+    + People could probably "Go to the beach to write" "Sit under a tree and draw"
+    + I've been fascinated with the idea of development in visionOS
 
   * **Apple Wallet**
     + Because how cool would it be to be the person who made it normal to buy things from your notes app
@@ -51,14 +51,15 @@
     + Proofread, refine, rewrite, summarize are available in PWA with right click
     + But iOS 18+ Writing Tools supposedly are only available native
   
-  * **Biometric Secturity**
+  * **Biometric Security**
     + Create locked sections or notes
-    + Keep your diary truely personal
+    + Keep your diary truly personal
+    + Actually this would be sort of essential in that we'd be setting up passkey login anyway; I'm assuming that the native app biometric would just make that faster and just not a login screen. 
 
   * **Live Activities & Widgets** 
     + This has potential
       - Our UI layout allowing users to set "post-it" visible text
-      - It could extend that feature to even more helpful locaitons
+      - It could extend that feature to even more helpful locations.
     + I love the idea of it being sort of like an interactive journal if you wanted
       - It can see when you get home and prompt you about what to journal
       - Create different "schemas" or vibes like therapy, and creative writing, and memior writer
@@ -80,11 +81,6 @@
       - Let you red pen edit a document 
 
 ### ADDITIONAL INNOVATIVE VALUE ADDS
-
-  * **MCP Server Integration** 
-    + Where Apple tries to cut us out, we could technically integrate MCP tools that get around Apples lack of API
-      - *Example*: "In summary, your native SwiftUI text editor app cannot natively access Apple Notes data through standard APIs. The MCP solutions you mentioned are clever, external automation tools that bypass this limitation by using local server-side scripting to act as a bridge between AI models and the desktop Notes application."
-      - Rather than the actual MCPs we'd probably want to better future prooof it and make sure it comes already included
 
   * **AI Integration Scopes**
     + I found an old list of MVPs we came up with and some are great for this
