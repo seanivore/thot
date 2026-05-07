@@ -1,9 +1,9 @@
 # Thot — Project Reference
 `thots.august.style`
 
-**Last Updated**: 2026-04-25
+**Last Updated**: 2026-05-06
 **Version**: v3.1.2
-**Status**: Production deployed. Next planned work: v3.2.0 URLs & Anchors.
+**Status**: Production deployed (v3.1.2). Active work: v4.0.0 polish pass on `feat/v4-basics`, with parallel v5 research underway in `docs/research/1_DEEP/`.
 
 ---
 
@@ -17,14 +17,15 @@
 ## Table of Contents
 
   1. [Project Overview](#project-overview)
-  2. [Recent Changes](#recent-changes)
-  3. [Architecture Explained](#architecture-explained)
-  4. [How to Run & Test Locally](#how-to-run--test-locally)
-  5. [File Structure & Key Files](#file-structure--key-files)
-  6. [Design System & Styling](#design-system--styling)
-  7. [Common Pitfalls & Important Notes](#common-pitfalls--important-notes)
-  8. [Deployment](#deployment)
-  9. [Changing Colors & Fonts](#changing-colors--fonts)
+  2. [Strategic Roadmap](#strategic-roadmap)
+  3. [Recent Changes](#recent-changes)
+  4. [Architecture Explained](#architecture-explained)
+  5. [How to Run & Test Locally](#how-to-run--test-locally)
+  6. [File Structure & Key Files](#file-structure--key-files)
+  7. [Design System & Styling](#design-system--styling)
+  8. [Common Pitfalls & Important Notes](#common-pitfalls--important-notes)
+  9. [Deployment](#deployment)
+  10. [Changing Colors & Fonts](#changing-colors--fonts)
 
 ---
 
@@ -56,6 +57,66 @@
   + Open the app, start typing, see instant highlighting
   + Close the browser, come back later, everything is exactly where you left it
   + Install as a PWA for an app-like experience without the App Store
+
+---
+
+## Strategic Roadmap
+
+This section is the high-level "where we're going." Implementation details for each version live in `docs/archive/vX_X/vX_Y_Z_IMPLEMENT.md`. This roadmap exists so any agent can see the milestone shape without reading the full archive.
+
+### Public Release Line
+
+**Thot does not ship publicly until it is a markdown AND normal-text editor with semantic highlighting** — i.e., not before v5.0.0. Versions v4.x ship internally and to early users only. This is the line that pins the roadmap order.
+
+### Milestones
+
+| Version    | Theme                                  | Ship to     | Status                                   |
+| ---------- | -------------------------------------- | ----------- | ---------------------------------------- |
+| **v4.x**   | Round out the basics                   | Internal    | In flight (`feat/v4-basics`)             |
+| **v5.0**   | Proprietary highlight scope + dual-mode UI | Public soft launch | Research underway                  |
+| **v6.0**   | User preferences UI on the v5 scope system | Public      | Planned                                  |
+| **vNext**  | Native wrappers, collab, AI integration | Public + App Store | Strategy phase, not promised        |
+
+### v4.x — Round out the basics
+
+User-experience expectations a modern editor should meet, plus polish on shipped features. No architectural changes.
+
+- **v4.0.0** (current) — line-numbers CSS, frontmatter detection tightening, checked-todo color, line-wrap unconditional, paste-as-plain-text + smart-quote normalization, list-styling bleed fix, list-blank-line behavior, `->` → `→` autocorrect, PWA title-bar dedup. Spec: `docs/archive/v4_0/v4_0_0_IMPLEMENT.md`.
+- **v4.1.0** — URL clickability + anchor links. Spec drafted in `docs/archive/v4_0/FEAT_URLS_ANCHORS.md`.
+- **v4.2.0** — Heading stacking feature (sticky-heading scroll behavior). Spec drafted in `docs/archive/v4_0/FEAT_HEADING_STACK.md`.
+
+### v5.0 — Proprietary highlight scope + Intelligent Formatting dual-mode
+
+The moat. Two features ship together because they share infrastructure (the proprietary scope system in `src/scopes.ts`).
+
+- **Proprietary highlight scope rebuild.** Wire `src/scopes.ts` (priority bands, `auto.*` plain-text-mode group, `userCustomizable` flags) into the runtime. Replace the current `theme.ts`'s tags-keyed `HighlightStyle` with a scope-keyed system. Whether Lezer stays underneath as the parser is the open question — see research bucket below.
+- **Intelligent Formatting dual-mode UI.** Markdown-visible mode (current) + visual mode (notation hidden via `Decoration.replace`, reappears when cursor enters region). Auto-detection layer: ALL CAPS → emphasis, `:` line endings → section labels, parenthetical asides dimmed, etc. (see `src/scopes.ts` `auto.*` group).
+- **Semantic highlighting for non-markdown writers.** The pitch in `CLARITY.md` § Growth — bring IDE-style coloring to writers who never type `#` or `-`. Same scope system, different input shape.
+
+**Research blockers** (active in `docs/research/1_DEEP/`):
+- `highlighter-architecture/` — what does "fully ours" mean and what does it cost? (Background agent running.)
+- `feature-research/FORMATTING_UX.md` — Sean's narrative description of the dual-mode interface (scaffolded; awaiting fill-in).
+
+### v6.0 — User preferences UI
+
+Once v5's scope system is in place, expose it. Full settings panel: pick the color, weight, and style of every scope. Toggle auto-detect rules on/off per scope. Live preview. The `userCustomizable: true/false` flag in `src/scopes.ts` is the gate.
+
+This is the moment Thot becomes a tool a non-developer would actually customize, which is the prerequisite for the wider audience CLARITY § Growth describes.
+
+### vNext — Strategy phase, not promised
+
+Listed as direction, not commitment. Any of these may slip earlier or later as research closes:
+
+- **Native wrappers** (macOS, iOS, iPadOS, WatchOS) using whichever wrapper approach the research recommends. PWA stays the canonical version; native shells add platform features (Live Activities, Dynamic Island, Apple Pencil annotation, WatchOS dictation, lock-screen widgets, App Intents). Research: `docs/research/1_DEEP/native-wrapper/`.
+- **Collaborative document editing.** Multi-user editing on the web app first; OAuth/passkey-first auth. Research: `docs/research/1_DEEP/auth-and-sync/`.
+- **`@claude` AI integration.** Inline LLM access — answer questions, sketch functions, confirm API doc currency, content-aware suggestions. Stripe billing-by-token model. Subtle integrations: tab autocompletion, automatic format suggestions, subagent-driven content surfacing.
+- **Columns + sticky-note layout.** A workspace UI with multiple document columns and pinnable sticky notes (some AI-populated). Scaffold: `docs/research/1_DEEP/feature-research/COLUMNS_LAYOUT.md` (awaiting fill-in).
+
+### Roadmap rules of thumb
+
+- **One IMPLEMENT.md per version** — this roadmap names versions; details live there.
+- **Research before promotion** — anything in vNext stays in `docs/research/` until a `final_recommendations.md` closes the bucket.
+- **Don't read this section during execution** — IMPLEMENT.md is the source of truth for what to build *now*. This section is for orientation.
 
 ---
 
