@@ -3,7 +3,7 @@
 **Version**: 1.0.0
 **Last Updated**: 2026-04-27
 **Purpose**: Standardize how research-heavy projects flow from open questions → defensible plans → polished deliverables (business plans, strategy docs, technical implementation guides).
-**Syncing**: Sync any updates via `frdoc` (see § *Syncing This Document*).
+**Syncing**: Sync any updates via `filemgmt` (see § *Syncing This Document*).
 
 ---
 
@@ -270,9 +270,7 @@ For large source corpora, external tools (NotebookLM, similar) can pre-synthesiz
 This protocol is intended to be the same across projects that use it. To propagate updates from one canonical copy out to every other project:
 
 ```bash
-frdoc -n /path/to/canonical/.agent/RESEARCH_PROTOCOL.md \
-      -s ~/Development \
-      -r .agent/RESEARCH_PROTOCOL.md
+filemgmt -f ~/Development -r /path/to/canonical/.agent/RESEARCH_PROTOCOL.md
 ```
 
 Project-specific research bucket choices, deliverable shapes, and stakeholder lists are *not* synced — each project keeps those in its own `docs/research/` tree. Only the protocol itself syncs.
