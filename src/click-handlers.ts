@@ -24,11 +24,14 @@ export const interactiveLinks = () => {
         return true
       }
 
-      // [text](destination) — walk up to Link, find URL child
-      if (node.name === 'LinkMark' || node.name === 'LinkTitle' || node.name === 'LinkLabel') {
-        const parent = node.parent
-        if (parent && parent.name === 'Link') {
-          const urlNode = parent.getChild('URL')
+      // [text](destination) — walk up from the clicked node to find a Link
+      // ancestor. Covers clicks on LinkMark (brackets/parens), LinkTitle,
+      // LinkLabel, AND the visible link text (which resolves to the Link
+      // node itself because plain inline text has no named child).
+      let cur: typeof node | null = node
+      while (cur) {
+        if (cur.name === 'Link') {
+          const urlNode = cur.getChild('URL')
           if (urlNode) {
             const urlText = view.state.sliceDoc(urlNode.from, urlNode.to)
             if (urlText.startsWith('#')) {
@@ -39,7 +42,9 @@ export const interactiveLinks = () => {
             event.preventDefault()
             return true
           }
+          break
         }
+        cur = cur.parent
       }
 
       return false
