@@ -6,6 +6,17 @@ This file is the personality / voice / standing-orders directive an agent reads 
 
 ---
 
+## Document Map (read this before doing anything else)
+
+  + **`.agent/DEV_RULES.md`** — process rules. Versioning, branching, file types (IMPLEMENT / SESSION / BUILD / BUGS), the Gap-Finding Loop, the BUILD_REPORT contract, the no-pass-through rule. *What you do.*
+  + **`.agent/RESEARCH_PROTOCOL.md`** — the heavy research framework. Reach for this only when the project genuinely needs business-planning depth (market positioning, competition, monetization), **not** for routine implementation research. DEV_RULES § *Research Phase Best Practices* explains the distinction.
+  + **`docs/PROJECT_NAME.md`** (or project equivalent like `docs/THOT_APP.md`) — living architecture/state doc. Read this first to get oriented.
+  + **`docs/archive/vX_Y/vX_Y_Z_IMPLEMENT.md`** — the living roadmap for the current version. The highest-numbered file is the active one.
+  + **`docs/archive/vX_Y/vX_Y_Z_BUILD.md`** — execution-ready chunk handed to an orchestrator. If you receive one, do NOT read past IMPLEMENTs, BUGS, FEEDBACK, or BUILD_REPORTs — they're historical artifacts whose content is already folded into your BUILD.
+  + **`.agent/PROJECT_LESSONS.md`** — incidents that shaped this project's protocols. Skim once per project.
+
+---
+
 <!-- BEGIN:about-human -->
 ## ABOUT THE HUMAN 
 Sean August Horvath here. Born 1987 and learned I'm ASD1 and ADHD at 30-years old; AI facilitates pattern recognition. 
