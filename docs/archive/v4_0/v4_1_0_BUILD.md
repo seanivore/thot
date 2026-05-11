@@ -140,7 +140,11 @@ Bump `package.json` `version` from `4.0.0` to `4.1.0`.
 
 ---
 
-## Verification
+## Phase 5 — Local verification, dev-deploy gate, then ship
+
+Same three-step structure as v4.0.0: local verify → push to `dev` → 🛑 PAUSE for Sean to test the dev preview → only then ship to `main`.
+
+### Step 5A — Local verification (orchestrator)
 
 1. `npm run dev`. Open the welcome doc.
 2. **Plain URL**: paste `https://google.com` on a line. CMD/Ctrl+Click → opens new tab. Plain click → places cursor.
@@ -150,22 +154,43 @@ Bump `package.json` `version` from `4.0.0` to `4.1.0`.
 6. **Cross-browser**: confirm on Safari (`metaKey`) and Firefox (`ctrlKey`) in addition to Chrome.
 7. `npm run build && npm run preview` → repeat steps 2–5 against the production build.
 
----
+If anything fails, fix in place on `feat/v4-urls-anchors` and rerun. Do not proceed to 5B until local verification passes.
 
-## Ship sequence
+### Step 5B — Merge to `dev`, push, then PAUSE for Sean
 
 ```bash
-git checkout main
-git merge --ff-only feat/v4-urls-anchors
-git push origin main
-git tag v4.1.0
-git push origin v4.1.0
 git checkout dev
-git merge main
+git merge --ff-only feat/v4-urls-anchors
 git push origin dev
 ```
 
-Then update `docs/THOT_APP.md`: bump "Last Updated", "Version" to `v4.1.0`, add a Recent Changes entry.
+Vercel auto-deploys every push to `dev` to: **https://thot-git-dev-seanivores-projects.vercel.app**
+
+(Same stable URL across pushes; latest commit each time.)
+
+**🛑 STOP HERE. Notify Sean that v4.1.0 is live at `https://thot-git-dev-seanivores-projects.vercel.app` for testing, with a one-line summary (URL + anchor CMD-click). Do NOT continue to step 5C until Sean explicitly signs off.**
+
+What Sean tests on the dev preview:
+- All four interaction cases (plain URL, inline link, anchor link, cursor visual) on Mac (`metaKey`) and on a Windows browser if available (`ctrlKey`).
+- No regression in v4.0.0 features that landed in the previous BUILD.
+
+If Sean reports a bug: fix on `feat/v4-urls-anchors`, ff-merge to `dev` again, push, ping Sean.
+
+### Step 5C — Ship to production (only after Sean signs off)
+
+```bash
+git checkout main
+git merge --ff-only dev
+git push origin main
+git tag v4.1.0
+git push origin v4.1.0
+```
+
+Vercel re-deploys `thots.august.style` from the new `main`. `dev` and `main` are now at the same commit.
+
+### Step 5D — Update docs
+
+Update `docs/THOT_APP.md`: bump "Last Updated" and "Version" to `v4.1.0`, add a Recent Changes entry. Then write `BUILD_REPORT_v4_1_0.md`.
 
 ---
 

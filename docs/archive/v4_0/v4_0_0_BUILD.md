@@ -335,29 +335,65 @@ This is the ship-commit step. Leave it as the last code edit before commit/tag.
 
 ---
 
-## Phase 10 — Verification & ship
+## Phase 10 — Local verification, dev-deploy gate, then ship
 
-### Verification (run before commit)
+This phase is split into three steps with an explicit pause for Sean to test the dev deploy before anything touches `main`. Production lives at `thots.august.style` (deployed from `main`) and gets tagged only after Sean signs off on the dev preview.
+
+### Step 10A — Local verification (orchestrator)
 
 1. `npm run dev` — manually exercise each phase's verify steps above.
-2. `npm run build && npm run preview` — confirm production build works.
+2. `npm run build && npm run preview` — confirm production build works (this serves `dist/` locally).
 3. Regression sweep: open the welcome doc rendered by `src/main.ts`, tab through every markdown construct (headings, bullets, numbered lists, blockquotes, code blocks, tables, links, checkboxes); confirm colors and weights match `docs/THOT_APP.md` § Color Palette.
-4. Vercel preview deploy from `feat/v4-basics`.
 
-### Ship sequence
+If anything fails, fix in place on `feat/v4-basics` and rerun. Do not proceed to 10B until all local verification passes.
+
+### Step 10B — Merge to `dev`, push, then PAUSE for Sean
+
+This step pushes the work to `dev` so Sean can test it on the Vercel dev-branch preview URL **before** anything touches `main`.
 
 ```bash
-git checkout main
-git merge --ff-only feat/v4-basics
-git push origin main
-git tag v4.0.0
-git push origin v4.0.0
+# 1. Merge the feature branch into dev (fast-forward keeps history linear)
 git checkout dev
-git merge main
+git merge --ff-only feat/v4-basics
+
+# 2. Push dev — Vercel auto-deploys a dev-branch preview URL
 git push origin dev
 ```
 
-Then update `docs/THOT_APP.md`: bump "Last Updated" to today, "Version" to `v4.0.0`, add a Recent Changes entry summarizing the polish round.
+Vercel auto-deploys every push to `dev` to: **https://thot-git-dev-seanivores-projects.vercel.app**
+
+(This URL is stable across pushes — same URL each time, latest commit each time.)
+
+**🛑 STOP HERE. Notify Sean that v4.0.0 is live at `https://thot-git-dev-seanivores-projects.vercel.app` for testing, with a one-line summary of each phase's fix. Do NOT continue to step 10C until Sean explicitly signs off.**
+
+What Sean tests on the dev preview:
+- All 10 fixes work as described in their phase's "Verify" steps.
+- No regressions in the markdown rendering sweep.
+- The frontmatter color preference call (Phase 3 note) — does Sean want to revisit?
+- List blank-line quirk #2 (Phase 8 defer-to-BUGS gate) — did the fix land cleanly, or does quirk #2 need to be filed in `v4_0_1_BUGS.md`?
+
+If Sean reports a bug: fix on `feat/v4-basics`, ff-merge to `dev` again, push, ping Sean again. The dev URL re-deploys automatically.
+
+### Step 10C — Ship to production (only after Sean signs off)
+
+```bash
+# 1. Move to main and ff-merge
+git checkout main
+git merge --ff-only dev
+
+# 2. Push and tag
+git push origin main
+git tag v4.0.0
+git push origin v4.0.0
+```
+
+Vercel re-deploys `thots.august.style` from the new `main`. `dev` and `main` are now at the same commit; no further sync needed.
+
+### Step 10D — Update docs
+
+Update `docs/THOT_APP.md`: bump "Last Updated" to today, "Version" to `v4.0.0`, add a Recent Changes entry summarizing the polish round.
+
+Then write `BUILD_REPORT_v4_0_0.md` per the contract at the bottom of this BUILD.
 
 ---
 

@@ -1,9 +1,9 @@
 # Development Protocols
 
-**Version**: v3.4.0
-**Last Updated**: 2026-05-10
-**Changes Made**: Replaced the old `DEV_PLANNING` / `SESSION_DEV` / `UPDATE` lifecycle with the four-file taxonomy (IMPLEMENT / SESSION / BUILD / BUGS). Killed the `IMPLEMENT_MASTER.md` concept — each version's `vX_Y_Z_IMPLEMENT.md` is itself the living roadmap. Added BUILD.md and `BUILD_REPORT_vX_Y_Z.md` to the Implementation Plans + Gap-Finding Loop sections, including the strict no-pass-through-between-tracks rule. Distinguished basic implementation research from the formal `RESEARCH_PROTOCOL.md` framework.
-**Purpose**: Inform agents on our standardized project structure, documentation and development workflows.
+**Version**: v3.5.0
+**Last Updated**: 2026-05-11
+**Changes Made**: Reframed versioning for internal use by using one continuous number counting any changes in planning document or shipped release. Added § *Two Operating Modes* (initiative vs patch) so agents self-route between long planning loops and small bug-fix BUILDs. Switched SESSION and FEEDBACK to date-named files (`YYYY_MM_DD_SESH.md`, `YYYY_MM_DD_FEEDBACK.md`) — they're event-in-time records, not version-bound. BUILD filenames for initiative-mode tracks use letter labels (`vX_Y_Z_TRACK_A_BUILD.md`, `vX_Y_Z_TRACK_B_BUILD.md`...) — descriptive names pigeonhole when track scope grows beyond the original label. Every IMPLEMENT and SESSION file declares its mode in a 2-line header so the filename's `vX.Y.Z` doesn't get pattern-matched as a software-release counter.
+**Purpose**: Inform agents how we optimize and simplify our methods to best stay organized and coordinate work, using consistent standards in workflows.
 **Syncing**: Sync any updates to all `.agent/DEV_RULES.md` files using `filemgmt` (see § *Syncing This Document*).
 
 ---
@@ -17,8 +17,6 @@
      - This is done whether or not you created the drift. 
      - If you discover issues while following your session plan, give human a heads up to make sure it is drift, then fix. 
 
-**Your assistance in maintaining these protocols is greatly appreciated.**
-
 ---
 
 ## Development Philosophy
@@ -30,13 +28,12 @@
 | Planning | 90%  |
 | Building | 10%  |
 
-### Maintain 9:1 Planning-to-Building Ratio
+### Monitor & Estimate 9:1 Planning-to-Building Ratio
 
-  - Start with the big-picture
-  - Do full project planning: write the MASTER implementation plan
-  - Always be thinking about where things are headed 
-  - Take turns reviewing, have clean context agents review, always identifying gaps in the plan 
-  - Iterate, identify gaps, research -> repeat this loop -> more times than we're historically comfortable with 
+  - Start with the big-picture for full project planning, maintain one working MASTER implementation plan
+  - Assess how many rounds of planning have taken place so far, take turns reviewing, and have clean context agents review 
+  - Always be thinking about where things are headed, and what gaps are still present
+  - Iterate, identify gaps, research -> repeat this loop -> more times than prior norms 
 
 ### Smart Session Track Creation
 
@@ -46,13 +43,13 @@ Knowing enough of the MASTER plan leads to smart session track creation. Tracks 
 
   * **Parallel Development**: Becoming aware of exactly what must be done before acting allows for more work in parallel, which is certainly not something much training data accounts for. 
 
-### Beware Dated Agent Training Data 
+### Question if Training Data Is Dated
 
-Recognize that today's tools encourage a different, more modern workflow, contrary to the stream of consciousness, build-as-you-go approach; that method is outdated.
+Today's tools encourage a different workflow that works against the stream of consciousness, build-as-you-go, method.
 
-  * **The Challenge**: By design, LLMs expect answers come during active work. This stream of thought can blind one from recognizing gaps in knowledge, or considering if training data might now be out of date.
+  * **The Challenge**: LLMs expect answers come during active work by design. This can blind one from recognizing gaps in knowledge.
 
-  * **The Solution**: This can be a strength, if handled during planning. Move "finding solutions" thinking out of active building, and into planning where there is opportunity for revisions and review.
+  * **The Solution**: Use it as a strength. Instead of "finding a solution" during active building, do it during planning where there is opportunity for revisions and review.
 
   * **Why This Matters**: Even with extensive planning, something will fall through the cracks. This minimizes those instances helping to prevent time spent debugging later in the process. 
 
@@ -69,27 +66,27 @@ Implementation guide planning should involve:
 
 **Loop until the plan becomes EXCLUSIVELY EXECUTABLE**
 
-Project implementation guide preparation occurs in a research and planning loop, ensuring that the orchestrating *agent following the plan to build requires no prior context*, *no guessing or looking anything up*. If something needed to be figured out, it should all have been accounted for during planning. 
+Project implementation guide preparation occurs in a research and planning loop. This ensures that the orchestrating agent following that plan *requires no prior context, no guessing, and no looking anything up*. 
 
 Specific guide on [The Gap-Finding Loop](#the-gap-finding-loop) near the bottom of this document.
 
-### AI's Struggles With Historic Processes
+### Modern Tools Require Modern Workflows
 
-Historically code was given an extremely high-value for how time consuming and exhaustive the cognitive work was. The way most people learned to debug is based very specifically on this premise. We must question these workflows given the capabilities of current agents and learn to reassign value where it makes sense to do so. 
+In the past, code was given an extremely high-value for being time consuming, exhaustive cognitive work. Debugging methods were based on this premise. Given the capabilities of coding agents today, we must question this workflow and reassign value.
 
-Agents today can write thousands of lines of code in minutes, often creating functional applications on a first build. One limitation is that LLMs can 'go down the wrong path' when producing output. This means that whole rewrites of features or functions can be more effective than the historic methods of debugging. 
+Agents today write thousands of lines of code in minutes. They can create a functional application on a first build, "one-shot" it. 
 
-Finally, we have to consider context windows. When bugs are 'patched' it is the code that is actually patched together. It can create a functioning application, but with a codebase that wasn't explicitly planned and never effectively documented. Consider what this mean for agents who work best from specifics where accuracy regarding the smallest details matter. 
+A new limitation we face is that LLMs can 'go down the wrong path' when producing output. However, this also means that whole rewrites of features or functions can be more effective than hunting for and then patching bugs. 
+
+Those 'patched' bugs often compound over time in hard-to-trace ways. They can create a functioning app, with a poorly documented codebase. Consider what this mean for agents with context windows who work best from specifics where accuracy regarding the smallest details matter. 
 
 ### The Agentic Orchestration Paradox
 
-The larger and more complex a task becomes, the more an AI naturally tries to shrink its scope to stay within its comfort zone — they manage context windows, rate limits, and fear losing the thread.
+The larger and more complex a task becomes, the more an AI naturally tries to shrink its scope to stay within its comfort zone — they manage context windows, rate limits, and fear losing the thread. 
 
-**This Is A Critical Paradox**: The only way to actually execute massive, complex projects is to force the AI to act as a high-level *orchestrator* that aggressively delegates to *subagents*.
+**This Is A Critical Paradox**: The only way to actually execute massive, complex projects is to have AI act as a high-level *orchestrator* that aggressively delegates to *subagents*.
 
-If you do not explicitly enforce this hierarchy, an agent will attempt to complete an entire massive plan in one breath—inevitably dropping context, writing buggy code, or getting rate-limited. Complex plans must be decoupled into independent tracks, and execution must rely on Orchestrator Agents assigning deterministic, tightly scoped tasks to fresh subagents.
-
-**Modern tools require modern workflows.**
+If you do not explicitly enforce this hierarchy, an agent will attempt to complete an entire massive plan in one breath—a single stream of consciousness—inevitably dropping context, writing buggy code, or getting rate-limited. Complex plans must be decoupled into independent tracks, and execution must rely on Orchestrator Agents assigning deterministic, tightly scoped tasks to fresh subagents.
 
 ---
 
@@ -97,7 +94,9 @@ If you do not explicitly enforce this hierarchy, an agent will attempt to comple
 
 ### 1. Standard Version Number Format
 
-A three-part semantic version is used: `vMAJOR.MINOR.PATCH` (e.g., `v3.1.2`). This is used throughout the life of the project, versioning from the first implementation guide document, updating it with each revision of the guide document, and then continuing the version numbers with the codebase itself, allowing future feature updates to continue smoothly.
+A three-part semantic version is used, `vMAJOR.MINOR.PATCH`, or `v3.1.2`, maintained for the life of the project, versioning from the first implementation guide document, updating it with each revision of the guide document as planning continues, and then continuing the version numbers with the codebase itself, allowing future feature updates to continue smoothly. 
+
+Simply: **We use version numbers as internal artifacts that help OUR work**. They are not customer-facing release counter. One continuous number track covers planning, through rounds, and through shipped releases. 
 
 | Position           | Bumps when                                                                |
 | ------------------ | ------------------------------------------------------------------------- |
@@ -108,6 +107,21 @@ A three-part semantic version is used: `vMAJOR.MINOR.PATCH` (e.g., `v3.1.2`). Th
 **Bumping a higher position resets lower positions to zero.** `v3.1.5` → next minor is `v3.2.0`, not `v3.2.5`.
 
 A patch or minor bump is justified for docs-only changes if the changes were substantial and constitute a new artifact (e.g., a state snapshot, a feedback round closing). Trivial commit-message-level doc edits don't need a bump.
+
+**Example**: 
+
+  - `v5_0_0_IMPLEMENT.md` (round 0 of the v5 initiative)
+  - `v5_0_1_IMPLEMENT.md` (round 1 after feedback) 
+  - `v5_0_2_IMPLEMENT.md` (round 2 after cold-review pass) 
+  - `v5_0_3_IMPLEMENT.md` (round 3, exclusively executable)
+
+When the BUILD extracted from round 3 ships and execution surfaced no deviations, the git tag is `v5.0.3`, **the same number**. Plan version IS ship version when nothing changed between them. The number only bumps further if execution surfaced a deviation (logged in BUILD_REPORT → drives a new plan round → new ship tag), or if the team wants to mark a public-launch shipment with a minor/major bump (e.g. `v5.1.0` for first public release of the v5 initiative).
+
+**Number changes track changes,** regardless of where the change came from. **No change, no bump.**
+
+The conventional "versions are only for shipped releases" is a UX gesture from the era when version numbers were dressed up for end-users; modern agentic workflows are 90% planning / 10% building (see § *Development Philosophy*), so the planning side of the lifecycle gets the same versioning machinery the shipping side does. Users don't need precise, non-skipping version numbers to find a changelog or know which is newer.
+
+The file's header (`Initiative` + `Revision driven by` for IMPLEMENT; `Driving` + `Type` for SESSION — see § *The Four File Types*) tells the reader whether they're looking at a planning revision or a shipped-release artifact. Trust the header, not pattern-matching on the filename.
 
 Updating docs-only examples: 
 
@@ -167,9 +181,7 @@ docs/
 └── PROJECT_NAME.md            ← master architecture/state doc (living)
 ```
 
-The roadmap is **not** a separate file — the highest-numbered `vX_Y_Z_IMPLEMENT.md` in `docs/archive/vX_Y/` is the living roadmap for the project. There is no `IMPLEMENT_MASTER.md`. See § *Master Documents* below.
-
-**Note**: The `docs/` path is canonical. Older drafts that referenced `assets/docs/` were inaccurate to actual repo structure.
+The roadmap is **not** a separate file — the highest-numbered `vX_Y_Z_IMPLEMENT.md` in `docs/archive/vX_Y/` is the living roadmap for the project. It **IS** the implementation master document, there is no separate IMPLEMENTATION_MASTER. See § *Master Documents* below.
 
 #### Non-Archive Doc Directories
 
@@ -177,56 +189,105 @@ Only create `docs/research` or `docs/planning` if there is active, ongoing resea
 
 ### 5. The Four File Types
 
-Every artifact in `docs/archive/vX_Y/` is one of four types. Filenames are constructed so that an alphabetical `ls` of a version directory reads like the version's chronological lifecycle (`B` before `I` before `S`; `BUGS` sorts where the patch bump puts it).
+Every artifact in `docs/archive/vX_Y/` is one of four types. 
 
-#### `vX_Y_Z_IMPLEMENT.md` — the living roadmap
+#### `vX_Y_Z_IMPLEMENT.md` — the evolving planning artifact for one initiative
 
-One per version, built up over many sessions. Holds the *entire* project roadmap, not just the next chunk — every milestone from the immediate polish work all the way out to vNext strategy. Sections detail their respective milestones with as much specificity as a real BUILD would need; un-investigated bugs and features are not allowed in IMPLEMENT (do the investigation, write the result).
+One per initiative, kept in `docs/archive/vX_Y/`. Iterates through revisions via FEEDBACK + SESSION cycles until chunks or the plan is entirely exclusively executable. 
 
-As chunks are promoted to BUILD and shipped, the corresponding section in IMPLEMENT is marked built, condensed to a short summary, and the fine architectural detail is migrated into `docs/PROJECT_NAME.md`. The newest IMPLEMENT for a project is always the authoritative roadmap.
+Each meaningful revision saves as a new file at the next version number — `v5_0_0_IMPLEMENT.md` → `v5_0_1_IMPLEMENT.md` → `v5_0_2_IMPLEMENT.md` → … (per § *Versioning § 1*: numbers move forward with every meaningful change). The highest-numbered IMPLEMENT in an initiative directory is active; earlier ones stay as historical record (nothing is deleted). Every IMPLEMENT leads with a 2-line header so a fresh agent doesn't pattern-match the filename's `vX.Y.Z` to a software release:
 
-#### `vX_Y_Z_SESSION.md` — the session log
+```
+**Initiative**: Public soft launch initiative is planning
+**Version**: v5.0.0 -> v5.0.1
+**Revision driven by**: Cold-review feedback (2026_06_08_FEEDBACK.md) for gaps in scope-cascade priority resolution; missing test corpus
+```
 
-What an actual session did. Can include planning, research, AND informal dev work — there is no separation between "planning sessions" and "build sessions" except by intent. Filename uses the version the session *started under*; if the session drives a version bump, the banner inside declares "Driving vX.Y.Z → vX.Y.(Z+1)" and the next IMPLEMENT bears the new number. Sessions are marked off live as work completes, not written as a report at the end.
+The `Revision driven by` line carries whatever descriptor fits the round — "initial draft", "post first feedback", "post cold-review pass", "Sean's lock-in review folded in", etc. The version number in the filename already counts the iteration; the header explains why this iteration happened.
 
-#### `vX_Y_Z_BUILD.md` — the execution-ready chunk
+Bug-fix work doesn't typically need an IMPLEMENT round — see § *Two Operating Modes* below.
 
-Created only when a chunk of IMPLEMENT has been judged ready to ship: investigated, exclusively executable, no decision-shaped questions remaining. Handed to an orchestrator agent who treats it as the entire job. The orchestrator returns a `BUILD_REPORT_vX_Y_Z.md` in the same directory capturing what changed, what gaps were found, and any bugs surfaced (see § *Implementation Plans Must Haves — BUILD.md and the BUILD_REPORT*).
+#### `YYYY_MM_DD_SESH.md` — the session log
+
+What an actual session did. Date-named because a SESSION is an event-in-time record, not a version-bound artifact. Sorts chronologically. Can include planning, research, and informal dev work — there is no separation between "planning sessions" and "build sessions" except by intent.
+
+Every SESSION leads with a 2-line header declaring what it advanced:
+
+```
+**Driving**: `v5_0_1_IMPLEMENT.md` → `v5_0_2_IMPLEMENT.md`
+**Type**: Planning (folding in cold-review findings)
+```
+
+If the session drives a new IMPLEMENT revision, the next IMPLEMENT bears the next version number. Sessions are marked off live as work completes, not written as a report at the end.
+
+#### `vX_Y_Z_TRACK_<LETTER>_BUILD.md` — the execution-ready chunk
+
+Created only when an IMPLEMENT has been judged ready to ship: investigated, exclusively executable, no decision-shaped questions remaining. Handed to an orchestrator agent who treats it as the entire job.
+
+For initiative-mode work, an IMPLEMENT typically splits into multiple **TRACKs** — natural execution boundaries (subsystem, layer, file cluster) sized to one orchestrator session. Tracks are labeled by letter (A, B, C). Avoid descriptive labels that can pigeonhole the work: a track named `HIGHLIGHTER` becomes a lie if the work expands to also touch the dual-mode UI surface that depends on it, but `TRACK_A` stays accurate regardless of what's inside. The version (`vX_Y_Z`) matches the IMPLEMENT revision the BUILD was extracted from. Example: BUILDs extracted from `v5_0_3_IMPLEMENT.md` are `v5_0_3_TRACK_A_BUILD.md`, `v5_0_3_TRACK_B_BUILD.md`, `v5_0_3_TRACK_C_BUILD.md`.
+
+For patch-mode or genuinely single-track work, `vX_Y_Z_BUILD.md` (with no `TRACK` token) is the simpler form.
+
+The orchestrator returns a `BUILD_REPORT_<source>.md` in the same directory capturing what changed, what gaps were found, and any bugs surfaced (see § *Implementation Plans Must Haves — BUILD.md and the BUILD_REPORT*). The `<source>` mirrors the BUILD filename minus the `_BUILD` suffix — e.g. `BUILD_REPORT_v5_0_3_TRACK_A.md`.
 
 #### `vX_Y_Z_BUGS.md` — bug tracking
 
-A bug log, by patch version. Either the human files it after testing, or the agent creates it during a session when bugs surface. Subsequent fixes are planned in IMPLEMENT and executed via BUILD like any other work — bugs are not a different kind of artifact, only a different *origin*.
+A bug log tied to a shipped release (the version that introduced the bug, or the version that fixes it). Either the human files it after testing, or the agent creates it during a session when bugs surface. In patch mode (see below), a tight cluster of confirmed bugs can promote directly from BUGS to a small BUILD without an intervening IMPLEMENT round. In these cases, the IMPLEMENT.md file's version number can just be edited to reflect the bug patch, I.e., **RENAME** `v5_0_3_IMPLEMENT.md` → `v5_0_4_IMPLEMENT.md`. No need to **"save-as"** an exact copy of the same implementation plan with nothing but a different version number file name. 
+
+#### `YYYY_MM_DD_FEEDBACK.md` — human review of an IMPLEMENT round
+
+Date-named, same as SESSION — feedback is event-in-time. Header declares which IMPLEMENT round it's reviewing and what bumps it should drive.
 
 #### Unversioned sketch files
 
-Anything in `docs/archive/vX_Y/` without a version prefix is a sketch/note: `FEAT_SETTINGS_UI.md`, `UPDATE.md`, `COOKIES_RESEARCH.md`, `REGROUP.md`. These inform planning; their actionable content migrates into the next IMPLEMENT and they remain as historical record (move to `processed/` once folded in).
+Anything in `docs/archive/vX_Y/` without a version or date prefix is a sketch/note: `FEAT_SETTINGS_UI.md`, `UPDATE.md`, `COOKIES_RESEARCH.md`. These inform planning; their actionable content migrates into the next IMPLEMENT and they remain as historical record (move to a `processed/` subdirectory once folded in).
 
-#### Other supporting documents
+### Two Operating Modes
 
-`vX_Y_Z_FEEDBACK.md` from the human (review of an IMPLEMENT round) is supported but not required as a separate type — it is functionally a sketch file with a version prefix, and its content gets folded into the next IMPLEMENT.
+Work splits into two modes, each with its own cadence. Agents pick the right mode by checking the trigger.
+
+  * **Initiative Mode** 
+    - TRIGGER: New feature(s). Architecture decisions involved. Multiple subsystems may be touched. Genuine planning required.
+    - CADENCE: Long planning rounds (often weeks). One IMPLEMENT iterated 0 → 1 → 2 → … via FEEDBACK + SESSION cycles until exclusively executable. Then split into one or more TRACK BUILDs. Tags assigned at ship time, possibly bundling tracks.
+  * **Patch Mode**
+    - TRIGGER: Bug fix or trivial polish. Root cause known. No architecture decisions.
+    - CADENCE: Short. BUGS doc → small `vX_Y_Z_BUILD.md` straight from BUGS → ship as patch. The IMPLEMENT planning loop is skipped. The "small build" pattern is the *right* default here — it's only the wrong default for feature work.
+
+Initiative-mode is the default for feature work. The frequent training-data trap is sizing initiative-mode work as patch-mode by mistake — extracting tiny BUILDs because the IMPLEMENT was structured by milestone. Initiative work uses TRACK BUILDs sized to natural execution boundaries (a coherent subsystem, a layer, a file cluster), not to feature/version units.
 
 ### 6. Working Chronological Example
 
 Sean files files into directories; agents file their own outputs only when explicitly told to. Otherwise agents receive paths to relevant documents at session start.
 
+The example below shows both modes side-by-side: `v4_2/` is patch-mode-style single-track work; `v5_0/` is initiative-mode work with multi-round IMPLEMENT iteration and multi-track BUILDs.
+
 ```
 docs/
 ├── archive/
-│   ├── v3_3/
-│   │   ├── v3_3_0_IMPLEMENT.md      # Roadmap at v3.3.0
-│   │   ├── v3_3_0_SESSION.md        # Session that shipped v3.3.0
-│   │   └── v3_3_1_BUGS.md           # Human's post-ship bug report → drove v3.3.0 → v3.3.1
-│   └── v4_0/
-│       ├── v3_3_1_FEEDBACK.md       # Human's notes on v3.3.1 that opened v4 scope
-│       ├── v4_0_0_BUILD.md          # The first executable chunk pulled off v4_0_0_IMPLEMENT
-│       ├── BUILD_REPORT_v4_0_0.md   # Orchestrator's post-execution report
-│       ├── v4_0_0_IMPLEMENT.md      # The living v4 roadmap
-│       ├── v4_0_0_SESSION.md        # Session that ran the BUILD and reconciled the report into IMPLEMENT
-│       └── v4_0_1_FEEDBACK.md       # Human review of v4.0.0 IMPLEMENT/BUILD → drives v4.0.0 → v4.0.1
-└── PROJECT_NAME.md                  # Master architecture/state doc (living)
+│   ├── v4_2/                                    # Patch-mode-style (small initiative)
+│   │   ├── v4_2_0_IMPLEMENT.md                  # Single revision was enough
+│   │   ├── 2026_05_15_SESH.md                   # Planning + ship session
+│   │   ├── v4_2_0_BUILD.md                      # Single-track execution
+│   │   └── BUILD_REPORT_v4_2_0.md
+│   └── v5_0/                                    # Initiative-mode (large initiative)
+│       ├── v5_0_0_IMPLEMENT.md                  # First draft
+│       ├── 2026_06_01_SESH.md                   # Planning session that produced the first draft
+│       ├── 2026_06_05_FEEDBACK.md               # Sean's first review
+│       ├── v5_0_1_IMPLEMENT.md                  # Sean's feedback folded in
+│       ├── 2026_06_08_SESH.md                   # Cold-review session
+│       ├── v5_0_2_IMPLEMENT.md                  # Cold-review gaps closed
+│       ├── 2026_06_12_FEEDBACK.md               # Sean's lock-in review
+│       ├── v5_0_3_IMPLEMENT.md                  # Exclusively executable, ready to split into BUILDs
+│       ├── v5_0_3_TRACK_A_BUILD.md              # Extracted from v5_0_3_IMPLEMENT.md
+│       ├── v5_0_3_TRACK_B_BUILD.md
+│       ├── v5_0_3_TRACK_C_BUILD.md
+│       ├── 2026_06_20_SESH.md                   # Track A execution
+│       ├── BUILD_REPORT_v5_0_3_TRACK_A.md
+│       └── …
+└── PROJECT_NAME.md                              # Master architecture/state doc (living)
 ```
 
-Note: `B` before `I` before `S` alphabetically, so a typical version directory reads in execution order. BUGS sorts at the patch bump that addresses them.
+Dated files (SESSION, FEEDBACK) group chronologically; versioned files (IMPLEMENT, BUILD, BUGS, BUILD_REPORT) group by version. Both kinds tell their own story without needing to interleave as in the example above.
 
 **Nothing is deleted.** Superseded plans stay in the archive as historical record — including the ones that turned out wrong. Future agents need to see the dead ends to understand the live decisions.
 
@@ -234,10 +295,10 @@ Note: `B` before `I` before `S` alphabetically, so a typical version directory r
 
 Two master documents live outside the archive. Each has a single, explicit role.
 
-| Doc                       | Role                                                              | Updated when                          |
-| ------------------------- | ----------------------------------------------------------------- | ------------------------------------- |
-| `docs/PROJECT_NAME.md`    | Architecture, current state, design system, pitfalls — the living tech doc | Every non-trivial change ships        |
-| `.agent/DEV_RULES.md`     | Rules of engagement; this document                                | When a convention is added or changed |
+| Doc                    | Role                                                                  | Updated when                   |
+| ---------------------- | --------------------------------------------------------------------- | ------------------------------ |
+| `docs/PROJECT_NAME.md` | Architecture, current state, design system, pitfalls, living tech doc | Every non-trivial change ships |
+| `.agent/DEV_RULES.md`  | Rules of engagement; this document                                    | Convention is added or changed |
 
 **The roadmap is not a master document.** The current `vX_Y_Z_IMPLEMENT.md` is the roadmap and lives in the version directory; there is no `IMPLEMENT_MASTER.md`. Architecture detail flows from IMPLEMENT into PROJECT_NAME as chunks ship, keeping IMPLEMENT focused on what's still ahead.
 
@@ -248,7 +309,7 @@ Two master documents live outside the archive. Each has a single, explicit role.
 
 #### Session document behavior
 
-A `vX_Y_Z_SESSION.md` is the live working document for the session — checkboxes marked **as work completes**, not at the end. If something unexpected changes the plan, note it inline at that step. If a step turns out wrong enough that a new plan is needed, **stop and start a new session** with a new SESSION doc; don't silently patch IMPLEMENT mid-build.
+A `YYYY_MM_DD_SESH.md` is the live working document for the session — checkboxes marked **as work completes**, not at the end. If something unexpected changes the plan, note it inline at that step. If a step turns out wrong enough that a new plan is needed, **stop and start a new session** with a new SESSION doc; don't silently patch IMPLEMENT mid-build.
 
 At session close, append three footer sections to the SESSION doc:
 
@@ -317,25 +378,43 @@ git pull origin main
 git checkout -b feat/your-feature-name
 ```
 
-### 2. Ready To Ship Updates Merged To Main
+### 2. Merge to Dev for Preview Testing
+
+Before merging to `main`, every feature ships through `dev` first so the human can test on the project's Vercel dev-branch preview URL — auto-deployed on every push to `dev`. The URL is project-specific (e.g. `<project>-git-dev-<vercel-team>.vercel.app`); find it documented in the project's `README.md` or `docs/PROJECT_NAME.md`, or check the Vercel dashboard.
+
+```bash
+# 1. Merge the feature branch into dev (fast-forward keeps history linear)
+git checkout dev
+git merge --ff-only feat/your-feature-name
+
+# 2. Push dev — Vercel auto-deploys to the dev preview URL
+git push origin dev
+```
+
+**🛑 PAUSE HERE.** Notify the human that the changes are live on the dev preview URL, with a one-line summary of what landed. Do NOT proceed to § 3 (ship-to-main) until the human signs off.
+
+If the human reports a bug: fix on `feat/*`, ff-merge to `dev` again, push, ping the human again. The dev URL re-deploys automatically on each push. Production (`thots.august.style` or the project's equivalent) is unaffected throughout this loop — `main` only gets touched in § 3.
+
+### 3. Ready To Ship Updates Merged To Main
 
 #### Pre-flight checklist (before any of the steps below)
 
   1. All tests passing.
-  2. `docs/PROJECT_NAME.md` reflects current architecture (per § *Master Documents*).
-  3. `vX_Y_Z_SESSION.md` complete with footer sections (per § *Master Documents → Session document behavior*).
-  4. The `BUILD_REPORT_vX_Y_Z.md` for the chunk that just shipped exists and its findings have been folded back into IMPLEMENT (per § *Implementation Plans Must Haves — BUILD.md and the BUILD_REPORT*).
-  5. Version bumped in `package.json` if applicable.
-  6. Build succeeds (`npm run build` or equivalent).
+  2. **Human has signed off on the dev preview URL** (per § 2 above).
+  3. `docs/PROJECT_NAME.md` reflects current architecture (per § *Master Documents*).
+  4. The session's `YYYY_MM_DD_SESH.md` is complete with footer sections (per § *Master Documents → Session document behavior*).
+  5. The `BUILD_REPORT_<source>.md` for the chunk that just shipped exists and its findings have been folded back into IMPLEMENT (per § *Implementation Plans Must Haves — BUILD.md and the BUILD_REPORT*). The `<source>` token matches the BUILD it reports on (e.g. `BUILD_REPORT_v5_0_3_TRACK_A.md` for `v5_0_3_TRACK_A_BUILD.md`).
+  6. Version bumped in `package.json` if applicable.
+  7. Build succeeds (`npm run build` or equivalent).
 
-When the checklist is clean and the feature is tested, use this 5-step process to keep tags and remote repositories perfectly synced. **Tag is clean numeric only** — no suffixes (see § *Versioning § 3*):
+When the checklist is clean, use this 5-step process to keep tags and remote repositories perfectly synced. **Tag is clean numeric only** — no suffixes (see § *Versioning § 3*):
 
 ```bash
 # 1. Move to the production branch
 git checkout main
 
-# 2. Fast-forward main to your feature branch state
-git merge --ff-only feat/your-feature-name
+# 2. Fast-forward main to dev (feat work is already in dev from § 2)
+git merge --ff-only dev
 
 # 3. Push the clean update to remote main
 git push origin main
@@ -347,15 +426,7 @@ git tag vX.Y.Z
 git push origin vX.Y.Z
 ```
 
-### 3. Syncing the Development Branch
-
-After successfully releasing a feature to `main`, keep `dev` up to date with the latest production state so parallel features don't drift:
-
-```bash
-git checkout dev
-git merge main
-git push origin dev
-```
+After step 5, `dev` and `main` are at the same commit — no separate sync step needed. The dev → main ff-merge model means dev is always either at-or-ahead of main, never out of sync.
 
 ---
 
@@ -404,7 +475,7 @@ Details from our **development philosophy**: plan Exclusively Executable guides.
 The `vX_Y_Z_IMPLEMENT.md` the executing agent reads contains **only confirmed decisions**. Nothing is up for re-evaluation during execution.
 
   - No decision framing, no alternatives, no "we could X or Y", no "Decision Dn" markers, no "TBD".
-  - Everything has been discussed, researched, and locked in earlier sessions (`SESSION.md` or upstream `FEEDBACK.md`).
+  - Everything has been discussed, researched, and locked in earlier sessions (an upstream `YYYY_MM_DD_SESH.md` or `YYYY_MM_DD_FEEDBACK.md`).
   - A `BUILD.md` is even stricter: it is a chunk extracted from IMPLEMENT once that chunk is judged exclusively executable. If something still reads like a decision in the BUILD, it belongs back in IMPLEMENT — not in front of the executing orchestrator.
   - If a subagent surfaces a decision-shaped question during execution, that is a real bug in the plan. Stop, surface to the human, fix the plan, then continue. **Never decide on the agent's own.**
 
@@ -437,7 +508,7 @@ IMPLEMENT is a *living roadmap*. BUILD is a *frozen execution chunk*. The two pl
 
 #### When to create a BUILD
 
-A `vX_Y_Z_BUILD.md` is created only when a chunk in IMPLEMENT has cleared the gap-finding loop and is judged exclusively executable: every fact verified, every decision made, every code change spelled out file:line. If you find yourself promoting an under-specified chunk to BUILD just to "get moving," stop — the right move is more planning, not earlier execution.
+A BUILD packet (`vX_Y_Z_TRACK_<LETTER>_BUILD.md` for initiative-mode tracks, `vX_Y_Z_BUILD.md` for patch-mode or single-track work) is created only when a chunk in IMPLEMENT has cleared the gap-finding loop and is judged exclusively executable: every fact verified, every decision made, every code change spelled out file:line. If you find yourself promoting an under-specified chunk to BUILD just to "get moving," stop — the right move is more planning, not earlier execution.
 
 #### What a BUILD contains
 
@@ -450,9 +521,9 @@ A BUILD is a self-contained packet handed to one orchestrator. It contains:
 
 A BUILD does **not** contain forward-looking roadmap, milestone framing, or content not directly executable. Reference content stays in `PROJECT_NAME.md` and `archive/resources/`.
 
-#### What the orchestrator returns: `BUILD_REPORT_vX_Y_Z.md`
+#### What the orchestrator returns: `BUILD_REPORT_<source>.md`
 
-After execution, the orchestrator writes a `BUILD_REPORT_vX_Y_Z.md` in the same version directory. The report captures:
+After execution, the orchestrator writes a `BUILD_REPORT_<source>.md` in the same initiative directory. The `<source>` token matches the BUILD it reports on (e.g. `BUILD_REPORT_v5_0_3_TRACK_A.md` for `v5_0_3_TRACK_A_BUILD.md`; `BUILD_REPORT_v4_2_0.md` for `v4_2_0_BUILD.md`). The report captures:
 - **What changed** — every file modified, with one-line summaries (not a `git diff` paste; a human-readable summary).
 - **What deviated from the BUILD** — anything the orchestrator decided differently and why. Ideally empty; non-empty entries are signal that the BUILD was under-specified.
 - **Gaps and bugs surfaced during execution** — anything the orchestrator hit that wasn't anticipated. These do not get fixed inside the BUILD itself; see the next subsection.
@@ -497,7 +568,7 @@ This is the operational layer of the *Planning takes 10× implementation* philos
      - An architecture-level decision surfaces — pause, surface to human, wait for direction.
      - Token / time budget reached — pause, ask human whether to continue.
 
-  6. When a chunk passes the loop, human reviews and approves promotion to a `vX_Y_Z_BUILD.md`. **No code is written before this gate.** A BUILD is created from the cleared chunk; the orchestrator who runs the BUILD writes a `BUILD_REPORT_vX_Y_Z.md`; findings from the report flow back into IMPLEMENT for the next round.
+  6. When a chunk passes the loop, human reviews and approves promotion to a BUILD packet. **No code is written before this gate.** A BUILD is created from the cleared chunk; the orchestrator who runs the BUILD writes a matching `BUILD_REPORT_<source>.md`; findings from the report flow back into IMPLEMENT for the next round.
 
 #### Why Fresh Subagents Matter
 
@@ -533,7 +604,7 @@ This is a deliberate forcing function: by sending the reader *out* of IMPLEMENT 
 [Milestone-level table of what this version is and what comes after — every milestone from immediate work to vNext strategy. Brief.]
 
 ## Milestone vX.Y.Z — [name]
-[Detailed plan for the immediate work. Phases, file:line specifics, production-ready snippets, verification, rollback. When a chunk here is judged exclusively executable, it is promoted to its own `vX_Y_Z_BUILD.md`.]
+[Detailed plan for the immediate work. Phases, file:line specifics, production-ready snippets, verification, rollback. When a chunk here is judged exclusively executable, it is promoted to its own BUILD packet — `vX_Y_Z_TRACK_<LETTER>_BUILD.md` for an initiative track, or `vX_Y_Z_BUILD.md` for patch-mode/single-track work.]
 
 ## Milestone vX.(Y+1) — [name]
 [Less detail than the immediate work but enough to set direction. Sketch becomes plan as it approaches the build queue.]
@@ -546,7 +617,7 @@ This is a deliberate forcing function: by sending the reader *out* of IMPLEMENT 
 
 ---
 
-## Cross-references — NOT IN THIS DOC, find here:
+## Cross-references — find here:
 
 - Tech stack summary, glossary, architecture diagrams → `docs/PROJECT_NAME.md`
 - API schemas, integration docs, third-party service references → `docs/archive/resources/`
@@ -557,8 +628,11 @@ This is a deliberate forcing function: by sending the reader *out* of IMPLEMENT 
 
 #### BUILD.md template (the executable chunk)
 
+Unlike IMPLEMENT and SESSION (which lead with a structured 2-line header), a BUILD opens with a metadata block — it's all execution-relevant context the orchestrator needs before reading the phases:
+
 ```markdown
-# v[X.Y.Z] Build Packet — [chunk name]
+# v[X.Y.Z] Track [LETTER] Build Packet
+# (or: # v[X.Y.Z] Build Packet — [chunk name]  for patch-mode / single-track)
 
 **Source**: extracted from `vX_Y_Z_IMPLEMENT.md` § [section]
 **Branch**: [feat/fix branch name]
@@ -590,7 +664,7 @@ This is a deliberate forcing function: by sending the reader *out* of IMPLEMENT 
 
 ---
 
-## What to write to BUILD_REPORT_vX_Y_Z.md when done
+## What to write to BUILD_REPORT_<source>.md when done
 
 - What changed (file-by-file, one-line summaries)
 - What deviated from this BUILD (anything you decided differently and why; ideally empty)
@@ -608,9 +682,9 @@ If you find yourself wanting to embed a tech-stack summary, schema, or glossary 
 
 **Solution**:
 
-  1. The roadmap is the highest-numbered `vX_Y_Z_IMPLEMENT.md` in `docs/archive/vX_Y/`. Planning sessions update it; nothing about it is master/separate.
-  2. The orchestrator running a build does **not** read IMPLEMENT — they read only the focused `vX_Y_Z_BUILD.md` extracted for them. This is the context-budget guarantee.
-  3. In-flight work in any session is logged in `docs/archive/vX_Y/vX_Y_Z_SESSION.md` (see § *Master Documents → Session document behavior*).
+  1. The active plan is the highest-numbered `vX_Y_Z_IMPLEMENT.md` in the current initiative directory `docs/archive/vX_Y/`. Planning sessions update it (by copying to the next IMPLEMENT revision); nothing about it is master/separate.
+  2. The orchestrator running a build does **not** read IMPLEMENT — they read only the focused track BUILD extracted for them (`vX_Y_Z_TRACK_<LETTER>_BUILD.md` or `vX_Y_Z_BUILD.md`). This is the context-budget guarantee.
+  3. In-flight work in any session is logged in `docs/archive/vX_Y/YYYY_MM_DD_SESH.md` (see § *Master Documents → Session document behavior*).
   4. Agents read `docs/PROJECT_NAME.md` and `README.md` at session start. They read nothing else unless referenced in the current BUILD or SESSION.
   5. **Do not** read past IMPLEMENTs, BUGS reports, FEEDBACK, or BUILD_REPORTs during execution. Those are historical artifacts; their content has already been folded into the current IMPLEMENT and (if applicable) the current BUILD.
   6. Mark SESSION checkboxes as work is completed — live, not at the end (see § *Master Documents → Session document behavior*).
@@ -655,7 +729,7 @@ Before starting parallel work:
 
 **4. Detailed Change Logs**
 
-Each orchestrator's `BUILD_REPORT_vX_Y_Z.md` documents:
+Each orchestrator's `BUILD_REPORT_<source>.md` documents:
 
   - What changed (file-by-file)
   - Why it changed (or why it deviated from the BUILD)
@@ -711,7 +785,7 @@ Every agent working on an update must:
      - Document new patterns or conventions
      - Update architecture diagrams if needed
 
-  6. **Append session footers to `SESSION.md`** before closing the session
+  6. **Append session footers to the session's `YYYY_MM_DD_SESH.md`** before closing the session
      - `## Session Notes` — surprises, undocumented findings, things that ought to be in PROJECT_NAME.md
      - `## Picked Up From / Stopped At` — resumption pointer
      - `## Open Threads For Next Session` — deferred work, questions
@@ -896,27 +970,27 @@ The minimum protocol for any session, in order. If something here is unclear, th
 
   1. `docs/PROJECT_NAME.md` — context primer
   2. `README.md` — project status, deploy URL, commands
-  3. Your assigned doc — usually `vX_Y_Z_BUILD.md` (if you're executing) or the highest-numbered `vX_Y_Z_IMPLEMENT.md` (if you're planning)
+  3. Your assigned doc — a track BUILD (`vX_Y_Z_TRACK_<LETTER>_BUILD.md` or `vX_Y_Z_BUILD.md`) if you're executing, or the highest-numbered `vX_Y_Z_IMPLEMENT.md` in the active initiative directory if you're planning
   4. `.agent/PROJECT_LESSONS.md` — incidents that shaped this project's protocols (skim)
 
 ### As you work
 
-  5. Mark `SESSION.md` checkboxes live, not at the end.
+  5. Mark session checkboxes live in `YYYY_MM_DD_SESH.md`, not at the end.
   6. If the BUILD or IMPLEMENT is wrong: stop, surface to the human, start a new SESSION. Don't silently patch.
   7. Confirm changes via `git diff` before commit. Every line intentional.
 
 ### Before closing the session
 
-  8. Append `## Session Notes`, `## Picked Up From / Stopped At`, `## Open Threads For Next Session` to `SESSION.md`.
-  9. If you ran a BUILD: write `BUILD_REPORT_vX_Y_Z.md` (per § *BUILD.md and the BUILD_REPORT*).
+  8. Append `## Session Notes`, `## Picked Up From / Stopped At`, `## Open Threads For Next Session` to `YYYY_MM_DD_SESH.md`.
+  9. If you ran a BUILD: write the matching `BUILD_REPORT_<source>.md` (per § *BUILD.md and the BUILD_REPORT*).
   10. If architecture changed: update `docs/PROJECT_NAME.md`. Future you depends on this.
   11. Commit with a message matching the BUILD's chunk grouping (see § *Commit Message Standards*).
 
 ### What you do NOT do
 
   - Don't read past IMPLEMENTs, BUGS, FEEDBACK, or BUILD_REPORTs during execution. Their content has already been folded into the current BUILD.
-  - Don't edit `vX_Y_Z_IMPLEMENT.md` mid-build. Surface the issue and start a new SESSION instead.
-  - Don't write a separate "completion" or "walkthrough" file. Footers go in `SESSION.md`; orchestrator findings go in `BUILD_REPORT_vX_Y_Z.md`.
+  - Don't edit a current IMPLEMENT mid-build, and don't edit an earlier IMPLEMENT to fold in new findings — copy to the next revision (`vX_Y_(Z+1)_IMPLEMENT.md`) and edit the copy. The earlier revision stays as historical record.
+  - Don't write a separate "completion" or "walkthrough" file. Footers go in the session's `YYYY_MM_DD_SESH.md`; orchestrator findings go in `BUILD_REPORT_<source>.md` (matching the BUILD it reports on).
   - Don't create archive directories at the major-version level only (no `archive/v3/` — only `archive/v3_0/`, `archive/v3_1/`, etc.).
   - Don't write IMPLEMENT or BUILD reference content (schemas, glossaries, architecture diagrams). Send the reader to `PROJECT_NAME.md` or `archive/resources/`.
   - Don't file `~/.claude/plans/<name>.md` into `docs/archive/`. The human handles that — they choose the version and filing path.
