@@ -1,9 +1,9 @@
 # Thot — Project Reference
 `thots.august.style`
 
-**Last Updated**: 2026-05-10
-**Version**: v3.1.2 (production); v4.0.x in active build
-**Status**: Production deployed (v3.1.2). Active living roadmap: `docs/archive/v4_0/v4_0_1_IMPLEMENT.md` — covers v4.0.x polish through vNext strategy, plus a parallel business-plan kickoff track. Workflow updated 2026-05-10 to the four-file taxonomy (IMPLEMENT / SESSION / BUILD / BUGS); see `.agent/DEV_RULES.md` v3.4.0.
+**Last Updated**: 2026-05-11
+**Version**: v4.0.0 (production); v4.1.0 next
+**Status**: Production deployed (v4.0.0 — round-out-the-basics polish). Active living roadmap: `docs/archive/v4_0/v4_0_1_IMPLEMENT.md` — covers v4.0.x polish through vNext strategy, plus a parallel business-plan kickoff track. Workflow at `.agent/DEV_RULES.md` v3.5.0 (four-file taxonomy + Two Operating Modes).
 
 ---
 
@@ -121,6 +121,16 @@ Listed as direction, not commitment. Any of these may slip earlier or later as r
 ---
 
 ## Recent Changes
+
+### 2026-05-11 — v4.0.0: Round-out-the-basics polish
+
+* **Shipped polish chunk** — line numbers fixed (top-anchored on wrapped lines, 25px stable column for 3-digit line counts), paste-as-plain-text with smart-quote normalization, PWA title-bar deduplication, list Enter on empty bullet exits the list, `package.json` version bump to 4.0.0. Spec: `docs/archive/v4_0/v4_0_0_BUILD.md`. Report: `docs/archive/v4_0/BUILD_REPORT_v4_0_0.md`.
+
+* **Highlight-system polish deferred to v5** — the BUILD attempted three highlight-system fixes (DocumentMeta remap, checked-todo distinct color, list bleed restriction). Investigation surfaced these as deeper symptoms of the current `styleTags + HighlightStyle + ViewPlugin` tri-system's expressiveness limits. Explicit decision: don't fight the current system; v5's proprietary scope rebuild handles all three cleanly. Deviations and side-effects documented in BUILD_REPORT.
+
+* **`->` autocorrect deferred** — dictionary entry added but trigger regex still excludes `>`; the substitution doesn't fire. Filed as v4.0.1 candidate.
+
+* **PWA install prompt** — flagged as v4.0.1 candidate to remove (Thot stays browser-only until native shells in vNext).
 
 ### 2026-03-03 — v3.1.2: Single Persistent Main Draftpad
 
