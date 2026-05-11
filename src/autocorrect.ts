@@ -127,7 +127,8 @@ export const AUTOCORRECT_DICTIONARY: Record<string, string> = {
   "c/o": "℅",
   "(c)": "©",
   "(r)": "®",
-  "(tm)": "™"
+  "(tm)": "™",
+  "->": "→"
 }
 
 import { EditorState, Transaction, TransactionSpec, StateField, StateEffect } from '@codemirror/state'

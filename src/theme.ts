@@ -64,7 +64,7 @@ export const thotEditorTheme = EditorView.theme({
     flexWrap: 'wrap',
   },
   '.cm-lineNumbers .cm-gutterElement': {
-    width: '16px',
+    width: 'var(--thot-line-number-width, 16px)',
     alignContent: 'flex-end',
   },
   '.cm-line': {

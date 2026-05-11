@@ -21,7 +21,7 @@ export async function openFile(setContentCallback: (content: string) => void): P
       setContentCallback(content);
 
       // Store handle for future saving if needed (out of scope for now to keep simple)
-      document.title = `${file.name} - Thot`;
+      document.title = file.name;
     } else {
       // Fallback for Safari/iOS
       const input = document.createElement('input');
@@ -34,7 +34,7 @@ export async function openFile(setContentCallback: (content: string) => void): P
         reader.onload = (e) => {
           const content = e.target?.result as string;
           setContentCallback(content);
-          document.title = `${file.name} - Thot`;
+          document.title = file.name;
         };
         reader.readAsText(file);
       };
@@ -63,7 +63,7 @@ export async function saveFileAs(content: string, suggestedName: string = 'thots
       const writable = await fileHandle.createWritable();
       await writable.write(content);
       await writable.close();
-      document.title = `${fileHandle.name} - Thot`;
+      document.title = fileHandle.name;
     } else {
       // Fallback for Safari/iOS
       const blob = new Blob([content], { type: 'text/markdown' });

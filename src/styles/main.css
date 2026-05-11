@@ -73,6 +73,10 @@
   font-display: swap;
 }
 
+:root {
+  --thot-line-number-width: 16px;
+}
+
 /* Reset & Base */
 *,
 *::before,

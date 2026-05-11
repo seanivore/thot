@@ -59,7 +59,8 @@ export const colors = {
   bulletContent: '#8aeefb',    // Text content in bullet list items
   numberedMarker: '#ff6b6b',   // Ordered markers: 1., 2., 3.
   numberedContent: '#f8a5c2',  // Text content in ordered list items
-  checkbox: '#8BE9FD',         // Task list [x] and [ ] markers
+  checkbox: '#8BE9FD',         // Task list [ ] open marker
+  checkboxChecked: '#5A7DB8',  // Task list [x] completed marker — darker, reads as "done"
 
   // ─── Block Elements ───
   blockquote: '#E6DB74',       // > markers and blockquote content

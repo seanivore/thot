@@ -13,6 +13,7 @@ import { hangingIndentPlugin } from './hanging-indent'
 import { forceSave } from './persistence'
 import { openFile, saveFileAs, newWindow } from './file-system'
 import { customAutocorrect } from './autocorrect'
+import { pastePlainText } from './paste-handler'
 import {
   colors,
   bulletContentTag,
@@ -51,6 +52,7 @@ export interface EditorConfig {
 const bulletMarkDeco = Decoration.mark({ attributes: { style: `color: ${colors.bulletMarker}; font-weight: 700` } })
 const numberMarkDeco = Decoration.mark({ attributes: { style: `color: ${colors.numberedMarker}; font-weight: 700` } })
 const inlineCodeMarkDeco = Decoration.mark({ attributes: { style: `color: ${colors.inlineCode}` } })
+const checkboxCheckedDeco = Decoration.mark({ attributes: { style: `color: ${colors.checkboxChecked}` } })
 
 function buildMarkerDecorations(view: EditorView): DecorationSet {
   const builder = new RangeSetBuilder<Decoration>()
@@ -96,6 +98,16 @@ function buildMarkerDecorations(view: EditorView): DecorationSet {
             }
             parent = parent.parent
           }
+        }
+
+        // Checked task markers — TaskMarker spans `[ ]` or `[x]` (3 chars);
+        // only the checked variant gets the darker color
+        if (node.name === 'TaskMarker') {
+          const text = view.state.sliceDoc(node.from, node.to)
+          if (text === '[x]' || text === '[X]') {
+            decos.push({ from: node.from, to: node.to, deco: checkboxCheckedDeco })
+          }
+          return
         }
       },
       leave(node) {
@@ -164,6 +176,11 @@ export function createEditor(config: EditorConfig): EditorView {
       styleTags({
         // ═══ MARKER OVERRIDES (depth=0, same depth as base → extension wins) ═══
 
+        // Mid-doc DocumentMeta mis-tagging: route to processingInstruction
+        // so it doesn't collide with frontmatter color or bold marker styling.
+        // Proper line-1 anchor lives in v5 scope rebuild.
+        DocumentMeta: tags.processingInstruction,
+
         // Heading # markers → same color as heading text
         HeaderMark: tags.heading,
 
@@ -188,10 +205,12 @@ export function createEditor(config: EditorConfig): EditorView {
         // ═══ CONTENT OVERRIDES (inherit mode, depth=0 → extension wins) ═══
 
         // Bullet list content → cyan
-        'BulletList/...': bulletContentTag,
+        // Restricted to direct list-item paragraphs to avoid CommonMark
+        // lazy-continuation bleed onto trailing/blank-separated paragraphs.
+        'BulletList/ListItem/Paragraph': bulletContentTag,
 
-        // Ordered list content → pink
-        'OrderedList/...': orderedContentTag,
+        // Ordered list content → pink (same restriction reasoning)
+        'OrderedList/ListItem/Paragraph': orderedContentTag,
 
         // Table content → lime
         'Table/...': tableTag,
@@ -221,6 +240,7 @@ export function createEditor(config: EditorConfig): EditorView {
       indentOnInput(),
       bracketMatching(),
       closeBrackets(),
+      pastePlainText,
       EditorState.languageData.of(() => [{
         closeBrackets: { brackets: ['(', '[', '{', "'", '"', '`', '*', '_', '~', '<'] }
       }]),
@@ -243,6 +263,37 @@ export function createEditor(config: EditorConfig): EditorView {
 
       // Keybindings
       keymap.of([
+        // Empty-list-item exit: Enter on a bare bullet/number marker strips
+        // the marker and leaves a plain line below, exiting the list.
+        // Non-empty list items fall through to default Enter behavior.
+        {
+          key: 'Enter',
+          run: (view: EditorView) => {
+            const { state } = view
+            const { head } = state.selection.main
+            const line = state.doc.lineAt(head)
+            const tree = syntaxTree(state)
+
+            let node = tree.resolveInner(head, -1)
+            while (node) {
+              if (node.name === 'ListItem') {
+                const itemText = state.doc.sliceString(line.from, line.to).trim()
+                if (/^[-*+]\s*$|^\d+\.\s*$/.test(itemText)) {
+                  view.dispatch({
+                    changes: { from: line.from, to: line.to, insert: '' },
+                  })
+                  return true
+                }
+                break
+              }
+              const parent: any = (node as any).parent
+              if (!parent) break
+              node = parent
+            }
+
+            return false
+          },
+        },
         // CMD+S intercept — prevent browser save dialog, trigger forceSave
         {
           key: 'Mod-s',
