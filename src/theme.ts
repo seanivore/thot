@@ -80,6 +80,7 @@ export const thotEditorTheme = EditorView.theme({
   '.cm-line': {
     padding: '0 2px',
   },
+  '.thot-url-link': { cursor: 'pointer' },
 }, { dark: true })
 
 /**
@@ -211,7 +212,7 @@ export const thotHighlightStyle = HighlightStyle.define([
   { tag: tags.link, color: colors.linkText, fontWeight: '700' },
   // URL must be AFTER link so it wins CSS cascade when Link/... inherit
   // propagates tags.link to the URL node (both classes on same span)
-  { tag: tags.url, color: colors.linkUrl },
+  { tag: tags.url, color: colors.linkUrl, class: 'thot-url-link' },
 
   // ─── Content separator (horizontal rule) ───
   { tag: tags.contentSeparator, color: colors.horizontalRule },

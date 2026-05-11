@@ -14,6 +14,7 @@ import { forceSave } from './persistence'
 import { openFile, saveFileAs, newWindow } from './file-system'
 import { customAutocorrect } from './autocorrect'
 import { pastePlainText } from './paste-handler'
+import { interactiveLinks } from './click-handlers'
 import {
   colors,
   bulletContentTag,
@@ -241,6 +242,7 @@ export function createEditor(config: EditorConfig): EditorView {
       bracketMatching(),
       closeBrackets(),
       pastePlainText,
+      interactiveLinks(),
       EditorState.languageData.of(() => [{
         closeBrackets: { brackets: ['(', '[', '{', "'", '"', '`', '*', '_', '~', '<'] }
       }]),
