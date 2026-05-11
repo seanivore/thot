@@ -65,7 +65,12 @@ export const thotEditorTheme = EditorView.theme({
   },
   '.cm-lineNumbers .cm-gutterElement': {
     width: 'var(--thot-line-number-width, 16px)',
-    alignContent: 'flex-end',
+    // flex-start keeps the line number aligned to the TOP of a wrapped row,
+    // not pushed onto the visual second line.
+    alignContent: 'flex-start',
+    // Override CodeMirror's default min-width: 20px which only fits 2 digits —
+    // 25px holds 3 digits without the column shifting at the 99→100 boundary.
+    minWidth: '25px',
   },
   '.cm-line': {
     padding: '0 2px',
