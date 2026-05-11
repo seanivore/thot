@@ -2,8 +2,8 @@
 `thots.august.style`
 
 **Last Updated**: 2026-05-11
-**Version**: v4.0.0 (production); v4.1.0 next
-**Status**: Production deployed (v4.0.0 — round-out-the-basics polish). Active living roadmap: `docs/archive/v4_0/v4_0_1_IMPLEMENT.md` — covers v4.0.x polish through vNext strategy, plus a parallel business-plan kickoff track. Workflow at `.agent/DEV_RULES.md` v3.5.0 (four-file taxonomy + Two Operating Modes).
+**Version**: v4.1.0 (production); v4.2.0 next (heading stacking)
+**Status**: Production deployed (v4.1.0 — URL/anchor CMD+Click). Active living roadmap: `docs/archive/v4_0/v4_0_1_IMPLEMENT.md` — covers v4.0.x polish through vNext strategy, plus a parallel business-plan kickoff track. Workflow at `.agent/DEV_RULES.md` v3.5.0 (four-file taxonomy + Two Operating Modes).
 
 ---
 
@@ -121,6 +121,13 @@ Listed as direction, not commitment. Any of these may slip earlier or later as r
 ---
 
 ## Recent Changes
+
+### 2026-05-11 — v4.1.0: URL clickability + anchor links
+
+* **CMD/Ctrl+Click on hyperlinks** — bare URLs and inline `[text](url)` links open in a new tab. Anchor links (`[label](#heading)`) scroll the editor so the matching heading is at the top of the viewport. Plain clicks still place the cursor as normal.
+* **Visual affordance** — URLs render with `cursor: pointer` on hover via a new `.thot-url-link` class wired through the `tags.url` HighlightStyle entry.
+* **Implementation** — new `src/click-handlers.ts` (`interactiveLinks()`); wired into `editor.ts` extensions array; theme rule added in `theme.ts`.
+* **Deferred to vNext** — touch / long-press context menu for mobile; local file path resolution (needs native shell). Spec: `docs/archive/v4_0/v4_1_0_BUILD.md`. Report: `docs/archive/v4_0/BUILD_REPORT_v4_1_0.md`.
 
 ### 2026-05-11 — v4.0.0: Round-out-the-basics polish
 
