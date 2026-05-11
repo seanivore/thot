@@ -71,6 +71,11 @@ export const thotEditorTheme = EditorView.theme({
     // Override CodeMirror's default min-width: 20px which only fits 2 digits —
     // 25px holds 3 digits without the column shifting at the 99→100 boundary.
     minWidth: '25px',
+    // Zero out CodeMirror's base padding (0 3px 0 5px). With text-align: right
+    // active, the 8px of inline padding inside our 25px column was clipping the
+    // third digit and visually centering numbers. No padding → digits right-
+    // align cleanly inside the full 25px.
+    padding: '0',
   },
   '.cm-line': {
     padding: '0 2px',
