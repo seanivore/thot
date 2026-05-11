@@ -115,7 +115,7 @@ This will need to include all of the stuff below in this document that is feedba
 
 We should also double check CLARITY.md and REGROUP.md, as well as where I think the previous agent may have put some of the features into `docs/research/...` -- which could be fine but only if addressed in the IMPLEMENT.md document and the denoted that these other research documents/process exists. Also I'm not sure what this second, initial, but probably dated directory for research contains but we should clean it up so that we don't have two research directories `docs/archive/research/...`. 
 
-If possible we should also knock out any of the smaller feature fixes that are more like bugs in this session. 
+If possible we should also knock out any of the smaller feature fixes that are more like bugs in this session. *OR* jump-starting the research and analysis needed to write up the business plan docs; maybe getting the next session agent all set to be able to be activated for that asap as well. wdyt? 
 
 We can then move all the old contents still in the `v4_0/...` subdirectory into `docs/archive/v4_0/processed/...`, so that our new process begins with a blank canvas.
 
@@ -209,3 +209,6 @@ I bring this up particularly because the other issue is that when you have a sor
 
 ---
 *Always end with making sure that `README.md` and `docs/THOT_APP.md` are up to date and accurate.*
+
+---
+*I can't wait to be able to use Thot for preparing these documents!*
