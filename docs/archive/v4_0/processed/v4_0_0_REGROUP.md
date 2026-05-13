@@ -209,10 +209,17 @@ Found and want easy quick way to create branch trees but also flow charts that A
       └──
 
 
-│ ─ ├ ┼ ┌ └ ┐ ┘ ┤
+│ ─ ├ ┼ ┌ └ ┐ ┘ ┤ 
 
 ┌────────────┼────────────┐
 └────────────┼────────────┘
+
+---
+
+
+┌────┐ ┌
+│    │ ┤
+└────┘ └
 
 ---
 

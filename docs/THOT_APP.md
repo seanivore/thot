@@ -64,19 +64,6 @@
 
 This section is the high-level "where we're going." The full living roadmap with per-milestone detail lives in `docs/archive/v4_0/v4_0_1_IMPLEMENT.md` (the current master IMPLEMENT). This roadmap section exists so any agent can see the milestone shape without reading the full archive.
 
-### Public Release Line
-
-**Thot does not ship publicly until it is a markdown AND normal-text editor with semantic highlighting** — i.e., not before v5.0.0. Versions v4.x ship internally and to early users only. This is the line that pins the roadmap order.
-
-### Milestones
-
-| Version   | Theme                                      | Ship to            | Status                       |
-| --------- | ------------------------------------------ | ------------------ | ---------------------------- |
-| **v4.x**  | Round out the basics                       | Internal           | In flight (`feat/v4-basics`) |
-| **v5.0**  | Proprietary highlight scope + dual-mode UI | Public soft launch | Research underway            |
-| **v6.0**  | User preferences UI on the v5 scope system | Public             | Planned                      |
-| **vNext** | Native wrappers, collab, AI integration    | Public + App Store | Strategy phase, not promised |
-
 ### v4.x — Round out the basics
 
 User-experience expectations a modern editor should meet, plus polish on shipped features. No architectural changes.

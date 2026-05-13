@@ -57,11 +57,11 @@ cd [project-name]
 
 ## Documentation
 
-| Document                                                      | Description                                                                  |
-|---------------------------------------------------------------|------------------------------------------------------------------------------|
-| [Architecture](docs/PROJECT_NAME.md)                          | Complete technical reference (or project equivalent like `docs/THOT_APP.md`) |
-| [Active roadmap](docs/archive/vX_Y/vX_Y_Z_IMPLEMENT.md)       | Current milestone plan (highest-numbered version directory)                  |
-| [Agent protocols](.agent/DEV_RULES.md)                        | Cross-project workflow and naming conventions                                |
+| Document                                                | Description                                                                  |
+| ------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| [Architecture](docs/PROJECT_NAME.md)                    | Complete technical reference (or project equivalent like `docs/THOT_APP.md`) |
+| [Active roadmap](docs/archive/vX_Y/vX_Y_Z_IMPLEMENT.md) | Current milestone plan (highest-numbered version directory)                  |
+| [Agent protocols](.agent/DEV_RULES.md)                  | Cross-project workflow and naming conventions                                |
 
 ---
 

@@ -475,14 +475,14 @@ Reference screenshots: `docs/archive/images/markdown-heading-stack-by-h-type-{1.
 
 ### Locked design decisions
 
-| # | Decision | Source |
-|---|---|---|
-| Q1 | **Render approach: pure DOM overlay**, appended to the editor's outer DOM, positioned absolutely over the scroller's top edge. NOT the Panel API (designed for static toolbars), NOT `Decoration.widget` (lives in document space and would scroll with content). | This-session research |
-| Q2 | **Heading tree maintenance: memoized sorted array**, invalidated only on `update.docChanged`. Per-scroll lookup via linear walk (or binary search) over an array of `{line, level, text, pos}` entries. NOT per-frame `syntaxTree.iterate` (O(N) on every scroll = unacceptable on 100K-line docs). | This-session research |
-| Q3 | **Smooth scroll, no jump.** When the next heading at level N approaches the pinned heading at level N, the pinned heading translates upward by the same delta as the scroll, sliding off-screen exactly as the new heading takes its place. Same trick IDEs use; the handoff looks like continuous scroll. | Sean (2026-05-10) |
-| Q4 | **Line-wrapped heading: show first line only.** The user only needs the section identifier, not the full heading text. | Sean (2026-05-10) |
-| Q5 | **Identical styling to in-document.** Same font, color, weight as the heading renders in the document body. Lines below scroll *under* the pinned overlay. The overlay needs an opaque background (`colors.bg` = `#1a1a1a`) so content sliding underneath is hidden. | Sean (2026-05-10) |
-| Q6 | **60fps on 100K+ lines is non-negotiable.** If the implementation can't hold this, the architecture is wrong — there are heavier features (collab, AI) coming and the perf headroom matters. Profile on a 100K-line synthetic doc before declaring done. | Sean (2026-05-10) |
+| #   | Decision                                                                                                                                                                                                                                                                                                   | Source                |
+| --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------- |
+| Q1  | **Render approach: pure DOM overlay**, appended to the editor's outer DOM, positioned absolutely over the scroller's top edge. NOT the Panel API (designed for static toolbars), NOT `Decoration.widget` (lives in document space and would scroll with content).                                          | This-session research |
+| Q2  | **Heading tree maintenance: memoized sorted array**, invalidated only on `update.docChanged`. Per-scroll lookup via linear walk (or binary search) over an array of `{line, level, text, pos}` entries. NOT per-frame `syntaxTree.iterate` (O(N) on every scroll = unacceptable on 100K-line docs).        | This-session research |
+| Q3  | **Smooth scroll, no jump.** When the next heading at level N approaches the pinned heading at level N, the pinned heading translates upward by the same delta as the scroll, sliding off-screen exactly as the new heading takes its place. Same trick IDEs use; the handoff looks like continuous scroll. | Sean (2026-05-10)     |
+| Q4  | **Line-wrapped heading: show first line only.** The user only needs the section identifier, not the full heading text.                                                                                                                                                                                     | Sean (2026-05-10)     |
+| Q5  | **Identical styling to in-document.** Same font, color, weight as the heading renders in the document body. Lines below scroll *under* the pinned overlay. The overlay needs an opaque background (`colors.bg` = `#1a1a1a`) so content sliding underneath is hidden.                                       | Sean (2026-05-10)     |
+| Q6  | **60fps on 100K+ lines is non-negotiable.** If the implementation can't hold this, the architecture is wrong — there are heavier features (collab, AI) coming and the perf headroom matters. Profile on a 100K-line synthetic doc before declaring done.                                                   | Sean (2026-05-10)     |
 
 ### Files
 
