@@ -45,7 +45,7 @@ It is intentionally long. A finished version will land in the 4–5k-line range.
     - **(Cancelled — see X)** — attempted and abandoned; rationale preserved so it isn't re-litigated by accident
     - **(Speculative — future watching)** — long-horizon ideas worth keeping on the radar
   - **Source citations**: `(source: path:line-range)` so future audits can trace any claim back to where it was first written.
-  - **Conflicts**: `**[CONFLICT]**:` flags disagreements between sources; resolved in later passes.
+  - **Conflicts**: `**CONFLICT**:` flags disagreements between sources; resolved in later passes.
   - **Research links**: prefixed with `→ Research:` and pointing to a file in `docs/research/...` or `docs/archive/research/...`.
   - **Open questions** live in section-local `### Open Questions` subsections AND get rolled up into the final "Open Questions & Unresolved Designs" appendix.
 
@@ -66,14 +66,14 @@ This is the rolling todo list for FB consolidation and downstream phases. Update
 The doc is ~3.9k lines. Suggested ways to skim:
   1. Read the "Strategic Pillars" (above) to confirm framing is right.
   2. Jump section-by-section via the H2 list; each section has status tags (**Shipped v4.1.0** / **Spec'd, not shipped** / **Research locked** / **Concept** / **Cancelled** / **Speculative**) so you can scan for what each is at a glance.
-  3. Watch for **[CONFLICT]** markers — those are inconsistencies between sources that the writers surfaced for you to resolve in Pass 2.
+  3. Watch for **CONFLICT** markers — those are inconsistencies between sources that the writers surfaced for you to resolve in Pass 2.
   4. Note overlaps where the same idea lives in two sections (e.g., Preferences-related items are spread across Editor Foundation, Semantic Highlighting, Intelligent Formatting, Workspace, and Preferences UI). Pass 2 will colocate these where you want them.
 
 ### Queued for this session — Pass 2 (after Sean's review)
 
   - **Reorg per Sean's redirects** — restructure based on the feedback; colocate cross-feature concerns (Preferences surfaces, anything UI-toggle-able, etc.).
   - **Gap fill** — hunt for any deep UX prose Sean remembers that didn't surface in Pass 1 (likely candidates: counter UI sketches, more workspace narrative).
-  - **Resolve [CONFLICT] markers** that Sean wants decided now.
+  - **Resolve CONFLICT markers** that Sean wants decided now.
   - **Refresh this Next Steps section** again at end of Pass 2.
 
 ### Queued — Pass 3+ (this session or next)
@@ -88,7 +88,7 @@ Features with **active research that has reached a locked recommendation** (read
 
   - **Highlighter scope-system rewrite (v5 moat)** → `docs/research/1_DEEP/highlighter-architecture/OPTIONS.md` — Option A (stay on Lezer, rewrite scope layer) + Option B2 (semantic prose-mode regex highlighter).
   - **Native wrappers** → `docs/research/1_DEEP/native-wrapper/OPTIONS.md` — Capacitor shell + native Swift for Live Activities / Pencil / WatchOS / widgets. Phasing A–F laid out.
-  - **Auth + sync architecture** → `docs/research/1_DEEP/auth-and-sync/OPTIONS.md` — Clerk for auth, Postgres for v1 sync, Yjs + Liveblocks for v2 collaboration. `[VERIFY]` tags need a Phase 2 pass.
+  - **Auth + sync architecture** → `docs/research/1_DEEP/auth-and-sync/OPTIONS.md` — Clerk for auth, Postgres for v1 sync, Yjs + Liveblocks for v2 collaboration. `VERIFY` tags need a Phase 2 pass.
 
 Features with **scaffolds awaiting Sean's narrative fill-in**:
 
@@ -366,7 +366,7 @@ When you tab/indent text past 4 spaces, CommonMark treats it as a code block:
 
 Acknowledged in docs/THOT_APP.md as Pitfall #1 — "Indented text (4+ spaces) turns code-block color. This is correct per CommonMark spec — 4 spaces of indent creates a code block. With correct code block color (#8989e3 light purple), it looks intentional." *(source: docs/THOT_APP.md:500-502)*
 
-**[CONFLICT]**: docs/archive/v2_0/v2_0_0_FEEDBACK.md:64 says "It needs to be able to tab over about two past the line above in case your creating a sublist." This implies the spec is to allow ~2 indent levels past the parent before triggering code-block coloring. docs/THOT_APP.md:500-502 frames this as a non-bug per CommonMark, accepting the 4-space threshold as-is. Net: defer to docs/THOT_APP.md (it's a deliberate v4-era stance), but v6 preferences UI should expose a "code block indent threshold" toggle if technically feasible — or v5 scope rebuild should reconsider the line.
+**CONFLICT**: docs/archive/v2_0/v2_0_0_FEEDBACK.md:64 says "It needs to be able to tab over about two past the line above in case your creating a sublist." This implies the spec is to allow ~2 indent levels past the parent before triggering code-block coloring. docs/THOT_APP.md:500-502 frames this as a non-bug per CommonMark, accepting the 4-space threshold as-is. Net: defer to docs/THOT_APP.md (it's a deliberate v4-era stance), but v6 preferences UI should expose a "code block indent threshold" toggle if technically feasible — or v5 scope rebuild should reconsider the line.
 
 ### Paste Behavior — Paste-as-Plain-Text + Smart-Quote Normalization
 
@@ -474,7 +474,7 @@ So the **shipped state** as of v4.1.0:
 - Highlight a word + type `(` / `[` / `{` / `'` / `"` / `` ` `` correctly wraps.
 - **DOES NOT wrap markdown-syntax-markers**: `*` (italic), `**` (bold) — but `**` is two characters; SHIFT-` * ` once should wrap with one `*` and second tap should expand to `**`. `~~` (strikethrough), `<>` (HTML-tag-style), `_` (underscore-italic) — none of these wrap on highlight + key currently.
 
-**[CONFLICT note for future]**: v1 spec listed backtick as a supported `closeBrackets` pair. Sean's v3 gap-finding included "inline code markers to a word" as a missing wrap. So `` ` `` is *technically* wrapping (single backtick) but Sean is asking for the markdown-specific multi-char wrap behavior — wrap with `*`, second press promotes to `**`. This is a different feature from `closeBrackets`. The behavior needs to live in a new extension (likely `src/markdown-wrap-marker.ts`) that intercepts `*`, `_`, `~`, `<`, `>` when there's a non-empty selection and applies the markdown wrap (with first-press = single marker, second press = double marker for `*` / `_`).
+**CONFLICT note for future**: v1 spec listed backtick as a supported `closeBrackets` pair. Sean's v3 gap-finding included "inline code markers to a word" as a missing wrap. So `` ` `` is *technically* wrapping (single backtick) but Sean is asking for the markdown-specific multi-char wrap behavior — wrap with `*`, second press promotes to `**`. This is a different feature from `closeBrackets`. The behavior needs to live in a new extension (likely `src/markdown-wrap-marker.ts`) that intercepts `*`, `_`, `~`, `<`, `>` when there's a non-empty selection and applies the markdown wrap (with first-press = single marker, second press = double marker for `*` / `_`).
 
 **Spec for v5 or v4.0.1**:
 - Highlight + `*` → `*word*` (italic). Second `*` press → `**word**` (bold). Third `*` press → `***word***` (bold+italic).
@@ -1252,7 +1252,7 @@ Style: ExtraBold (800). Heading marker (`#`) and heading content render identica
 | `italic`        | `#BF437F` (magenta)             | `UPDATE_v2_1_0.md:56`, `old-theme-ref.ts:22`                              |
 | `strikethrough` | `#6272A4` (gray) + line-through | `UPDATE_v2_1_0.md:57`, `old-theme-ref.ts:23`                              |
 
-**[CONFLICT]**: `ThotMarkdownTheme.json:47` lists italic at `#8aeefb` (cyan), and `TextMateRules.md:58` matches that cyan. The current `highlight-tags.ts` and `old-theme-ref.ts` both use magenta `#BF437F`. The cyan TextMate value appears to be a stale earlier value; the magenta is current.
+**CONFLICT**: `ThotMarkdownTheme.json:47` lists italic at `#8aeefb` (cyan), and `TextMateRules.md:58` matches that cyan. The current `highlight-tags.ts` and `old-theme-ref.ts` both use magenta `#BF437F`. The cyan TextMate value appears to be a stale earlier value; the magenta is current.
 
 Style notes: bold → ExtraBold (800); italic → ExtraBoldItalic (800i); strikethrough → Thin (100) with `text-decoration: line-through` (`UPDATE_v2_1_0.md:443`).
 
@@ -1265,7 +1265,7 @@ Style notes: bold → ExtraBold (800); italic → ExtraBoldItalic (800i); strike
 | `codeBlockContent` (plain code-block text fallback) | `#8989e3` (light purple) | `UPDATE_v2_1_0.md:62`, `old-theme-ref.ts:28` |
 | `codeLanguage` (language identifier after ```)      | `#F1FA8C` (yellow)       | `UPDATE_v2_1_0.md:63`, `old-theme-ref.ts:29` |
 
-**[CONFLICT]**: `ThotMarkdownTheme.json:103` lists inlineCode at `#78de8c` (mint-green) and `TextMateRules.md:115` matches that. Current canonical is `#F34D3E` red-orange per `UPDATE_v2_1_0.md` and `old-theme-ref.ts` — the JSON green is from an even older theme version. **Color-correction note from v2.0.8**: the prior `theme.ts` had `blockCodeDelimiter: '#8989e3'` which was actually the code CONTENT color; the fix mapped `tags.processingInstruction → #6767fc` so the fenced delimiter is now correctly blue-purple (`UPDATE_v2_1_0.md:771-773`).
+**CONFLICT**: `ThotMarkdownTheme.json:103` lists inlineCode at `#78de8c` (mint-green) and `TextMateRules.md:115` matches that. Current canonical is `#F34D3E` red-orange per `UPDATE_v2_1_0.md` and `old-theme-ref.ts` — the JSON green is from an even older theme version. **Color-correction note from v2.0.8**: the prior `theme.ts` had `blockCodeDelimiter: '#8989e3'` which was actually the code CONTENT color; the fix mapped `tags.processingInstruction → #6767fc` so the fenced delimiter is now correctly blue-purple (`UPDATE_v2_1_0.md:771-773`).
 
 #### Links
 
@@ -1298,7 +1298,7 @@ Image and Link share the same Lezer node structure (both use `LinkMark`, `URL`).
 | `checkbox` (`[ ]` open)               | `#8BE9FD` (cyan)        | `UPDATE_v2_1_0.md:83`, `old-theme-ref.ts:41`                    |
 | `checkboxChecked` (`[x]` complete)    | `#5A7DB8` (darker blue) | Added v4.0.0.4 (`v4_0_1_IMPLEMENT.md:106`). **Reads as "done"** |
 
-**[CONFLICT]**: `ThotMarkdownTheme.json` and `TextMateRules.md` listed bullet content at `#5feda4` (mint) and checkbox at `#50faad`. Current canonical values are the `UPDATE_v2_1_0.md` `#8aeefb` cyan / `#8BE9FD` cyan pair.
+**CONFLICT**: `ThotMarkdownTheme.json` and `TextMateRules.md` listed bullet content at `#5feda4` (mint) and checkbox at `#50faad`. Current canonical values are the `UPDATE_v2_1_0.md` `#8aeefb` cyan / `#8BE9FD` cyan pair.
 
 #### Block Elements
 
@@ -1331,7 +1331,7 @@ Style: comment → ThinItalic (100i) (`UPDATE_v2_1_0.md:383`).
 
 #### YAML Front Matter
 
-**[CONFLICT — full]**: The v4.0.0.3 spec called for changing frontmatter from `#FF9D00` to `#F5F0B5` pale yellow to avoid a cascade collision with heading orange and bold marker styling. BUILD_REPORT v4.0.0 reports the actual implementation went a different route: `DocumentMeta: tags.processingInstruction` was added as a styleTag remap, but at runtime verification found `@lezer/markdown` **does not emit `DocumentMeta` at all** — that tag only fires for HTML/XML `DoctypeDecl`. The styleTag entry is inert. The real root cause of the "hyphen-line-orange-bold" bug Sean reported is **SetextHeading2** (a `---` line after a paragraph promotes the paragraph to H2 per CommonMark). The styleTag entry was left in (inert) per Sean's call to "leave as-is, fix properly in v5." Current shipped frontmatter color is therefore still whatever `colors.frontmatter` holds, NOT remapped by the inert styleTag. The pale-yellow change may or may not have landed — `THOT_APP.md` should be consulted as the canonical truth, and v5 owns the proper line-1 + canonical-`---` anchor fix.
+**CONFLICT — full**: The v4.0.0.3 spec called for changing frontmatter from `#FF9D00` to `#F5F0B5` pale yellow to avoid a cascade collision with heading orange and bold marker styling. BUILD_REPORT v4.0.0 reports the actual implementation went a different route: `DocumentMeta: tags.processingInstruction` was added as a styleTag remap, but at runtime verification found `@lezer/markdown` **does not emit `DocumentMeta` at all** — that tag only fires for HTML/XML `DoctypeDecl`. The styleTag entry is inert. The real root cause of the "hyphen-line-orange-bold" bug Sean reported is **SetextHeading2** (a `---` line after a paragraph promotes the paragraph to H2 per CommonMark). The styleTag entry was left in (inert) per Sean's call to "leave as-is, fix properly in v5." Current shipped frontmatter color is therefore still whatever `colors.frontmatter` holds, NOT remapped by the inert styleTag. The pale-yellow change may or may not have landed — `THOT_APP.md` should be consulted as the canonical truth, and v5 owns the proper line-1 + canonical-`---` anchor fix.
 
 #### Brackets & Delimiters (standalone, outside links)
 
@@ -1575,7 +1575,7 @@ The `userCustomizable: true/false` flag in `src/scopes.ts` gates which scopes ar
 **Open work before promoting to BUILD**:
 
 - Sean's narrative in `docs/research/1_DEEP/feature-research/FORMATTING_UX.md` (currently 9 lead-in prompts awaiting fill-in).
-- Phase-2 verification of research items flagged `[VERIFY]` in `OPTIONS.md`.
+- Phase-2 verification of research items flagged `VERIFY` in `OPTIONS.md`.
 - Concrete migration plan for `theme.ts` tags-keyed → scope-keyed.
 - Test corpus: a documented set of markdown files exercising every Lezer construct + every `auto.*` regex pattern.
 - Confirm `ViewPlugin` highlighter and `syntaxHighlighting()` co-exist cleanly for code blocks.
@@ -2278,7 +2278,7 @@ These come from v2 forward-looking sections. They have not been formally re-scop
 
 ### Open Questions — File Management & I/O
 
-  + **Does v5+ introduce a real document model?** Sidebar, Finder-column-view, tags (`#ProjectTag`), `@mention` linking between notes by title — all surfaced as v3.x / v4.x ideas. **[CONFLICT]**: The v2.0.0 forward-looking section listed Finder-column navigation as a v3.x deliverable (source: `docs/archive/v2_0/UPDATES_v2_0_0.md:283-287`), but every subsequent doc has either deferred this to vNext (columns + sticky-notes scaffold) or left it explicitly open. Current canonical position: vNext direction, not promised.
+  + **Does v5+ introduce a real document model?** Sidebar, Finder-column-view, tags (`#ProjectTag`), `@mention` linking between notes by title — all surfaced as v3.x / v4.x ideas. **CONFLICT**: The v2.0.0 forward-looking section listed Finder-column navigation as a v3.x deliverable (source: `docs/archive/v2_0/UPDATES_v2_0_0.md:283-287`), but every subsequent doc has either deferred this to vNext (columns + sticky-notes scaffold) or left it explicitly open. Current canonical position: vNext direction, not promised.
   + **What happens when a temp window has an open file?** When you `openFile()` in a `?id=temp-xyz` window, do file edits write back to disk on `forceSave`, or only to localStorage? Today the file handle is held in memory only; the relationship between file-handle persistence and the temp-partition isn't specified.
   + **AirDrop / Share content vs URL on iOS** — there's a mobile-only bug where Web Share API sends only the URL. Worth investigating whether `text:` field actually carries doc content on iOS 18+.
   + **PDF export and Print** — not scoped, not implemented. v2 carryover items.
@@ -2314,7 +2314,7 @@ The research bucket `docs/research/1_DEEP/auth-and-sync/OPTIONS.md` produced a c
 ### Sync option comparison (verbatim from research)
 
   + **Yjs (CRDT, OSS)** — The de-facto JS CRDT library. Battle-tested in BlockNote, Tiptap, JupyterLab. Fit with CodeMirror 6: excellent (`y-codemirror.next` is a maintained, first-party-quality binding). Transport: BYO (`y-websocket`, `y-webrtc`, or Supabase Broadcast / a custom WS server / Liveblocks). Persistence: BYO (`y-indexeddb` for offline). Lock-in: none.
-  + **Liveblocks** — Hosted realtime infrastructure with a Yjs-compatible API and presence/awareness primitives. Drops into CodeMirror via `@liveblocks/yjs` + `y-codemirror.next`. Free tier: MAU-style limits, **[VERIFY]**. Pros: managed transport + persistence; presence and comments come free. Cons: hosted dependency; cost scales with active rooms. Lock-in: moderate — Yjs document format is portable but the room/presence API is theirs.
+  + **Liveblocks** — Hosted realtime infrastructure with a Yjs-compatible API and presence/awareness primitives. Drops into CodeMirror via `@liveblocks/yjs` + `y-codemirror.next`. Free tier: MAU-style limits, **VERIFY**. Pros: managed transport + persistence; presence and comments come free. Cons: hosted dependency; cost scales with active rooms. Lock-in: moderate — Yjs document format is portable but the room/presence API is theirs.
   + **Automerge** — Rust core, stronger story for local-first / offline-first apps. Fit with CodeMirror 6: `@automerge/automerge-codemirror` exists, ecosystem thinner than Yjs's. Pros: best-in-class for local-first; the `@automerge/automerge-repo` model handles offline-edit-then-reconcile elegantly. Cons: smaller ecosystem; CodeMirror integration not as polished.
   + **Supabase Realtime (Broadcast / Presence / Postgres CDC)** — Three primitives: Postgres CDC, Broadcast (ephemeral pub/sub), Presence (who's-online). Excellent for regime 1 (per-device sync). For regime 2 (collab), Broadcast is the transport but Yjs/Automerge on top is still required.
   + **Custom CRDT** — "Don't. Building a correct CRDT is a research-grade undertaking. Yjs and Automerge exist for a reason."
@@ -2357,7 +2357,7 @@ The research treats CRDT vs LWW as **a regime split, not an architectural choice
   + **Passkey + PWA cold launch**: iOS PWA cold launches strip URL parameters (the v3.1.1 lesson). Any sync flow that depends on URL state surviving a cold launch is suspect. Sessions in `localStorage` or `IndexedDB` survive.
   + **Background sync is hostile on iOS Safari**: the sync model must work entirely on foreground events (focus, visibilitychange).
   + **OAuth redirect flows touch iOS Safari quirks** — for passkey/magic-link the JS-only flow is clean inside a PWA.
-  + **Cross-origin auth redirects from standalone PWA on iOS** historically opened SFAuthenticationSession / SFSafariViewController, losing session cookies back in the PWA. JS-only flows are safer than hosted-page redirects for iOS PWAs. **[VERIFY]** current iOS 18/19 behavior.
+  + **Cross-origin auth redirects from standalone PWA on iOS** historically opened SFAuthenticationSession / SFSafariViewController, losing session cookies back in the PWA. JS-only flows are safer than hosted-page redirects for iOS PWAs. **VERIFY** current iOS 18/19 behavior.
   + (source: `docs/research/1_DEEP/auth-and-sync/OPTIONS.md:182-185`)
 
 ### Recovery UX (open)
@@ -2383,7 +2383,7 @@ Every current Thot user has docs in `localStorage` (`thot:content:main` + `thot:
 ### Open Questions — Cross-Device Sync
 
   + **End-to-end encryption?** If document content is encrypted with a user-derived key, the server never sees plaintext. Search across docs becomes hard; password recovery becomes catastrophic. Sean's privacy lineage favors E2E if feasible.
-  + **`[VERIFY]` items in `OPTIONS.md`** still open: Liveblocks pricing for small-team collab, Supabase passkey-as-primary status, iOS Safari 18/19 passkey + PWA behavior, Yjs binding compatibility with Thot's existing `styleTags` + `ViewPlugin` setup.
+  + **`VERIFY` items in `OPTIONS.md`** still open: Liveblocks pricing for small-team collab, Supabase passkey-as-primary status, iOS Safari 18/19 passkey + PWA behavior, Yjs binding compatibility with Thot's existing `styleTags` + `ViewPlugin` setup.
   + **Multi-doc model**: today there is one main doc + N temp docs. Sync presumes a `documents` table with a `document_id`. The data model for "which docs sync, by what name, in what namespace" is unspecified — needs to land before the v1 sync IMPLEMENT.
   + **Sync vs collab transition**: when a doc moves from solo to collab, does its persistence representation change (LWW row → Yjs document)? Needs a clean upgrade flow.
   + **Free vs paid tier line for sync**: is single-device-only the free tier, with sync gated to paid? Or is basic sync free and "team collab" the paid line? Touches monetization.
@@ -2504,7 +2504,7 @@ This section is **deliberately thin on implementation detail** because the imple
 
 ## Authentication & Accounts
 
-Authentication for Thot has one hard constraint and a lot of secondary preferences. The hard constraint: **passkey-first is non-negotiable**. The research bucket has produced a locked recommendation: **Clerk**. This section captures the constraint, the comparative research, the recommendation rationale, and the open `[VERIFY]` items that still need a Phase 2 pass before any auth code lands.
+Authentication for Thot has one hard constraint and a lot of secondary preferences. The hard constraint: **passkey-first is non-negotiable**. The research bucket has produced a locked recommendation: **Clerk**. This section captures the constraint, the comparative research, the recommendation rationale, and the open `VERIFY` items that still need a Phase 2 pass before any auth code lands.
 
 ### The non-negotiable: passkey-first **(Sean's locked constraint)**
 
@@ -2551,12 +2551,12 @@ The full comparative matrix from `docs/research/1_DEEP/auth-and-sync/OPTIONS.md`
 
 ### Option-by-option rationale (summary; see OPTIONS.md for full text)
 
-  + **Supabase Auth** — Passkey support is currently MFA-shaped, not primary-shaped (as of late 2025 / early 2026). "Passkey-first sign-in" — where a returning user taps "Sign in with passkey" and never types an email — is not the native happy path. **[VERIFY]** whether Supabase has shipped passkey-as-primary by Q2 2026. Free tier: 50K MAU, 500 MB Postgres, 2 GB bandwidth, projects pause after 7 days. Sync story is native (Postgres CDC, Broadcast, Presence). Choose if the auth+DB bundle is compelling and the passkey gap closes; otherwise pass.
+  + **Supabase Auth** — Passkey support is currently MFA-shaped, not primary-shaped (as of late 2025 / early 2026). "Passkey-first sign-in" — where a returning user taps "Sign in with passkey" and never types an email — is not the native happy path. **VERIFY** whether Supabase has shipped passkey-as-primary by Q2 2026. Free tier: 50K MAU, 500 MB Postgres, 2 GB bandwidth, projects pause after 7 days. Sync story is native (Postgres CDC, Broadcast, Presence). Choose if the auth+DB bundle is compelling and the passkey gap closes; otherwise pass.
   + **Clerk** **(Recommended)** — Shipped passkey GA in 2024 and treats them as a first-class primary factor — users can sign up *with* a passkey and sign in with it as the sole credential. **This is probably the cleanest passkey-first developer experience in the market.** Free tier: 10K MAU. Above 10K it jumps to ~$25/month + $0.02/MAU. PWA-wise, sessions are JWT-cookie based; the `routerPush`/`routerReplace` props let you intercept iOS-specific redirect-back URL issues. Sync story: none — bring your own DB + sync layer.
   + **Auth.js** — V5 added a WebAuthn provider in 2024, but Auth.js's branding is Next.js-first. There is no first-class plain-Vite/SPA adapter. Thot is a non-Next Vite SPA with no server runtime. Auth.js is the wrong tool until Thot adopts a server framework.
-  + **WorkOS / Stytch** — Both ship strong passkey-first flows. WorkOS made User Management free up to 1M MAU as a deliberate stake against Clerk. **[VERIFY]** current ceiling. Stytch's pure-JS SDK is well-suited to Vite SPAs. Neither ships a sync layer.
+  + **WorkOS / Stytch** — Both ship strong passkey-first flows. WorkOS made User Management free up to 1M MAU as a deliberate stake against Clerk. **VERIFY** current ceiling. Stytch's pure-JS SDK is well-suited to Vite SPAs. Neither ships a sync layer.
   + **Custom WebAuthn + Vercel/Neon Postgres** — As good as you build it. `@simplewebauthn/browser` and `@simplewebauthn/server` are the de-facto libraries. Complexity: **high for v1.** The bug surface for "passkey + email recovery + lost-device flow + account-recovery email-deliverability" is substantial. Choose when you've outgrown a provider or when compliance demands it.
-  + **Other** — Hanko (OSS passkey-first, smaller ecosystem, **[VERIFY]** 2026 maturity), Logto (OSS Auth0 alternative), Kinde (newer entrant), Auth0 (legacy giant, pricing escalates fast — not recommended).
+  + **Other** — Hanko (OSS passkey-first, smaller ecosystem, **VERIFY** 2026 maturity), Logto (OSS Auth0 alternative), Kinde (newer entrant), Auth0 (legacy giant, pricing escalates fast — not recommended).
   + (source: `docs/research/1_DEEP/auth-and-sync/OPTIONS.md:29-126`)
 
 ### Locked recommendation: Clerk
@@ -2587,7 +2587,7 @@ Hosting:     Vercel (current)
 
   + Passkeys work in Safari iOS 16+. The platform passkey is stored in iCloud Keychain and syncs across the user's Apple devices automatically. **This is the best-case experience for "I made a passkey on my iPhone and now I'm signing in on my MacBook."**
   + The PWA-specific failure mode that bit Thot at v3.1.1 was `manifest_url` overrides and `?id=` parameter loss on cold-launch. Auth flows should not rely on URL parameters surviving a Safari standalone PWA cold launch.
-  + Cross-origin auth redirects from a standalone PWA on iOS historically opened SFAuthenticationSession / SFSafariViewController, losing the session cookie back in the PWA. JS-only flows (Supabase magic link processed in the SPA, Clerk's `clerk-js` UI components) are safer than hosted-page redirects (Auth0 Universal Login, WorkOS AuthKit redirect mode) for iOS PWAs. **[VERIFY]** current iOS 18/19 behavior.
+  + Cross-origin auth redirects from a standalone PWA on iOS historically opened SFAuthenticationSession / SFSafariViewController, losing the session cookie back in the PWA. JS-only flows (Supabase magic link processed in the SPA, Clerk's `clerk-js` UI components) are safer than hosted-page redirects (Auth0 Universal Login, WorkOS AuthKit redirect mode) for iOS PWAs. **VERIFY** current iOS 18/19 behavior.
   + (source: `docs/research/1_DEEP/auth-and-sync/OPTIONS.md:182-185`)
 
 ### Account recovery
@@ -2617,7 +2617,7 @@ E2E encryption with user-derived keys gives the strongest privacy story but trad
   + **Thot adopts a server framework** (Next.js, SvelteKit, Hono on Vercel Functions). At that point Auth.js + custom WebAuthn becomes viable as a zero-vendor option.
   + **iOS Safari regression** in passkey or PWA behavior that breaks Clerk's drop-in flow.
 
-### Open `[VERIFY]` items (from research, Phase 2 needed)
+### Open `VERIFY` items (from research, Phase 2 needed)
 
   1. **Supabase passkey-as-primary status.** Has "passkey-first sign-in (no email step)" shipped?
   2. **Clerk pricing structure as of Q2 2026.** Free MAU, paid jump, organizations gating.
@@ -2631,8 +2631,8 @@ E2E encryption with user-derived keys gives the strongest privacy story but trad
 
 ### Open Questions — Authentication & Accounts
 
-  + **Vanilla-Clerk passkey UX parity.** `[VERIFY]` item #7 above. Open whether `@clerk/clerk-js` ships the same drop-in passkey components as `@clerk/clerk-react`. If not, we either re-architect to React or build the passkey ceremony ourselves on top of Clerk's session APIs.
-  + **iOS Safari 18/19 passkey + standalone PWA cold-launch behavior.** `[VERIFY]` #4. Load-bearing — if there's a regression we don't know about, Clerk's drop-in may fail on the platform that matters most.
+  + **Vanilla-Clerk passkey UX parity.** `VERIFY` item #7 above. Open whether `@clerk/clerk-js` ships the same drop-in passkey components as `@clerk/clerk-react`. If not, we either re-architect to React or build the passkey ceremony ourselves on top of Clerk's session APIs.
+  + **iOS Safari 18/19 passkey + standalone PWA cold-launch behavior.** `VERIFY` #4. Load-bearing — if there's a regression we don't know about, Clerk's drop-in may fail on the platform that matters most.
   + **Account recovery codes** — standard among providers? Worth Phase 2.
   + **Sign in with Apple integration timing**. App Store policy makes it required if we ship a native iOS shell that also offers third-party sign-in. The 30-minute integration cost makes it a no-brainer for v1 of auth.
   + **Anonymous → authenticated upgrade flow**. User has been using Thot account-less for 6 months with a `main` doc full of notes. They sign in. What happens to the existing local content? Most likely: claim the local content as their first doc on the server. Needs UX spec.
@@ -2898,7 +2898,7 @@ This section captures everything in the corpus about AI integration: predictive 
   + **Open question: deterministic vs LLM-driven**
     - Most of the above are deterministic — they can be done by a Prettier-style markdown formatter without invoking an LLM at all.
     - The LLM-driven cases are the ones where structure isn't obvious from the source: "rewrite this paragraph as a bulleted list," "convert this prose to a table." These are *more powerful* but also *more cost* and *more risk* (LLM hallucinating content during cleanup).
-    - **[CONFLICT]** Sean wants subtle AI but also wants "BOOM it cleans it up all pretty for you" — the second framing implies LLM-driven structural rewrite, which contradicts "always ask: can we do this without AI?" The resolution probably is: deterministic by default, LLM-driven on explicit invocation (right-click → "AI clean this up").
+    - **CONFLICT** Sean wants subtle AI but also wants "BOOM it cleans it up all pretty for you" — the second framing implies LLM-driven structural rewrite, which contradicts "always ask: can we do this without AI?" The resolution probably is: deterministic by default, LLM-driven on explicit invocation (right-click → "AI clean this up").
 
 ### Model choice (local vs hosted) **(Open — needs research)**
 
@@ -3545,7 +3545,7 @@ This section captures the entire native wrapper strategy: locked architecture de
     - *"For Thot: point Capacitor's `server.url` at `https://thots.august.style`. Re-submit the binary only when native plugins change. The App Store binary becomes a thin shell over the same website you already control — literal 'PWA is canonical.'"* (source: `docs/research/1_DEEP/native-wrapper/OPTIONS.md:158`)
 
   + **Offline caveat**
-    - *"Pure remote-URL apps lose offline unless the WKWebView's Service Worker survives across cold starts. Service Workers run inside WKWebView since iOS 14, but lifecycle inside a native host is finicky. **[VERIFY]** If 'open instantly on a plane' is mandatory, bundle a `dist/` snapshot as the offline fallback and use `server.url` only when network is up — Capacitor supports the pattern."* (source: `docs/research/1_DEEP/native-wrapper/OPTIONS.md:160`)
+    - *"Pure remote-URL apps lose offline unless the WKWebView's Service Worker survives across cold starts. Service Workers run inside WKWebView since iOS 14, but lifecycle inside a native host is finicky. **VERIFY** If 'open instantly on a plane' is mandatory, bundle a `dist/` snapshot as the offline fallback and use `server.url` only when network is up — Capacitor supports the pattern."* (source: `docs/research/1_DEEP/native-wrapper/OPTIONS.md:160`)
 
   + **Connections that need preservation**
     - `localStorage` keys (`thot:content:*`, `thot:state:*`) — both sides of the bridge read these.
@@ -3555,20 +3555,20 @@ This section captures the entire native wrapper strategy: locked architecture de
 
 ### Full capability matrix (from `docs/research/1_DEEP/native-wrapper/OPTIONS.md` § 3)
 
-  | Want                                   | Capacitor                      | PWABuilder iOS                                             | Custom WKWebView                     | Tauri 2.0 Mobile           |
-  | -------------------------------------- | ------------------------------ | ---------------------------------------------------------- | ------------------------------------ | -------------------------- |
-  | macOS shell (parity with PWA)          | Yes (Mac Catalyst)             | Limited (iPad-on-Mac path)                                 | Yes (AppKit or Catalyst)             | Yes (native, mature)       |
-  | iOS / iPadOS shell                     | Yes (mature)                   | Yes (auto-generated)                                       | Yes                                  | Yes (newer)                |
-  | Live Activities                        | Via custom plugin              | No (out of the box)                                        | Yes (direct ActivityKit)             | Custom plugin **[VERIFY]** |
-  | Dynamic Island                         | Via custom plugin              | No                                                         | Yes (ActivityKit, same as Live Acts) | Custom plugin **[VERIFY]** |
-  | App Intents / Shortcuts                | Via custom plugin              | No (community only)                                        | Yes                                  | Custom plugin **[VERIFY]** |
-  | Lock-screen / Home widgets (WidgetKit) | Via custom plugin **[VERIFY]** | No                                                         | Yes                                  | Custom plugin **[VERIFY]** |
-  | Apple Pencil (annotation overlay)      | Hybrid: native overlay         | No                                                         | Hybrid: native overlay               | Hybrid: native overlay     |
-  | WatchOS app                            | **No** (companion only)        | No                                                         | Companion native target              | **No**                     |
-  | Siri / dictation in WatchOS            | n/a                            | n/a                                                        | Yes (native Watch app)               | n/a                        |
-  | Live PWA reload (no rebuild required)  | Yes (Live Updates / Capgo)     | Yes (loads remote URL)                                     | Yes (load remote URL)                | Yes (config option)        |
-  | App Store review friction              | Low (well-trodden)             | Higher (apps that are "just a website" risk 4.2 rejection) | Lowest (acts like native app)        | Newer; **[VERIFY]**        |
-  | Maintenance burden (code volume)       | Low                            | Lowest                                                     | Highest                              | Medium                     |
+  | Want                                   | Capacitor                    | PWABuilder iOS                                             | Custom WKWebView                     | Tauri 2.0 Mobile         |
+  | -------------------------------------- | ---------------------------- | ---------------------------------------------------------- | ------------------------------------ | ------------------------ |
+  | macOS shell (parity with PWA)          | Yes (Mac Catalyst)           | Limited (iPad-on-Mac path)                                 | Yes (AppKit or Catalyst)             | Yes (native, mature)     |
+  | iOS / iPadOS shell                     | Yes (mature)                 | Yes (auto-generated)                                       | Yes                                  | Yes (newer)              |
+  | Live Activities                        | Via custom plugin            | No (out of the box)                                        | Yes (direct ActivityKit)             | Custom plugin **VERIFY** |
+  | Dynamic Island                         | Via custom plugin            | No                                                         | Yes (ActivityKit, same as Live Acts) | Custom plugin **VERIFY** |
+  | App Intents / Shortcuts                | Via custom plugin            | No (community only)                                        | Yes                                  | Custom plugin **VERIFY** |
+  | Lock-screen / Home widgets (WidgetKit) | Via custom plugin **VERIFY** | No                                                         | Yes                                  | Custom plugin **VERIFY** |
+  | Apple Pencil (annotation overlay)      | Hybrid: native overlay       | No                                                         | Hybrid: native overlay               | Hybrid: native overlay   |
+  | WatchOS app                            | **No** (companion only)      | No                                                         | Companion native target              | **No**                   |
+  | Siri / dictation in WatchOS            | n/a                          | n/a                                                        | Yes (native Watch app)               | n/a                      |
+  | Live PWA reload (no rebuild required)  | Yes (Live Updates / Capgo)   | Yes (loads remote URL)                                     | Yes (load remote URL)                | Yes (config option)      |
+  | App Store review friction              | Low (well-trodden)           | Higher (apps that are "just a website" risk 4.2 rejection) | Lowest (acts like native app)        | Newer; **VERIFY**        |
+  | Maintenance burden (code volume)       | Low                          | Lowest                                                     | Highest                              | Medium                   |
 
   + **Key reading**: No option ships Live Activities, Dynamic Island, App Intents, or WidgetKit "for free." Every wrapper requires a native-Swift plugin (or app extension target) to expose those frameworks to the web layer — because all four are *app extensions* that compile separately and run outside the WKWebView process. The wrapper choice doesn't determine *whether* you write Swift; it determines *how much* Swift glue you write and what shape the bridge takes. (source: `docs/research/1_DEEP/native-wrapper/OPTIONS.md:70`)
 
@@ -3666,7 +3666,7 @@ From `docs/research/1_DEEP/native-wrapper/OPTIONS.md:227`:
 
   + *"Live Activities & Widgets — This has potential — Our UI layout allowing users to set 'post-it' visible text — It could extend that feature to even more helpful locations."* (source: `docs/archive/resources/SWIFTUI.md:59-62`)
   + *"Full, immediate integration with Widgets, Lock Screen Live Activities, and App Intents for Shortcuts — Glanceable data on the Lock Screen, Home Screen, and Dynamic Island."* (source: `docs/archive/resources/SWIFTUI.md:66-67`)
-  + Capacitor: via custom plugin (no first-party ActivityKit plugin as of late 2025 per OPTIONS.md `[VERIFY]`).
+  + Capacitor: via custom plugin (no first-party ActivityKit plugin as of late 2025 per OPTIONS.md `VERIFY`).
   + Implementation: separate Widget Extension target reading from a shared App Group container; web layer writes via thin Capacitor plugin.
 
 #### App Intents (Siri / Shortcuts)
@@ -3799,14 +3799,14 @@ From `docs/research/1_DEEP/native-wrapper/OPTIONS.md:227`:
 
 From `docs/research/1_DEEP/native-wrapper/OPTIONS.md:250-263` (Phase 2 should target these directly):
 
-  1. **[VERIFY] Capacitor plugin status for ActivityKit, App Intents, WidgetKit** — community plugin maintenance, license, dependency profile. If none are usable, scope custom-plugin work explicitly.
-  2. **[VERIFY] PWABuilder iOS template in 2026** — officially supported, maintenance mode, or abandoned. If abandoned, drop from candidate set.
-  3. **[VERIFY] Tauri 2.0 iOS plugin ecosystem** — basics (Camera, Filesystem, Push, Haptics, Share) shipped or theoretical?
-  4. **[VERIFY] Guideline 4.2 rejection trends 2025–2026** — practitioner reports, updated rejection language.
-  5. **[VERIFY] Service Worker reliability in Capacitor's WKWebView on iOS 17/18** — lifecycle, storage quotas, cold-start persistence. Affects offline-on-airplane.
-  6. **[VERIFY] PencilKit + WKWebView coexistence in shipped apps** — real overlay examples, glitch rate, toggle UX.
-  7. **[VERIFY] On-device Watch transcription quality** — `SFSpeechRecognizer` adequate, or does audio need to round-trip to phone/server for Whisper-quality? Latency vs quality.
-  8. **[VERIFY] Pencil Pro gesture exposure through WKWebView pointer events** — how much of squeeze/barrel-roll is reachable without a native overlay. If most works, Pencil overlay scope shrinks.
+  1. **VERIFY Capacitor plugin status for ActivityKit, App Intents, WidgetKit** — community plugin maintenance, license, dependency profile. If none are usable, scope custom-plugin work explicitly.
+  2. **VERIFY PWABuilder iOS template in 2026** — officially supported, maintenance mode, or abandoned. If abandoned, drop from candidate set.
+  3. **VERIFY Tauri 2.0 iOS plugin ecosystem** — basics (Camera, Filesystem, Push, Haptics, Share) shipped or theoretical?
+  4. **VERIFY Guideline 4.2 rejection trends 2025–2026** — practitioner reports, updated rejection language.
+  5. **VERIFY Service Worker reliability in Capacitor's WKWebView on iOS 17/18** — lifecycle, storage quotas, cold-start persistence. Affects offline-on-airplane.
+  6. **VERIFY PencilKit + WKWebView coexistence in shipped apps** — real overlay examples, glitch rate, toggle UX.
+  7. **VERIFY On-device Watch transcription quality** — `SFSpeechRecognizer` adequate, or does audio need to round-trip to phone/server for Whisper-quality? Latency vs quality.
+  8. **VERIFY Pencil Pro gesture exposure through WKWebView pointer events** — how much of squeeze/barrel-roll is reachable without a native overlay. If most works, Pencil overlay scope shrinks.
   9. **App Group container size + write-frequency limits.** iOS throttles widget refresh; informs how often the web layer should write "latest note."
   10. **Sync architecture dependency.** WatchOS phase presumes a sync story; `auth-and-sync/` needs to land first or in parallel. Flag as cross-bucket dependency.
   11. **All cited sources need re-verification** — the original draft was written without live web access. Phase 2 must re-fetch Capacitor, Apple Developer, and PWABuilder docs and add direct quotes / version numbers.
