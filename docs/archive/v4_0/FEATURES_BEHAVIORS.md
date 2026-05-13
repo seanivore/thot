@@ -231,3 +231,25 @@ Many of the best IDE markdown tools require AI. This is being called out specifi
 
 ---
 
+This came up during an update trying to give the todo checkbox a different color when empty versus when when checked, Re: "Now v4.0.0.4 — re-spec the checked-todo color as a ViewPlugin extension since the parser doesn't tag-differentiate", I noted "parser doesn't tag-differentiate" 
+
+is not okay. Will it be something that will only cause 
+
+Other items that we've tried to fix in past updates and the "bug" was never fixed. 
+
+List item bullets or numbers a different color than the list item, and trying to give
+
+
+
+
+Otherwise looks 
+
+I'm searching for my original notes and am bumming the really detailed UI and UX writing I had is gone. I tried to go back in git to get them but in trying to formalize protocols and stuff so that things wouldn't get lost, we deleted branches lol aye. 
+
+  + Not sure where the original description of the UI was but found this in v1 doc 
+    - Finder-style column navigation 
+    - Column panes "drill down" into the note and each note detail 
+    - Instead of auto preview like "Notes" app (and only one awkward column in Apple Notes app): Configurable "post-it" preview snippets per note so you can preview what you want specifically so that, at a high level the app works as a quick reference tool, but the drill down and multi layers makes it a really powerful planning tool. We'd use tags to somehow allow for connecting content as well so that certain drill-down spots would be "auto" created based on the #ProjectTag and then when writing a note within a #ProjectTag you could @tag different notes based on their title
+  + Declarative Customization via AI
+
+---
