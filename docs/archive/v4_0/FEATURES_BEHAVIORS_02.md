@@ -1,18 +1,22 @@
-# Thot — Features & Behaviors (Holistic Map)
+# Thot App Comprehensive Feature & Behavior Documentation
 
 **Version**: 02 (working draft)
 **Created**: 2026-05-13
-**Updated**: 2026-05-13
+**Updated**: 2026-05-18
 **Status**: Planning — Pass 1 in flight
-**Supersedes**: `docs/archive/v4_0/FEATURES_BEHAVIORS.md` (carried forward; do not delete)
+**Supersedes**: `docs/archive/v4_0/FEATURES_BEHAVIORS_01.md` (carried forward; do not delete)
 
 ---
 
-## How to Read This Document
+## This Document's Purpose 
 
-This file is the single living source of truth for Thot's full feature picture — current behavior, locked decisions, planned work, research-gated questions, and legacy concepts that were always meant to land somewhere. It exists because too many rich UI/UX writeups were getting lost between version-specific docs; this document holds the whole map in one place so nothing falls through the cracks and so cross-feature interactions become visible.
+Single document to place all feature planning and UX/UI behavior breakdown. Agents are processing through all archive documents to gather every note of this information
 
-It is intentionally long. A finished version will land in the 4–5k-line range. Don't optimize for concision on first reads. The structure will tighten in later passes as overlapping concerns get consolidated and well-trodden material is summarized.
+### How to Read This Document
+
+This file is the single living source of truth for Thot's full feature picture — current behavior, locked decisions, planned work, research-gated questions, and legacy concepts that were always meant to land somewhere. It exists because too many rich UI/UX write ups were getting lost between version-specific docs; this document holds the whole map in one place so nothing falls through the cracks and so cross-feature interactions become visible.
+
+It is intentionally long, it needs to be, as this is where we drill down on all implementation planning working towards making it exclusively executable. A finished version will land in the 4–5k-line range. Don't optimize for concision on first reads. The structure will tighten in later passes as overlapping concerns get consolidated and well-trodden material is summarized.
 
 ### Conceptual Process
 
