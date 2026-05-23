@@ -300,3 +300,15 @@ If anyone — investor, advisor, future acquirer — frames "proprietary tech" a
 ---
 
 *End of Phase 1 deep-dive on highlighter architecture options.*
+
+---
+
+## Open sub-questions (added 2026-05-20 from session notes)
+
+These came out of Sean's session notes (`docs/archive/v4_0/thots.md`) and concern VSCode `textMateRules` parity. They are open research questions, not yet answered — they sharpen the "Customization UI scope" thread in Appendix A item 7.
+
+1. **Verbatim `textMateRules` apply.** Can Thot's scope system read and apply a VSCode `textMateRules` JSON block *exactly as the VSC forks (VS Code, Cursor, Antigravity) do* — i.e. the same rules produce the same colors? What would the v5 scope-system rewrite need in order to consume `textMateRules` faithfully? (Context: Sean handed in his saved `textMateRules` at the start of the project and the scopes did not highlight correctly — understanding *why* is part of this question.)
+2. **Raw paste vs. import/export.** Should Thot support pasting raw `textMateRules` JSON directly into a settings field? If raw paste turns out to be unreliable, the fallback is an explicit import path — which then also requires an export path. Which is the right primary path, and is paste even viable?
+3. **JSONC support.** The paste/import parser must accept JSONC (JSON-with-comments), not strict JSON only — Sean keeps a commented copy of his rules where comments label what each scope is for. Confirm the chosen JSON path tolerates comments.
+4. **Coexistence of JSON and the friendly visual UI.** The developer-facing `textMateRules` paste/import path and the non-developer-facing visual scope-color UI (pickers + describers + live preview, per § Preferences UI) must drive the *same* underlying scope config without drift. How do the two surfaces stay in sync — does a JSON paste re-populate the visual UI, and does a visual edit round-trip back to exportable JSON?
+

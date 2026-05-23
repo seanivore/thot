@@ -294,3 +294,16 @@ Hosting:     Vercel (current)
 - Neon (Vercel Postgres): https://neon.tech/
 
 All cited URLs reflect canonical landing pages as of cutoff. Phase 2 must re-fetch these and verify the **VERIFY**-tagged claims inline above.
+
+---
+
+## Open sub-questions (added 2026-05-20 from session notes)
+
+These came out of Sean's session notes (`docs/archive/v4_0/thots.md`) and concern passkey *UX* — distinct from the provider-choice analysis above. Passkey-first is already locked; these are the experience-pattern questions that need research, ideally by studying apps and services already doing passkeys flawlessly (Stripe is one reference Sean named). The overarching intent: passkey eliminates password friction — no difficult setup, details captured during first signup, login driven by device recognition.
+
+1. **Account-creation timing — create-with vs. add-after.** Some apps create the account *with* a passkey up front; others let the user add a passkey *after* signup. Add-after is preferable for Thot — but only if frictionless. Research the patterns that make add-after painless: a checkbox during signup that opts into passkey creation, or a passkey-creation flow that also sets a password in the same step so the user never has to dig into settings later. The failure mode to avoid: forcing the user into settings to create a passkey after the fact.
+2. **Cross-device passkey portability.** A passkey created on one device should work on the user's other devices — no separate per-device setup. Sean observed Stripe doing this (a Mac passkey and an iPhone passkey, either working on either device). What makes this work — is it iCloud Keychain passkey sync, the provider's own credential sync, or something else? What does Clerk (the locked provider) do here?
+3. **Phone-as-authenticator for Touch-ID-less users.** For users without Touch ID (e.g. a Mac keyboard with no fingerprint sensor), the passkey can live on the phone: the web app prompts "use your phone," the user scans their face on the phone, and is logged in — with no native app required, even for a pure web app. Sean experienced this on a web app with no iOS/macOS app at all. Confirm this is the standard cross-device WebAuthn / hybrid-transport flow and that Clerk's drop-in supports it cleanly inside a PWA.
+4. **Biometric-agnostic matching.** The system should match face *or* fingerprint for the same account — the user need not set up both. If the device unlocks, the account unlocks. Confirm this is inherent to platform authenticators (it generally is) and that nothing in the chosen provider's flow forces a specific biometric.
+5. **Minimizing setup friction.** Passkey must not be *harder* than password or social login. Any details the system needs should be acquired during the first signup, not in a later setup step. Research the lowest-friction signup flows in the wild and confirm the recommended stack can match them.
+

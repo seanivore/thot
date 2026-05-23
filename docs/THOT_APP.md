@@ -1,9 +1,9 @@
 # Thot — Project Reference
 `thots.august.style`
 
-**Last Updated**: 2026-05-11
+**Last Updated**: 2026-05-20
 **Version**: v4.1.0 (production); v4.2.0 next (heading stacking)
-**Status**: Production deployed (v4.1.0 — URL/anchor CMD+Click). Active living roadmap: `docs/archive/v4_0/v4_0_1_IMPLEMENT.md` — covers v4.0.x polish through vNext strategy, plus a parallel business-plan kickoff track. Workflow at `.agent/DEV_RULES.md` v3.5.0 (four-file taxonomy + Two Operating Modes).
+**Status**: Production deployed (v4.1.0 — URL/anchor CMD+Click). Active living roadmap: `docs/archive/v5_0/v5_0_0_IMPLEMENT.md` — covers v4.0.x polish through vNext strategy, plus a parallel business-plan kickoff track. Workflow at `.agent/DEV_RULES.md` v3.5.0 (four-file taxonomy + Two Operating Modes).
 
 ---
 
@@ -62,15 +62,15 @@
 
 ## Strategic Roadmap
 
-This section is the high-level "where we're going." The full living roadmap with per-milestone detail lives in `docs/archive/v4_0/v4_0_1_IMPLEMENT.md` (the current master IMPLEMENT). This roadmap section exists so any agent can see the milestone shape without reading the full archive.
+This section is the high-level "where we're going." The full living roadmap with per-milestone detail lives in `docs/archive/v5_0/v5_0_0_IMPLEMENT.md` (the current master IMPLEMENT). This roadmap section exists so any agent can see the milestone shape without reading the full archive.
 
 ### v4.x — Round out the basics
 
 User-experience expectations a modern editor should meet, plus polish on shipped features. No architectural changes.
 
-- **v4.0.0** (in active build) — line-numbers CSS, frontmatter detection tightening, checked-todo color, line-wrap unconditional, paste-as-plain-text + smart-quote normalization, list-styling bleed fix, list-blank-line behavior, `->` → `→` autocorrect, PWA title-bar dedup. Spec: `docs/archive/v4_0/v4_0_1_IMPLEMENT.md` § *Milestone v4.0.x*.
-- **v4.1.0** — URL clickability + anchor links. Spec: `docs/archive/v4_0/v4_0_1_IMPLEMENT.md` § *Milestone v4.1.0*.
-- **v4.2.0** — Heading stacking feature (sticky-heading scroll behavior). Spec: `docs/archive/v4_0/v4_0_1_IMPLEMENT.md` § *Milestone v4.2.0*.
+- **v4.0.0** (shipped 2026-05-11) — line-numbers CSS, frontmatter detection tightening, checked-todo color, line-wrap unconditional, paste-as-plain-text + smart-quote normalization, list-styling bleed fix, list-blank-line behavior, `->` → `→` autocorrect, PWA title-bar dedup. Detail lives in `docs/archive/v5_0/v5_0_0_IMPLEMENT.md` (feature sections, tagged Shipped v4.1.0).
+- **v4.1.0** — URL clickability + anchor links. Detail in `docs/archive/v5_0/v5_0_0_IMPLEMENT.md` § *Interactive Markdown*.
+- **v4.2.0** — Heading stacking feature (sticky-heading scroll behavior). Spec: `docs/archive/v5_0/v5_0_0_IMPLEMENT.md` § *Heading Stacking / Sticky Scroll* (spec locked, BUILD-ready).
 
 ### v5.0 — Proprietary highlight scope + Intelligent Formatting dual-mode
 
