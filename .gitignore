@@ -49,3 +49,6 @@ Thumbs.db
 **.jpg
 **.jpeg
 **.png
+# Personal, per-machine Claude Code permissions. Accumulates absolute local
+# paths, client filenames, and search patterns from real work — never commit it.
+.claude/settings.local.json
